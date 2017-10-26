@@ -45,6 +45,32 @@
 			<artifactId>spring-aspects</artifactId>
 		</dependency>
 		
+		
+		<!-- Hibernate Dependencies -->
+       <dependency>
+           <groupId>org.hibernate</groupId>
+           <artifactId>hibernate-core</artifactId>
+           <version>3.6.10.Final</version>
+       </dependency>
+       <!-- Hibernate Logging dependency -->
+       <dependency>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-simple</artifactId>
+           <version>1.6.4</version>
+       </dependency>
+       <dependency>
+           <groupId>org.hibernate</groupId>
+           <artifactId>hibernate-entitymanager</artifactId>
+           <version>3.6.10.Final</version>
+       </dependency>
+       <!-- Level 2 Cache Dependency -->
+       <dependency>
+           <groupId>net.sf.ehcache</groupId>
+           <artifactId>ehcache</artifactId>
+           <version>2.0.0</version>
+           <type>pom</type>
+       </dependency>
+		
 	</dependencies>
   
 </project>
