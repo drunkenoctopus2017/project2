@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+<!-- Component Scan -->
+<context:component-scan base-package="com.revature"></context:component-scan>
+
+<!-- Turn on AOP -->
+<aop:aspectj-autoproxy/>
+
+<!-- Look for MVC annotations -->
+<mvc:annotation-driven/>
+
+<!-- Look for Tx Annotations -->
+<tx:annotation-driven/>
+
+
+<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+
+
+<!-- DATASOURCE CONFIG -->
+<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+    <property name="username" value="octocat_user"></property>
+    <property name="password" value="p4ssw0rd"></property>
+    <property name="url" value="jdbc:oracle:thin:@octocat.crwx5goxs3em.us-east-2.rds.amazonaws.com:1521:ORCL"></property>
+</bean>
+
+<!-- SESSION FACTORY CONFIG -->
+<bean id="mySessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	<!-- Inject the DataSource bean -->
+	<property name="dataSource" ref="myDataSource"></property>
+	
+	<!-- HIBERNATE CONFIG -->
+	<property name="hibernateProperties">
+		<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			<prop key="hibernate.hbm2ddl.auto">none</prop>
+			<prop key="hibernate.connection.pool_size">10</prop>
+			
+			<!-- CACHE CONFIG -->
+			<!-- <prop key="net.sf.ehcache.configurationResourceName">/ehcache.xml</prop>
+			<prop key="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</prop>
+			<prop key="hibernate.cache.use_second_level_cache">false</prop>
+			<prop key="hibernate.cache.use_query_cache">true</prop> -->
+		</props>
+	</property>
+	
+	<!-- scans for JPA -->
+	<property name="packagesToScan" value="com.revature.models" />
+</bean>
+
+<!-- TRANSACTION MANAGEMENT CONFIG -->
+<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	<property name="sessionFactory" ref="mySessionFactory"></property>
+</bean>
+
+<!-- Other Beans -->
+<bean class="com.revature.service.AppService" id="AppService"></bean>
+<bean class="com.revature.dao.DaoImpl" id="dao"></bean> 
+</beans>
