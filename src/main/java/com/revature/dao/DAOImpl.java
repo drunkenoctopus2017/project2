@@ -2,6 +2,7 @@ package com.revature.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import com.revature.model.ScrumUser;
 
 @Transactional
 @Repository	//Makes it a bean, and used with the TransactionManager
-public class DAOImpl {
+public class DAOImpl implements DAO{
 	/*
 	 * <!-- create a transaction manager and give the sessionfactory -->
 	 * <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -19,11 +20,15 @@ public class DAOImpl {
 	 */
 	@Autowired
 	private SessionFactory sessionFactory;
-	public ScrumUser getScrumUserByUsernameAndPassword(ScrumUser su) {
-		Session session = sessionFactory.getCurrentSession();
-		//insert hibernate query here.
+	
+	public ScrumUser getScrumUserByUsername(ScrumUser su) {
 		
-		//Dummy response
-		return new ScrumUser(1, "Patrick", "Runyan", su.getUsername(), su.getPassword(), "jpwrunyan@hotmail.com", 100);
+		Session session = sessionFactory.getCurrentSession();
+		//insert hibernate query here
+		Query query = session.createQuery("from ScrumUser where username = :username");
+		query.setParameter("username", su.getUsername());
+		ScrumUser user = (ScrumUser)query.getSingleResult();
+		
+		return user;
 	}
 }
