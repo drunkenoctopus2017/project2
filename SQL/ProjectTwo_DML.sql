@@ -1,24 +1,26 @@
 --initial inserts for lookup tables
-INSERT INTO SU_ROLES VALUES(1,'Employee');
-INSERT INTO SU_ROLES VALUES(2,'Manager');
+INSERT INTO SU_ROLES VALUES(100, 'Employee');
+INSERT INTO SU_ROLES VALUES(200, 'Manager');
 /
-INSERT INTO SB_LANES VALUES(1,'Backlog');
-INSERT INTO SB_LANES VALUES(2,'TODO');
-INSERT INTO SB_LANES VALUES(3,'In Progress');
-INSERT INTO SB_LANES VALUES(4,'Test');
-INSERT INTO SB_LANES VALUES(5,'Verify');
-INSERT INTO SB_LANES VALUES(6,'Done');
+INSERT INTO SB_LANES VALUES(10, 'Backlog');
+INSERT INTO SB_LANES VALUES(20, 'TODO');
+INSERT INTO SB_LANES VALUES(30, 'In Progress');
+INSERT INTO SB_LANES VALUES(40, 'Test');
+INSERT INTO SB_LANES VALUES(50, 'Verify');
+INSERT INTO SB_LANES VALUES(60, 'Done');
 /
 --Test Entries--
+INSERT INTO SCRUM_USERS(USER_FN, USER_LN, USER_USERNAME, USER_PASSWORD, ROLE_ID, USER_EMAIL) 
+VALUES ('Patrick', 'Onion', 'pusername', 'password', 200, 'jpwrunyan@hotmail.com');
 INSERT INTO SCRUM_USERS(USER_FN,USER_LN,USER_USERNAME,USER_PASSWORD,ROLE_ID,USER_EMAIL) 
-VALUES ('Patrick','Onion','pusername','password',2,'jpwrunyan@hotmail.com');
+VALUES ('Mister','Rogers','musername','password',100,'brogers0101@gmail.com');
 INSERT INTO SCRUM_USERS(USER_FN,USER_LN,USER_USERNAME,USER_PASSWORD,ROLE_ID,USER_EMAIL) 
-VALUES ('Mister','Rogers','musername','password',1,'brogers0101@gmail.com');
+VALUES ('Burly','Gerbil','busername','password',100,'jibbgh@gmail.com');
 INSERT INTO SCRUM_USERS(USER_FN,USER_LN,USER_USERNAME,USER_PASSWORD,ROLE_ID,USER_EMAIL) 
-VALUES ('Burly','Gerbil','busername','password',1,'jibbgh@gmail.com');
-INSERT INTO SCRUM_USERS(USER_FN,USER_LN,USER_USERNAME,USER_PASSWORD,ROLE_ID,USER_EMAIL) 
-VALUES ('Elvis','Yangster','eusername','password',1,'waveeyang@gmail.com');
+VALUES ('Elvis','Yangster','eusername','password',100,'waveeyang@gmail.com');
 /
+--
+--HERE BELOW NEEDS TO BE FIXED
 INSERT INTO SCRUM_BOARDS(USER_ID,SB_NAME) VALUES (1,'Patrick Board'); 
 INSERT INTO USERS_BOARDS(USER_ID,SB_ID) VALUES(1,1);
 INSERT INTO SCRUM_BOARDS(USER_ID,SB_NAME) VALUES (2,'Ben Board'); 
