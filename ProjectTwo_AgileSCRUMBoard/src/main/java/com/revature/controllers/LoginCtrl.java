@@ -23,7 +23,7 @@ public class LoginCtrl {
 		
 		service = (AppService) ac.getBean("AppService");
 		ScrumUser su = new ScrumUser();
-		su.setUserId(1);
+		su.setUserId(21);
 		
 		su = service.getScrumUserById(su);
 		
