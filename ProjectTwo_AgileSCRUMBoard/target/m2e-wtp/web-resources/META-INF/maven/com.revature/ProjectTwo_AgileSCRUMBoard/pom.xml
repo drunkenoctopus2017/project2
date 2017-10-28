@@ -96,14 +96,12 @@
 			<version>1.0.2</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.github.ferstl/spring-jdbc-oracle-ojdbc -->
-<dependency>
-    <groupId>com.github.ferstl</groupId>
-    <artifactId>spring-jdbc-oracle-ojdbc</artifactId>
-    <version>1.0.0</version>
-</dependency>
+		<!-- LOG4J2-->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		</dependency>
 		
-
 		
 	</dependencies>
 
