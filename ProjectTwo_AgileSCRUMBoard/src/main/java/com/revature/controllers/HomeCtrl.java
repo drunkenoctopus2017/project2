@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeCtrl {
 	
 	@RequestMapping("/")
-	public String home() {
+	public String homeController() {
 		System.out.println("home");
 		
 		return "/resources/index.html";

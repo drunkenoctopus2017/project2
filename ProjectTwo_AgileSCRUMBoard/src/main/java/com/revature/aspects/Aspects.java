@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 @Component("aspect")
 public class Aspects {
 
-	@Before("execution(public*(..))")
-	public void printSomething(JoinPoint jp) {
+	@Before("execution(* home*(..))")
+	public void beforeHome(JoinPoint jp) {
+		System.out.println("before method: " + jp.getSignature());
+	}
+	
+	@Before("execution(* login*(..))")
+	public void beforeLogin(JoinPoint jp) {
 		System.out.println("before method: " + jp.getSignature());
 	}
 	

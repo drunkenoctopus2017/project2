@@ -18,7 +18,7 @@ public class LoginCtrl {
 	private ApplicationContext ac;
 	
 	@RequestMapping("/login")
-	public String login() {
+	public String loginController() {
 		System.out.println("login");
 		
 		service = (AppService) ac.getBean("AppService");

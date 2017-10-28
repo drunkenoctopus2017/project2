@@ -68,4 +68,5 @@
 <!-- Other Beans -->
 <bean class="com.revature.service.AppService" id="AppService"></bean>
 <bean class="com.revature.dao.DaoImpl" id="dao"></bean> 
+<bean class="com.revature.aspects.Aspects" id="aspects"></bean>
 </beans>
