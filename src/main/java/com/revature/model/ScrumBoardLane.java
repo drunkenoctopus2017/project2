@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SB_LANES")
-public class SbLane {
+public class ScrumBoardLane {
 	@Id
 	@Column(name="SBL_ID")
 	private int sblId;
@@ -15,7 +15,7 @@ public class SbLane {
 	@Column(name="SBL_NAME")
 	private String sblName;
 	
-	public SbLane() {
+	public ScrumBoardLane() {
 	}
 
 	public int getSblId() {

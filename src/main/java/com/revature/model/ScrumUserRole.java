@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SU_ROLES")
-public class SuRoles {
+public class ScrumUserRole {
 	@Id
 	@Column(name="SUR_ID")
 	private int roleId;
@@ -15,7 +15,7 @@ public class SuRoles {
 	@Column(name="SUR_name")
 	private String roleName;
 	
-	public SuRoles() {
+	public ScrumUserRole() {
 		// TODO Auto-generated constructor stub
 	}
 	

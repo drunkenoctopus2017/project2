@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SB_TASKS")
-public class SbTasks {
+public class ScrumBoardTask {
 	@Id
 	@Column(name="SBT_ID")
 	private int sbtId;
@@ -18,7 +18,7 @@ public class SbTasks {
 	@Column(name="SBS_ID")
 	private int sbsId;
 
-	public SbTasks() {
+	public ScrumBoardTask() {
 	}
 
 	public int getSbtId() {

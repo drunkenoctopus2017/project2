@@ -55,9 +55,5 @@
 		<!-- This will get wired to the "sessionFactory" property -->
 		<property name="sessionFactory" ref="mySessionFactory"></property>
 	</bean>
-
-	<!-- my beans -->
-	<bean class="com.revature.service.MainService" id="MainService"></bean>
-	<bean class="com.revature.dao.DAOImpl" id="dao"></bean> 
 	
 </beans>

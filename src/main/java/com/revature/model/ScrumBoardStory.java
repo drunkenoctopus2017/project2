@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SB_STORIES")
-public class SbStories {
+public class ScrumBoardStory {
 	@Id
 	@Column(name="SBS_ID")
 	private int sbsId;
@@ -22,7 +22,7 @@ public class SbStories {
 	@Column(name="FINISH_TIME")
 	private String finishTime;
 	
-	public SbStories() {
+	public ScrumBoardStory() {
 	}
 
 	public int getSbsId() {

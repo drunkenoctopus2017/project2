@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="SCRUM_BOARDS")
-public class ScrumBoards {
+public class ScrumBoard {
 	@Id
 	@Column(name="SB_ID")
 	private int sbId;
@@ -23,7 +23,7 @@ public class ScrumBoards {
 	@Column(name="SBSTART")
 	private Timestamp startTime;
 	
-	public ScrumBoards() {
+	public ScrumBoard() {
 	}
 
 	public int getSbId() {
