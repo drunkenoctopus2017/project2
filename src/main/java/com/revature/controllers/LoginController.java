@@ -34,10 +34,11 @@ public class LoginController {
 		System.out.println("json? " + loginUserCredentials.toString());
 		
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
+
 		if (su != null) {
 			//TODO: save the authenticated user in session so that 
 			//the client isn't constantly sending private info to the server...
-			System.out.println("user: " + su.toString());
+			System.out.println("user: " + su);
 			return new ResponseEntity<ScrumUser>(su, HttpStatus.OK);
 		} else {
 			//TODO return something else...
