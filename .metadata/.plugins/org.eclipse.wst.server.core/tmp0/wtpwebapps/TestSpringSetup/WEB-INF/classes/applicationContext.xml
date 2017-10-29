@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- Scans for Spring @s -->
+	<context:component-scan base-package="com.revature"></context:component-scan>
+
+	<!-- Turn on MVC @s like @Controller, @RequestMapping -->
+	<mvc:annotation-driven />
+
+	<!-- Tell DispatcherServlet the location of our static content -->
+	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+
+
+	<!-- 1st supply your DataSource: basic JDBC information -->
+	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- Setter DI of Username, Pw, URL, Driver -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="username" value="flashcard_db"></property>
+		<property name="password" value="p4ssw0rd"></property>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+	</bean>
+	<!-- 
+	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="username" value="octocat_user"></property>
+		<property name="password" value="p4ssw0rd"></property>
+		<property name="url" value="jdbc:oracle:thin:@octocat.crwx5goxs3em.us-east-2.rds.amazonaws.com:1521:ORCL"></property>
+	</bean>
+	 -->
+	<!-- Now give that DataSource object to SessionFactory -->
+	<!-- Note, this path must match the hibernate version (eg: 5.2.4.Final = hibernate5 -->
+	<bean id="mySessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- Inject the DataSource bean -->
+		<property name="dataSource" ref="myDataSource"></property>
+
+		<!-- Now supply the rest of the Hibernate Properties -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
+			</props>
+		</property>
+
+		<!-- scans for JPA @'s - Java Persistency API (hibernate uses JPA) -->
+		<!-- Short-cut to save time from registering beans here. -->
+		<property name="packagesToScan" value="com.revature.model" />
+	</bean>
+
+	<!-- create a transaction manager and give the sessionfactory -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<!-- This will get wired to the "sessionFactory" property -->
+		<property name="sessionFactory" ref="mySessionFactory"></property>
+	</bean>
+	
+	<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
+	<tx:annotation-driven />
+	<!-- my beans -->
+	
+</beans>

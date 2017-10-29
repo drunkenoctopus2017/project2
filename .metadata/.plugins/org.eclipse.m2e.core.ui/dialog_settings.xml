@@ -14,6 +14,8 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\X-star\Downloads\project2"/>
+			<item value="C:\Users\X-star\my_git_repos\project\project2"/>
 			<item value="C:\Users\jpwru\my_git_repos\project2"/>
 		</list>
 		<list key="projectNameTemplate">

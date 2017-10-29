@@ -1,0 +1,32 @@
+package com.revature.models;
+
+public class SbLane {
+	private int sblId;
+	private String sblName;
+	
+	public SbLane() {
+	}
+
+	public int getSblId() {
+		return sblId;
+	}
+
+	public void setSblId(int sblId) {
+		this.sblId = sblId;
+	}
+
+	public String getSblName() {
+		return sblName;
+	}
+
+	public void setSblName(String sblName) {
+		this.sblName = sblName;
+	}
+
+	@Override
+	public String toString() {
+		return "SbLane [sblId=" + sblId + ", sblName=" + sblName + "]";
+	}
+	
+	
+}

@@ -1,0 +1,9 @@
+package com.revature.service;
+
+public class ScrumUserService {
+	User login(String username, )
+	void registerUser
+	void updateUser
+	List<ScrumUser> getAllUsers
+	User findUser
+}

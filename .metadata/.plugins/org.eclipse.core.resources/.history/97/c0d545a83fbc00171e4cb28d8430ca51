@@ -1,0 +1,64 @@
+package com.revature.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="SB_TASKS")
+public class SbTasks {
+	
+	/*
+	SBT_ID
+	SBS_ID
+	SBT_STATUS
+	SBT_DESCRIPTION
+	 */
+	@Id
+	@SequenceGenerator(name="SBT_SEQ", sequenceName="SBT_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SBT_SEQ")
+	@Column(name="SBT_ID")
+	private int sbtId;
+	
+	@Column(name="SBT_STATUS")
+	private int sbtStatus; 
+	
+	@Column(name="SBT_DESCRIPTION")
+	private String sbtDescription;
+	
+	public SbTasks() {
+	}
+
+	public int getSbtId() {
+		return sbtId;
+	}
+
+	public void setSbtId(int sbtId) {
+		this.sbtId = sbtId;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "SbTasks [sbtId=" + sbtId + ", status=" + status + ", description=" + description + "]";
+	}
+}

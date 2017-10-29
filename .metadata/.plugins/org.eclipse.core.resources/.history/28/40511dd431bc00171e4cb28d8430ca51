@@ -1,0 +1,41 @@
+package com.revature.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="SB_LANE")
+public class SbLane {
+/*
+	SBL_ID
+	SBL_NAME
+ */
+	private int sblId;
+	private String sblName;
+	
+	public SbLane() {
+	}
+
+	public int getSblId() {
+		return sblId;
+	}
+
+	public void setSblId(int sblId) {
+		this.sblId = sblId;
+	}
+
+	public String getSblName() {
+		return sblName;
+	}
+
+	public void setSblName(String sblName) {
+		this.sblName = sblName;
+	}
+
+	@Override
+	public String toString() {
+		return "SbLane [sblId=" + sblId + ", sblName=" + sblName + "]";
+	}
+	
+	
+}

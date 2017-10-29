@@ -1,0 +1,52 @@
+package com.revature.models;
+
+import java.sql.Timestamp;
+
+public class ScrumBoards {
+	private int sbId;
+	private int userId;
+	private String Name;
+	private Timestamp startTime;
+	
+	public ScrumBoards() {
+	}
+
+	public int getSbId() {
+		return sbId;
+	}
+
+	public void setSbId(int sbId) {
+		this.sbId = sbId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		Name = name;
+	}
+
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@Override
+	public String toString() {
+		return "ScrumBoards [sbId=" + sbId + ", userId=" + userId + ", Name=" + Name + ", startTime=" + startTime + "]";
+	}
+	
+	
+}

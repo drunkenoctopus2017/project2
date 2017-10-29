@@ -1,0 +1,39 @@
+package com.revature.model;
+
+public class SbTasks {
+	private int sbtId;
+	private int status; //or boolean? 0=incomplete 1= complete
+	private String description;
+	
+	public SbTasks() {
+	}
+
+	public int getSbtId() {
+		return sbtId;
+	}
+
+	public void setSbtId(int sbtId) {
+		this.sbtId = sbtId;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "SbTasks [sbtId=" + sbtId + ", status=" + status + ", description=" + description + "]";
+	}
+}
