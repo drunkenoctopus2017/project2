@@ -22,6 +22,9 @@ app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
 		controller: "loginController"
+	}).when("/mainMenu", {
+		templateUrl: urlBase + "mainMenuView.html", 
+		controller: "mainMenuController"
 	});
 });
 
@@ -35,25 +38,12 @@ app.controller("GlobalController", function() {
 	
 	global = this; 
 	
-	this.testVar = "testVar";
-	console.log("global init - testVar: " + global.testVar);
-	
 	this.scrumUser = {};
 });
-/*
-Anything to add to this?
-controller("test", function($scope) {}) vs controller("test", ["$scope", function($scope) {}])
-Use the Array syntax so you can minify your code without worrying about the minifier renaming function parameters.
-*/
-app.controller("loginController", function($scope, loginUserService) {
-	console.log("profile init");
-	console.log("global testvar: " + global.testVar);
-	
-	$scope.username = "test";
-	$scope.password = "test";
+
+app.controller("loginController", function($scope, $location, loginUserService) {
 	
 	$scope.login = function() {
-		console.log("huh")
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
 			function (response) {
@@ -69,36 +59,24 @@ app.controller("loginController", function($scope, loginUserService) {
 				 */
 				//Save the data to the global controller if necessary.
 				global.scrumUser = response.data;
-				console.log("success " + global.scrumUser.username);
+				$location.path("/mainMenu");
 			}, function (error) {
-				console.log("failure -- add some logic here to send the user back to the logout or a 404");
+				alert("There was an error logging in!");
 			}
 		);
 	}
 });
 
-//Factory or Service? Which to use?
+app.controller("mainMenuController", function($scope) {
+	console.log("mainMenu");
+	$scope.firstName = global.scrumUser.firstName;
+	$scope.lastName = global.scrumUser.lastName;
+});
+
+//Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
-	
-	//This is here for the dummy data test.
-	//Delete before pushing to develop.
-	var urlBase = "resources/";
-	
 	return {
-		//Since the returned object contains this method and since this method CAN
-		//access the above local scope var's this is how we can expose them to the rest of the application.
-		//loginUserService will return an object that has a method to return the variables.
-		//Note that loginUserService is instantiated as a Singleton (again, defacto).
-		getUsername: function() {
-			return this.username1;
-		}, 
-		//Use this technique when trying to get client up and running before connecting to webcontainer.
-		loginDummy: function() {
-			 return $http.get(urlBase + "DummyUserData.json");
-		}, 
 		login: function(username, password) {
-			 //return $http.get('resources/DummyUserData.json');
-			console.log("login?");
 			return $http.post("authenticateLogin", {username: username, password: password});
 		}
 	};
