@@ -5,7 +5,23 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2017-10-27T18:27:30Z</updated>
+  <updated>2017-10-30T11:50:58Z</updated>
+  <entry>
+    <title>Spring REST Docs 2.0.0.RC1</title>
+    <link rel="alternate" href="https://spring.io/blog/2017/10/30/spring-rest-docs-2-0-0-rc1" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Andy Wilkinson</name>
+    </author>
+    <id>tag:spring.io,2017-10-30:3076</id>
+    <updated>2017-10-30T11:50:58Z</updated>
+    <content type="html">&lt;p&gt;On behalf of everyone who contributed, it&amp;rsquo;s my pleasure to announce that Spring REST Docs 2.0.0.RC1 has been released and is available from &lt;a href="https://repo.spring.io/milestone/"&gt;https://repo.spring.io/milestone/&lt;/a&gt;.&lt;/p&gt;&lt;h1&gt;&lt;a href="#what-rsquo-s-new" class="anchor" name="what-rsquo-s-new"&gt;&lt;/a&gt;What&amp;rsquo;s new?&lt;/h1&gt;
+&lt;p&gt;Spring REST Docs 2.0 is the latest generation of the project and requires Spring Framework 5.0 and Java 8.&lt;/p&gt;
+&lt;p&gt;The main highlight of the 2.0 release is support for using Spring WebFlux&amp;rsquo;s &lt;code&gt;WebTestClient&lt;/code&gt; to document an API. &lt;code&gt;WebTestClient&lt;/code&gt; can be used for lightweight testing and documentation of APIs implemented using WebFlux Fn and WebFlux&amp;rsquo;s annotation-based programming model. It can also be used to document any API that&amp;rsquo;s accessible via HTTP, something that was previously only possible when using REST Docs&amp;rsquo; REST Assured support.&lt;/p&gt;
+&lt;p&gt;For more information about the new &lt;code&gt;WebTestClient&lt;/code&gt; support and the other changes in 2.0, please refer to the &lt;a href="https://github.com/spring-projects/spring-restdocs/wiki/Spring-REST-Docs-2.0-Release-Notes"&gt;release notes&lt;/a&gt;.&lt;/p&gt;&lt;h1&gt;&lt;a href="#what-rsquo-s-next" class="anchor" name="what-rsquo-s-next"&gt;&lt;/a&gt;What&amp;rsquo;s next?&lt;/h1&gt;
+&lt;p&gt;We&amp;rsquo;re hoping to publish a release in a few weeks&amp;rsquo; time. Please take the release candidate for a spin and &lt;a href="https://github.com/spring-projects/spring-restdocs/issues/new"&gt;let us know&lt;/a&gt; if you find any problems or if you have a suggestion for some last-minute improvements.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://projects.spring.io/spring-restdocs/"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-restdocs"&gt;GitHub&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-restdocs/issues"&gt;Issues&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-restdocs/docs/2.0.0.RC1/reference/html5/"&gt;Documentation&lt;/a&gt; | &lt;a href="https://stackoverflow.com/questions/tagged/spring-restdocs"&gt;Stack Overflow&lt;/a&gt; | &lt;a href="https://gitter.im/spring-projects/spring-restdocs"&gt;Gitter&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Reactor Bismuth-SR3 is now available</title>
     <link rel="alternate" href="https://spring.io/blog/2017/10/27/reactor-bismuth-sr3-is-now-available" />
@@ -1259,24 +1275,5 @@ Spring IO Platform testing is a critical component, so we are still working on m
   &lt;li&gt;In this amazing post on the Ordina JWorks blog, Dieter Hubau helps connect &lt;a href="https://ordina-jworks.github.io/spring/2017/10/04/Spring-Cloud-Stream-Rick-And-Morty-Adventure.html"&gt;Rick (from &lt;em&gt;Rick &amp;amp; Morty&lt;/em&gt;) with the amazing McDonald&amp;rsquo;s Mulan Szechuan sauce with Spring Cloud Stream&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Thymeleaf lead Daniel Fernandez just &lt;a href="http://forum.thymeleaf.org/Thymeleaf-3-0-8-JUST-PUBLISHED-td4030687.html"&gt;announced that Thymeleaf 3.0.8 has been released&lt;/a&gt;! There are a lot of new features in this release, but my favorite is the GA release of the Spring 5 integration module, &lt;code&gt;thymeleaf-spring5&lt;/code&gt;, which makes it easy to use Thymeleaf in a reactive fashion.&lt;/li&gt;
 &lt;/ul&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Session 2.0.0 M5 Released</title>
-    <link rel="alternate" href="https://spring.io/blog/2017/10/10/spring-session-2-0-0-m5-released" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Rob Winch</name>
-    </author>
-    <id>tag:spring.io,2017-10-10:3059</id>
-    <updated>2017-10-10T15:52:00Z</updated>
-    <content type="html">&lt;div class="paragraph"&gt;
-&lt;p&gt;On behalf of the community I&amp;#8217;m pleased to announce the release of &lt;a href="http://docs.spring.io/spring-session/docs/2.0.0.M5/reference/html5/"&gt;Spring Session 2.0.0.M5&lt;/a&gt;. This release brings a Redis &lt;code&gt;ReactiveSessionRepository&lt;/code&gt; implementation. The &lt;a href="https://github.com/spring-projects/spring-session/tree/2.0.0.M5/samples/javaconfig/webflux"&gt;webflux sample&lt;/a&gt; has been updated to demonstrate its use.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;You can find the complete details of the release in the &lt;a href="https://github.com/spring-projects/spring-session/milestone/25?closed=1"&gt;changelog&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;&lt;a href="http://projects.spring.io/spring-session/"&gt;Project Site&lt;/a&gt; | &lt;a href="http://docs.spring.io/spring-session/docs/2.0.0.M5/reference/html5/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-session"&gt;Help&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;</content>
   </entry>
 </feed>
