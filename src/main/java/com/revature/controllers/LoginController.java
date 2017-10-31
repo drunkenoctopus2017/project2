@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,15 +32,15 @@ public class LoginController {
 	 * @return ScrumUser matching the credentials provided
 	 */
 	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials) {
-		System.out.println("json? " + loginUserCredentials.toString());
+	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
 
 		if (su != null) {
-			//TODO: save the authenticated user in session so that 
+			//save the authenticated user in session so that 
 			//the client isn't constantly sending private info to the server...
-			System.out.println("user: " + su);
+			request.getSession().setAttribute("ScrumUser", su);
+			
 			return new ResponseEntity<ScrumUser>(su, HttpStatus.OK);
 		} else {
 			//TODO return something else...
