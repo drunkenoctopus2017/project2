@@ -30,7 +30,10 @@ public class LoginController {
 	 * @param loginUserCredentials a ScrumUser object that contains the password and username to be checked against the database.
 	 * @return ScrumUser matching the credentials provided
 	 */
-	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/authenticateLogin", 
+			method=RequestMethod.POST, 
+			consumes=MediaType.APPLICATION_JSON_VALUE, 
+			produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials) {
 		System.out.println("json? " + loginUserCredentials.toString());
 		

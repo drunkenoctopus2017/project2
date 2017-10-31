@@ -11,15 +11,20 @@ public class ScrumBoardStory {
 	@Id
 	@Column(name="SBS_ID")
 	private int sbsId;
+	
 	@Column(name="SB_ID")
 	private int sbId;
-	@Column(name="DESCRIPTION")
+	
+	@Column(name="SBS_DESCRIPTION")
 	private String descriptions;
-	@Column(name="POINTS")
+	
+	@Column(name="SBS_POINTS")
 	private int points;
-	@Column(name="LANE_ID")
+	
+	@Column(name="SBL_ID")
 	private int laneId;
-	@Column(name="FINISH_TIME")
+	
+	@Column(name="SBS_DONE")
 	private String finishTime;
 	
 	public ScrumBoardStory() {

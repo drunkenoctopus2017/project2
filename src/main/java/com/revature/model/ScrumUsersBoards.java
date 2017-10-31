@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="USERS_BOARDS")
 public class ScrumUsersBoards {
+	
 	@Id
 	@Column(name="USER_ID")
 	private int userId;
