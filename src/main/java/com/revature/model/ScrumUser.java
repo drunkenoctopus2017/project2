@@ -1,10 +1,17 @@
 package com.revature.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -46,8 +53,11 @@ public class ScrumUser {
 	private int role; //potentially changes to string via lookup table???
 	
 	//TODO add the boards and do greedy load since only one user will be logged in at a time but we'll need to show all their boards.
-	//@OneToMany(mappedBy="bankUser", fetch=FetchType.EAGER) 
-	//Set<ScrumBoards> scrumBoards = new HashSet<ScrumBoards>(); 	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name="USERS_BOARDS", 
+	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), 
+	inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID")) 
+	private List<ScrumBoard> scrumBoards; 	
 	
 	public ScrumUser() {}
 	
@@ -124,9 +134,18 @@ public class ScrumUser {
 		this.role = role;
 	}
 
+	public List<ScrumBoard> getScrumBoards() {
+		return scrumBoards;
+	}
+
+	public void setScrumBoards(List<ScrumBoard> scrumBoards) {
+		this.scrumBoards = scrumBoards;
+	}
+
 	@Override
 	public String toString() {
 		return "ScrumUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + ", email=" + email + ", role=" + role + "]";
+				+ ", password=" + password + ", email=" + email + ", role=" + role + ", scrumBoards=" + scrumBoards
+				+ "]";
 	}
 }

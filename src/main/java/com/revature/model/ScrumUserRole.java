@@ -9,10 +9,10 @@ import javax.persistence.Table;
 @Table(name="SU_ROLES")
 public class ScrumUserRole {
 	@Id
-	@Column(name="SUR_ID")
+	@Column(name="ROLE_ID")
 	private int roleId;
 	
-	@Column(name="SUR_name")
+	@Column(name="ROLE_NAME")
 	private String roleName;
 	
 	public ScrumUserRole() {

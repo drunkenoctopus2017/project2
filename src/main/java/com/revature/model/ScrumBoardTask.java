@@ -11,12 +11,16 @@ public class ScrumBoardTask {
 	@Id
 	@Column(name="SBT_ID")
 	private int sbtId;
-	@Column(name="STATUS")
-	private int status; //or boolean? 0=incomplete 1= complete
-	@Column(name="DESCRIPTION")
-	private String description;
+	
 	@Column(name="SBS_ID")
 	private int sbsId;
+	
+	@Column(name="SBT_STATUS")
+	private int status; //or boolean? 0=incomplete 1= complete
+	
+	@Column(name="SBT_DESCRIPTION")
+	private String description;
+	
 
 	public ScrumBoardTask() {
 	}
