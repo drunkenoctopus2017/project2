@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.ScrumUser;
 import com.revature.service.MainService;
-
 
 @RestController
 public class LoginController {
@@ -33,30 +33,38 @@ public class LoginController {
 	 */
 	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
+		System.out.println("json? " + loginUserCredentials);
 		
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
-
-		if (su != null) {
-			//save the authenticated user in session so that 
-			//the client isn't constantly sending private info to the server...
-			request.getSession().setAttribute("ScrumUser", su);
-			
-			return new ResponseEntity<ScrumUser>(su, HttpStatus.OK);
-		} else {
-			//TODO return something else...
-			return null;
-		}
+		
+		
+		//save the authenticated user in session so that 
+		//the client isn't constantly sending private info to the server...
+		request.getSession().setAttribute("user", su);
+		
+		System.out.println("valid user: " + su);
+		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
 	/**
-	 * Does this do the work our try/catch logic used to???
+	 * Respond to an invalid credentials attempt and return 401.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(NoResultException.class)
+	public ResponseEntity<Exception> handleException(NoResultException e){
+		return new ResponseEntity<Exception>(e, HttpStatus.UNAUTHORIZED);
+	}
+	
+	/**
+	 * All other exceptions are caught here and return 409.
 	 * 
 	 * @param e
 	 * @return
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e){
-		System.out.println(e.getMessage());
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }
