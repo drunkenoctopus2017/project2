@@ -32,16 +32,10 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/mainMenu", {
 		templateUrl: urlBase + "mainMenuView.html", 
 		controller: "mainMenuController"
+	}).when("/createScrumBoard", {
+		templateUrl: urlBase + "createScrumBoardView.html", 
+		controller: "createScrumBoardController"
 	});
-});
-
-app.controller("GlobalController", function() {
-	//this in addition to the "global as GlobalController" syntax will allow us to access
-	//variables and references in this code block in other codeblocks (eg test controller, see below)
-	//This is where we'll store "global" variables instead of $rootScope.
-	//Do not put stuff here lightly.
-	//Use constant() and value() instead.
-	global = this;
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser) {
@@ -78,12 +72,24 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, loginUser) {
+app.controller("mainMenuController", function($scope, $location, loginUser) {
 	console.log("mainMenu");
 	//$scope.firstName = global.scrumUser.firstName;
 	//$scope.lastName = global.scrumUser.lastName;
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
+	$scope.createScrumBoard = function() {
+		$location.path("/createScrumBoard");
+	}
+});
+
+app.controller("createScrumBoardController", function($scope, scrumBoardService, loginUser) {
+	console.log("createScrumBoardController");
+	$scope.firstname = loginUser.firstName;
+	//$scope.firstName = global.scrumUser.firstName;
+	//$scope.lastName = global.scrumUser.lastName;
+	//$scope.firstName = loginUser.firstName;
+	//$scope.lastName = loginUser.lastName;
 });
 
 //Factory, Service, or Provider? Which to use?
@@ -91,6 +97,14 @@ app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
+		}
+	};
+});
+
+app.factory("scrumBoardService", function($http) {
+	return {
+		createNewScrumBoard: function(name, startDate, duration) {
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		}
 	};
 });

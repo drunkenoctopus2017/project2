@@ -12,34 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.model.ScrumUser;
+import com.revature.model.ScrumBoard;
 import com.revature.service.MainService;
 
 @RestController
-public class LoginController {
+public class ScrumBoardController {
 	
 	@Autowired
 	private MainService service;
 	
-	/**
-	 * Take the login credentials provided by the client and then compare them to the database.
-	 * Authenticate the credentials and then return a valid ScrumUser to the client. 
-	 * Otherwise an error should occur somehow.
-	 * TODO: implement invalid login logic (client-side and server-side)
-	 * 
-	 * @param loginUserCredentials a ScrumUser object that contains the password and username to be checked against the database.
-	 * @return ScrumUser matching the credentials provided
-	 */
-	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials) {
-		System.out.println("json? " + loginUserCredentials.toString());
+	@RequestMapping(value="/createNewScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumBoard> createNewScrumBoard(@RequestBody ScrumBoard newScrumBoard) {
 		
-		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
-		
+		//ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
+		System.out.println("service: " + service);
 		//TODO: save the authenticated user in session so that 
 		//the client isn't constantly sending private info to the server...
-		System.out.println("valid user: " + su);
-		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
+		//System.out.println("valid user: " + su);
+		return new ResponseEntity<ScrumBoard>(newScrumBoard, HttpStatus.OK); //200
 	}
 	
 	/**
