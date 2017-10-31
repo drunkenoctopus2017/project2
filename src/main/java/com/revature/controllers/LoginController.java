@@ -1,7 +1,10 @@
 package com.revature.controllers;
 
 import javax.persistence.NoResultException;
+<<<<<<< HEAD
 import javax.servlet.http.HttpServletRequest;
+=======
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,7 @@ public class LoginController {
 	 * @param loginUserCredentials a ScrumUser object that contains the password and username to be checked against the database.
 	 * @return ScrumUser matching the credentials provided
 	 */
+<<<<<<< HEAD
 	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		System.out.println("json? " + loginUserCredentials);
@@ -42,6 +46,19 @@ public class LoginController {
 		//the client isn't constantly sending private info to the server...
 		request.getSession().setAttribute("user", su);
 		
+=======
+	@RequestMapping(value="/authenticateLogin", 
+			method=RequestMethod.POST, 
+			consumes=MediaType.APPLICATION_JSON_VALUE, 
+			produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials) {
+		System.out.println("json? " + loginUserCredentials.toString());
+		
+		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
+		
+		//TODO: save the authenticated user in session so that 
+		//the client isn't constantly sending private info to the server...
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 		System.out.println("valid user: " + su);
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}

@@ -56,13 +56,18 @@
 			<artifactId>jackson-core</artifactId>
 			<version>2.9.2</version>
 		</dependency>
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.2</version>
 		</dependency>
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -81,5 +86,7 @@
 		</dependency>
 
 
+=======
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 	</dependencies>
 </project>

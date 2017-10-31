@@ -8,6 +8,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name="USERS_BOARDS")
 public class ScrumUsersBoards {
+<<<<<<< HEAD:src/main/java/com/revature/model/ScrumUsersBoards.java
+=======
+	
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089:src/main/java/com/revature/model/ScrumUsersBoards.java
 	@Id
 	@Column(name="USER_ID")
 	private int userId;

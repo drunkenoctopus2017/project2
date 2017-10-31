@@ -25,6 +25,11 @@ app.value("loginUser", {
 	//Add more fields here only if necessary.
 });
 
+<<<<<<< HEAD
+=======
+app.value("loginUserBoards", []);
+
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -44,7 +49,11 @@ app.controller("GlobalController", function() {
 	global = this;
 });
 
+<<<<<<< HEAD
 app.controller("loginController", function($scope, $location, loginUserService, loginUser) {
+=======
+app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserBoards) {
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -64,6 +73,14 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
+<<<<<<< HEAD
+=======
+				traverseObject(response.data);
+//				loginUserBoards = response.data.scrumBoards; //can't just reassign arrays for some reason
+				while(response.data.scrumBoards.length > 0){
+					loginUserBoards.push(response.data.scrumBoards.pop());
+				}
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 				$location.path("/mainMenu");
 			}, function (error) {
 				console.log(error);
@@ -78,12 +95,22 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
+<<<<<<< HEAD
 app.controller("mainMenuController", function($scope, loginUser) {
 	console.log("mainMenu");
+=======
+app.controller("mainMenuController", function($scope, loginUser, loginUserBoards) {
+	console.log("mainMenu");
+	console.log(loginUserBoards);
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 	//$scope.firstName = global.scrumUser.firstName;
 	//$scope.lastName = global.scrumUser.lastName;
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
+<<<<<<< HEAD
+=======
+	$scope.boards = loginUserBoards;
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 });
 
 //Factory, Service, or Provider? Which to use?
@@ -93,4 +120,25 @@ app.factory("loginUserService", function($http) {
 			return $http.post("authenticateLogin", {username: username, password: password});
 		}
 	};
+<<<<<<< HEAD
 });
+=======
+});
+
+//TODO delete before pushing to master
+function traverseObject(obj) {
+    let s = getObjectString(obj, 0);
+    console.log("traverse: " + s);
+}
+
+function getObjectString(obj, indent) {
+    let s = "";
+    for (p in obj) {
+        s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
+        if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
+            s += getObjectString(obj[p], indent + 1);
+        }
+    }
+    return s;
+}
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089

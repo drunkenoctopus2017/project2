@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+<<<<<<< HEAD
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -9,6 +10,13 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+=======
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 	<!-- Scans for Spring @s -->
@@ -22,9 +30,12 @@
 	
 		<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
 	<tx:annotation-driven />
+<<<<<<< HEAD
 	
   	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
+=======
+>>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 
 
 	<!-- 1st supply your DataSource: basic JDBC information -->
