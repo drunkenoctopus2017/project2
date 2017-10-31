@@ -18,9 +18,8 @@ public class ScrumAspects {
 	private static final Logger log = LogManager.getRootLogger();
 	
 	@Before("execution(* getScrumUserByUsername*(..))")
-	public void beforeGetting(JoinPoint jp, ScrumUser user) {
+	public void beforeGetting(JoinPoint jp) {
 		log.info("BEFORE: " + jp.getKind() + " - " + jp.getSignature());
-		log.info("USER = " + user.getUsername());
 
 	}
 	
