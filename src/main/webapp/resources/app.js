@@ -80,16 +80,16 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser) {
-	console.log("mainMenu");
+app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole) {
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
+	$scope.role = loginUserRole.id;
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, scrumBoardService, loginUser, loginUserRole) {
+app.controller("createScrumBoardController", function($scope, scrumBoardService, loginUser) {
 	$scope.create = function() {
 		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
 			function (response) {
