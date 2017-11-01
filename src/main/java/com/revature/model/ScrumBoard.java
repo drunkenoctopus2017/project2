@@ -100,8 +100,7 @@ public class ScrumBoard {
 
 	@Override
 	public String toString() {
-		return "ScrumBoards [id=" + id + ", userId=" + userId + ", name=" + name + ", startDate=" + startDate + "]";
+		return "ScrumBoard [id=" + id + ", userId=" + userId + ", name=" + name + ", startDate=" + startDate
+				+ ", duration=" + duration + "]";
 	}
-	
-	
 }

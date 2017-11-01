@@ -26,9 +26,7 @@ public class ScrumBoardController {
 	@RequestMapping(value="/createNewScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumBoard> createNewScrumBoard(@RequestBody ScrumBoard newScrumBoard, HttpServletRequest request) {
 		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
-		System.out.println("createNewScrumBoard()");
 		ScrumBoard sb = service.createNewScrumBoard(newScrumBoard, su);
-		System.out.println("saved sb: " + sb.toString());
 		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	
@@ -42,18 +40,4 @@ public class ScrumBoardController {
 	public ResponseEntity<Exception> handleException(NoResultException e){
 		return new ResponseEntity<Exception>(e, HttpStatus.UNAUTHORIZED);
 	}
-	
-	/**
-	 * All other exceptions are caught here and return 409.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	/*
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Exception> handleException(Exception e){
-		
-		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
-	}
-	*/
 }
