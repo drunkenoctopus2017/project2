@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
 
 @Transactional
@@ -21,14 +22,24 @@ public class DAOImpl implements DAO{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	public ScrumUser getScrumUserByUsername(ScrumUser su) {
-		
+	public ScrumBoard createNewScrumBoard(ScrumBoard sb) {
 		Session session = sessionFactory.getCurrentSession();
-		//insert hibernate query here
+		Integer id = (Integer) session.save(sb);
+		sb.setId(id);
+		return sb;
+	}
+	
+	public ScrumUser getScrumUserByUsername(ScrumUser su) {
+		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from ScrumUser where username = :username");
 		query.setParameter("username", su.getUsername());
 		ScrumUser user = (ScrumUser)query.getSingleResult();
-		
 		return user;
+	}
+	
+	public ScrumUser updateScrumUser(ScrumUser su) {
+		Session session = sessionFactory.getCurrentSession();
+		su = (ScrumUser) session.merge(su);
+		return su;
 	}
 }

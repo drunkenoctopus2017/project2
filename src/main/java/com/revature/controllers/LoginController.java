@@ -18,35 +18,26 @@ import com.revature.service.MainService;
 
 @RestController
 public class LoginController {
-
+	
 	@Autowired
 	private MainService service;
-
+	
 	/**
-	 * Take the login credentials provided by the client and then compare them to
-	 * the database. Authenticate the credentials and then return a valid ScrumUser
-	 * to the client. Otherwise an error should occur somehow. TODO: implement
-	 * invalid login logic (client-side and server-side)
+	 * Take the login credentials provided by the client and then compare them to the database.
+	 * Authenticate the credentials and then return a valid ScrumUser to the client. 
+	 * Otherwise an error should occur somehow.
+	 * TODO: implement invalid login logic (client-side and server-side)
 	 * 
-	 * @param loginUserCredentials
-	 *            a ScrumUser object that contains the password and username to be
-	 *            checked against the database.
+	 * @param loginUserCredentials a ScrumUser object that contains the password and username to be checked against the database.
 	 * @return ScrumUser matching the credentials provided
 	 */
-
-	@RequestMapping(value = "/authenticateLogin", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumUser> handleTodo(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
-		System.out.println("json? " + loginUserCredentials);
-
+	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
-		// save the authenticated user in session so that
-		// the client isn't constantly sending private info to the server...
 		request.getSession().setAttribute("user", su);
-
-		System.out.println("valid user: " + su);
-		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); // 200
+		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
-
+	
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
 	 * 
@@ -57,7 +48,7 @@ public class LoginController {
 	public ResponseEntity<Exception> handleException(NoResultException e) {
 		return new ResponseEntity<Exception>(e, HttpStatus.UNAUTHORIZED);
 	}
-
+	
 	/**
 	 * All other exceptions are caught here and return 409.
 	 * 
@@ -66,6 +57,7 @@ public class LoginController {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e) {
+		e.printStackTrace(); //TODO wrap this in Aspect
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }
