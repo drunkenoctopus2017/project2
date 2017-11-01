@@ -8,9 +8,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name="SU_ROLES")
 public class ScrumUserRole {
+	
 	@Id
 	@Column(name="ROLE_ID")
-	private int roleId;
+	private int id;
 	
 	@Column(name="ROLE_NAME")
 	private String roleName;
@@ -19,22 +20,24 @@ public class ScrumUserRole {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int getRoleId() {
-		return roleId;
+	public int getId() {
+		return id;
 	}
-	public void setRoleId(int roleId) {
-		this.roleId = roleId;
+	public void setId(int id) {
+		this.id = id;
 	}
+	
 	public String getRoleName() {
 		return roleName;
 	}
+	
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
 
 	@Override
 	public String toString() {
-		return "SuRoles [roleId=" + roleId + ", roleName=" + roleName + "]";
+		return "SuRoles [id=" + id + ", roleName=" + roleName + "]";
 	}
 	
 }

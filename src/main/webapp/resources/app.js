@@ -27,6 +27,12 @@ app.value("loginUser", {
 
 app.value("loginUserBoards", []);
 
+//The authorization level of the user.
+app.value("loginUserRole", {
+	id: 0, 
+	roleName: "unauthorized"
+});
+
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -34,6 +40,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/mainMenu", {
 		templateUrl: urlBase + "mainMenuView.html", 
 		controller: "mainMenuController"
+  }).when("/createScrumBoard", {
+		templateUrl: urlBase + "createScrumBoardView.html", 
+		controller: "createScrumBoardController"
 	});
 });
 
@@ -57,8 +66,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 	}
 });
 
-app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserBoards) {
-
+app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -78,16 +86,12 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
-
-//				traverseObject(response.data);
-
-//				loginUserBoards = response.data.scrumBoards; //can't just reassign arrays for some reason
-				while(response.data.scrumBoards.length > 0){
+				loginUserRole.id = response.data.role.id;
+				loginUserRole.roleName = response.data.role.roleName;
+				while(response.data.scrumBoards.length > 0) {
 					loginUserBoards.push(response.data.scrumBoards.pop());
-
 				}
 				$location.path("/mainMenu");
-
 			}, function (error) {
 				console.log(error);
 				//The error object above has: 
@@ -101,14 +105,28 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, loginUser, loginUserBoards) {
-	console.log("mainMenu");
-//	console.log(loginUserBoards);
-	//$scope.firstName = global.scrumUser.firstName;
-	//$scope.lastName = global.scrumUser.lastName;
+app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards) {
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
+	$scope.role = loginUserRole.id;
+	$scope.createScrumBoard = function() {
+		$location.path("/createScrumBoard");
+	}
+});
+
+app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
+	$scope.create = function() {
+		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+			function (response) {
+				//Refresh the data for the main menu without doing another server request (because you don't need to);
+				loginUserBoards.push(response.data);
+				$location.path("/mainMenu");
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+			}
+		);
+	}
 });
 
 //Factory, Service, or Provider? Which to use?
@@ -119,6 +137,14 @@ app.factory("loginUserService", function($http) {
 		},
 		logout: function(){
 			return $http.get("logout");
+		}
+	};
+});
+
+app.factory("scrumBoardService", function($http) {
+	return {
+		createNewScrumBoard: function(name, startDate, duration) {
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		}
 	};
 });

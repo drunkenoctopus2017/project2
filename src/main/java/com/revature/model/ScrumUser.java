@@ -3,6 +3,7 @@ package com.revature.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,21 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="SCRUM_USERS")
 public class ScrumUser {
-	/*
-	USER_ID
-	USER_FN
-	USER_LN
-	USER_USERNAME
-	USER_PASSWORD
-	ROLE_ID
-	USER_EMAIL
-	*/
 	
 	@Id
 	@SequenceGenerator(name="SU_SEQ", sequenceName="SU_SEQ")
@@ -49,19 +42,13 @@ public class ScrumUser {
 	@Column(name="USER_EMAIL")
 	private String email;
 	
-	@Column(name="ROLE_ID")
-	private int role; //potentially changes to string via lookup table???
+	@ManyToOne
+	@JoinColumn(name="ROLE_ID")
+	private ScrumUserRole role;
 	
-	//TODO add the boards and do greedy load since only one user will be logged in at a time but we'll need to show all their boards.
-
-	//@OneToMany(mappedBy="bankUser", fetch=FetchType.EAGER) 
-	//Set<ScrumBoards> scrumBoards = new HashSet<ScrumBoards>(); 	
-
 	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name="USERS_BOARDS", 
-	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), 
-	inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID")) 
-	private List<ScrumBoard> scrumBoards; 	
+	@JoinTable(name="USERS_BOARDS",	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID"))
+	private List<ScrumBoard> scrumBoards;
 	
 	public ScrumUser() {}
 	
@@ -71,7 +58,8 @@ public class ScrumUser {
 		this.password = password;
 	}
 	
-	public ScrumUser(int id, String firstName, String lastName, String username, String password, String email, int role) {
+
+	public ScrumUser(int id, String firstName, String lastName, String username, String password, String email, ScrumUserRole role) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -130,11 +118,11 @@ public class ScrumUser {
 		this.email = email;
 	}
 	
-	public int getRole() {
+	public ScrumUserRole getRole() {
 		return role;
 	}
 
-	public void setRole(int role) {
+	public void setRole(ScrumUserRole role) {
 		this.role = role;
 	}
 	
@@ -145,11 +133,10 @@ public class ScrumUser {
 	public void setScrumBoards(List<ScrumBoard> scrumBoards) {
 		this.scrumBoards = scrumBoards;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "ScrumUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + ", email=" + email + ", role=" + role + ", scrumBoards=" + scrumBoards
-				+ "]";
+				+ ", password=" + password + ", email=" + email + ", role=" + role + " scrumBoards=" + scrumBoards + "]";
 	}
 }

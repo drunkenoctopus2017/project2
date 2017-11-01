@@ -59,7 +59,7 @@ public class LoginController {
 		}
 //		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
-  
+
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
 	 * 
@@ -79,6 +79,8 @@ public class LoginController {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e) {
+
+		e.printStackTrace(); //TODO wrap this in Aspect
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }
