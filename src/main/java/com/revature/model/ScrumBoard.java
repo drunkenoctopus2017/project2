@@ -1,6 +1,6 @@
 package com.revature.model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,26 +12,29 @@ import javax.persistence.Table;
 public class ScrumBoard {
 	@Id
 	@Column(name="SB_ID")
-	private int sbId;
+	private int id;
+	
 	@Column(name="USER_ID")
 	private int userId;
+	
 	@Column(name="SB_NAME")
-	private String Name;
-	@Column(name="SB_LENGTH")
-	private int sbLength;
+	private String name;
 
-	@Column(name="SBSTART")
-	private Timestamp startTime;
+	@Column(name="SB_DURATION")
+	private int duration;
+	
+	@Column(name="SB_START")
+	private Date startDate;
 	
 	public ScrumBoard() {
 	}
 
 	public int getSbId() {
-		return sbId;
+		return id;
 	}
 
 	public void setSbId(int sbId) {
-		this.sbId = sbId;
+		this.id = sbId;
 	}
 
 	public int getUserId() {
@@ -43,32 +46,33 @@ public class ScrumBoard {
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
-	public Timestamp getStartTime() {
-		return startTime;
+	public Date getStartTime() {
+		return startDate;
 	}
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
+	public void setStartTime(Date startDate) {
+		this.startDate = startDate;
 	}
 	
 	public int getSbLength() {
-		return sbLength;
+		return duration;
 	}
 
-	public void setSbLength(int sbLength) {
-		this.sbLength = sbLength;
+	public void setSbLength(int duration) {
+		this.duration = duration;
 	}
 
 	@Override
 	public String toString() {
-		return "ScrumBoards [sbId=" + sbId + ", userId=" + userId + ", Name=" + Name + ", startTime=" + startTime + "]";
+		return "ScrumBoard [id=" + id + ", userId=" + userId + ", name=" + name + ", duration=" + duration	
+				+ ", startDate=" + startDate + "]";
 	}
 	
 	

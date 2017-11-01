@@ -25,8 +25,6 @@ app.value("loginUser", {
 	//Add more fields here only if necessary.
 });
 
-app.value("loginUserBoards", []);
-
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -46,8 +44,7 @@ app.controller("GlobalController", function() {
 	global = this;
 });
 
-app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserBoards) {
-
+app.controller("loginController", function($scope, $location, loginUserService, loginUser) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -67,15 +64,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
-
-				traverseObject(response.data);
-//				loginUserBoards = response.data.scrumBoards; //can't just reassign arrays for some reason
-				while(response.data.scrumBoards.length > 0){
-					loginUserBoards.push(response.data.scrumBoards.pop());
-
-				}
 				$location.path("/mainMenu");
-
 			}, function (error) {
 				console.log(error);
 				//The error object above has: 
@@ -89,14 +78,12 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, loginUser, loginUserBoards) {
+app.controller("mainMenuController", function($scope, loginUser) {
 	console.log("mainMenu");
-	console.log(loginUserBoards);
 	//$scope.firstName = global.scrumUser.firstName;
 	//$scope.lastName = global.scrumUser.lastName;
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
-	$scope.boards = loginUserBoards;
 });
 
 //Factory, Service, or Provider? Which to use?
@@ -107,20 +94,3 @@ app.factory("loginUserService", function($http) {
 		}
 	};
 });
-
-//TODO delete before pushing to master
-function traverseObject(obj) {
-    let s = getObjectString(obj, 0);
-    console.log("traverse: " + s);
-}
-
-function getObjectString(obj, indent) {
-    let s = "";
-    for (p in obj) {
-        s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
-        if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
-            s += getObjectString(obj[p], indent + 1);
-        }
-    }
-    return s;
-}

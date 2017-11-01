@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="SB_STORIES")
 public class ScrumBoardStory {
+	
 	@Id
 	@Column(name="SBS_ID")
 	private int sbsId;

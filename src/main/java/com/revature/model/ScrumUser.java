@@ -1,13 +1,6 @@
 package com.revature.model;
 
-<<<<<<< HEAD
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-=======
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
->>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -61,16 +53,15 @@ public class ScrumUser {
 	private int role; //potentially changes to string via lookup table???
 	
 	//TODO add the boards and do greedy load since only one user will be logged in at a time but we'll need to show all their boards.
-<<<<<<< HEAD
+
 	//@OneToMany(mappedBy="bankUser", fetch=FetchType.EAGER) 
 	//Set<ScrumBoards> scrumBoards = new HashSet<ScrumBoards>(); 	
-=======
+
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="USERS_BOARDS", 
 	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), 
 	inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID")) 
 	private List<ScrumBoard> scrumBoards; 	
->>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 	
 	public ScrumUser() {}
 	
@@ -146,13 +137,7 @@ public class ScrumUser {
 	public void setRole(int role) {
 		this.role = role;
 	}
-
-<<<<<<< HEAD
-	@Override
-	public String toString() {
-		return "ScrumUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + ", email=" + email + ", role=" + role + "]";
-=======
+	
 	public List<ScrumBoard> getScrumBoards() {
 		return scrumBoards;
 	}
@@ -166,6 +151,5 @@ public class ScrumUser {
 		return "ScrumUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
 				+ ", password=" + password + ", email=" + email + ", role=" + role + ", scrumBoards=" + scrumBoards
 				+ "]";
->>>>>>> 2c376636a4203e3e26e6b8c3621e86e63bf0f089
 	}
 }
