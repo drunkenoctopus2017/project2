@@ -1,6 +1,6 @@
 package com.revature.model;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -53,6 +53,10 @@ public class ScrumUser {
 	private int role; //potentially changes to string via lookup table???
 	
 	//TODO add the boards and do greedy load since only one user will be logged in at a time but we'll need to show all their boards.
+
+	//@OneToMany(mappedBy="bankUser", fetch=FetchType.EAGER) 
+	//Set<ScrumBoards> scrumBoards = new HashSet<ScrumBoards>(); 	
+
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="USERS_BOARDS", 
 	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), 
@@ -133,7 +137,7 @@ public class ScrumUser {
 	public void setRole(int role) {
 		this.role = role;
 	}
-
+	
 	public List<ScrumBoard> getScrumBoards() {
 		return scrumBoards;
 	}
