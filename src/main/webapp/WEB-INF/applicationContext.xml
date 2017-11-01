@@ -16,18 +16,25 @@
 	<!-- Tell DispatcherServlet the location of our static content -->
 	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
 	
-		<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
+	<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
 	<tx:annotation-driven />
 
-
 	<!-- 1st supply your DataSource: basic JDBC information -->
+
 	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
 		<property name="username" value="octocat_user"></property>
 		<property name="password" value="p4ssw0rd"></property>
 		<property name="url" value="jdbc:oracle:thin:@octocat.crwx5goxs3em.us-east-2.rds.amazonaws.com:1521:ORCL"></property>
 	</bean>
-	 
+	<!-- 
+	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="username" value="drunken_octopus_db"></property>
+		<property name="password" value="p4ssw0rd"></property>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+	</bean>
+	 -->	 
 	<!-- Now give that DataSource object to SessionFactory -->
 	<!-- Note, this path must match the hibernate version (eg: 5.2.4.Final = hibernate5 -->
 	<bean id="mySessionFactory"
@@ -40,6 +47,7 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">none</prop>
 			</props>
 		</property>

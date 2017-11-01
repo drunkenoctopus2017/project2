@@ -25,6 +25,12 @@ app.value("loginUser", {
 	//Add more fields here only if necessary.
 });
 
+//The authorization level of the user.
+app.value("loginUserRole", {
+	id: 0, 
+	roleName: "unauthorized"
+});
+
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -38,7 +44,7 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-app.controller("loginController", function($scope, $location, loginUserService, loginUser) {
+app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -58,6 +64,8 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
+				loginUserRole.id = response.data.role.id;
+				loginUserRole.roleName = response.data.role.roleName;
 				$location.path("/mainMenu");
 			}, function (error) {
 				console.log(error);
@@ -74,8 +82,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 
 app.controller("mainMenuController", function($scope, $location, loginUser) {
 	console.log("mainMenu");
-	//$scope.firstName = global.scrumUser.firstName;
-	//$scope.lastName = global.scrumUser.lastName;
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.createScrumBoard = function() {
@@ -83,13 +89,16 @@ app.controller("mainMenuController", function($scope, $location, loginUser) {
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, scrumBoardService, loginUser) {
-	console.log("createScrumBoardController");
-	$scope.firstname = loginUser.firstName;
-	//$scope.firstName = global.scrumUser.firstName;
-	//$scope.lastName = global.scrumUser.lastName;
-	//$scope.firstName = loginUser.firstName;
-	//$scope.lastName = loginUser.lastName;
+app.controller("createScrumBoardController", function($scope, scrumBoardService, loginUser, loginUserRole) {
+	$scope.create = function() {
+		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+			function (response) {
+				$location.path("/mainMenu");
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+			}
+		);
+	}
 });
 
 //Factory, Service, or Provider? Which to use?
@@ -108,3 +117,20 @@ app.factory("scrumBoardService", function($http) {
 		}
 	};
 });
+
+//TODO delete before pushing to master
+function traverseObject(obj) {
+	let s = getObjectString(obj, 0);
+	console.log("traverse: " + s);
+}
+
+function getObjectString(obj, indent) {
+	let s = "";
+	for (p in obj) {
+		s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
+		if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
+			s += getObjectString(obj[p], indent + 1);
+		}
+	}
+	return s;
+}

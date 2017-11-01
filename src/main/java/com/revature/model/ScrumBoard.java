@@ -1,11 +1,18 @@
 package com.revature.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="SCRUM_BOARDS")
@@ -13,6 +20,8 @@ public class ScrumBoard {
 	
 	@Id
 	@Column(name="SB_ID")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SB_SEQ")
+	@SequenceGenerator(name="SB_SEQ", sequenceName="SB_SEQ")
 	private int id;
 	
 	@Column(name="USER_ID")
@@ -21,12 +30,24 @@ public class ScrumBoard {
 	@Column(name="SB_NAME")
 	private String name;
 	
-	@Column(name="SBSTART")
+	@Column(name="SB_START")
 	private Date startDate;
 	
 	@Column(name="SB_DURATION")
 	private int duration;
 	
+	@ManyToMany(mappedBy="scrumBoards")
+	private List<ScrumUser> scrumUsers;
+	
+	@JsonIgnore
+    public List<ScrumUser> getScrumUsers() {
+		return scrumUsers;
+	}
+	
+    public void setScrumUsers(List<ScrumUser> scrumUsers) {
+		this.scrumUsers = scrumUsers;
+	}
+    
 	public ScrumBoard() {
 	}
 	

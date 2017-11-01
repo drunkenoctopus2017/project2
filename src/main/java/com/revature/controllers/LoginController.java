@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,14 +32,9 @@ public class LoginController {
 	 * @return ScrumUser matching the credentials provided
 	 */
 	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials) {
-		System.out.println("json? " + loginUserCredentials.toString());
-		
+	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
-		
-		//TODO: save the authenticated user in session so that 
-		//the client isn't constantly sending private info to the server...
-		System.out.println("valid user: " + su);
+		request.getSession().setAttribute("user", su);
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
@@ -49,7 +45,7 @@ public class LoginController {
 	 * @return
 	 */
 	@ExceptionHandler(NoResultException.class)
-	public ResponseEntity<Exception> handleException(NoResultException e){
+	public ResponseEntity<Exception> handleException(NoResultException e) {
 		return new ResponseEntity<Exception>(e, HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -60,7 +56,8 @@ public class LoginController {
 	 * @return
 	 */
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Exception> handleException(Exception e){
+	public ResponseEntity<Exception> handleException(Exception e) {
+		e.printStackTrace(); //TODO wrap this in Aspect
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }
