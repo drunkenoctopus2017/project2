@@ -10,4 +10,5 @@ public interface DAO {
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
 	
 	public ScrumUser updateScrumUser(ScrumUser su);
+  
 }

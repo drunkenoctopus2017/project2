@@ -26,6 +26,7 @@ app.value("loginUser", {
 });
 
 app.value("loginUserBoards", []);
+
 //The authorization level of the user.
 app.value("loginUserRole", {
 	id: 0, 
@@ -39,10 +40,30 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/mainMenu", {
 		templateUrl: urlBase + "mainMenuView.html", 
 		controller: "mainMenuController"
-	}).when("/createScrumBoard", {
+  }).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
 	});
+});
+
+app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+
+	$scope.logout = function(){
+		loginUser.firstName = "not logged in";
+		loginUser.lastName = "";
+		while(loginUserBoards.length > 0){
+			loginUserBoards.pop();	
+		}
+		loginUserService.logout().then(
+			function(response){
+				$location.path("/");
+			},
+			function(error){
+				console.log(error);
+				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
+			}
+		);
+	}
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
@@ -113,6 +134,9 @@ app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
+		},
+		logout: function(){
+			return $http.get("logout");
 		}
 	};
 });
@@ -127,17 +151,17 @@ app.factory("scrumBoardService", function($http) {
 
 //TODO delete before pushing to master
 function traverseObject(obj) {
-	let s = getObjectString(obj, 0);
-	console.log("traverse: " + s);
+    let s = getObjectString(obj, 0);
+    console.log("traverse: " + s);
 }
 
 function getObjectString(obj, indent) {
-	let s = "";
-	for (p in obj) {
-		s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
-		if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
-			s += getObjectString(obj[p], indent + 1);
-		}
-	}
-	return s;
+    let s = "";
+    for (p in obj) {
+        s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
+        if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
+            s += getObjectString(obj[p], indent + 1);
+        }
+    }
+    return s;
 }

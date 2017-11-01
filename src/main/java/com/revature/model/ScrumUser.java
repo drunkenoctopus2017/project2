@@ -1,5 +1,6 @@
 package com.revature.model;
 
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -57,6 +58,7 @@ public class ScrumUser {
 		this.password = password;
 	}
 	
+
 	public ScrumUser(int id, String firstName, String lastName, String username, String password, String email, ScrumUserRole role) {
 		super();
 		this.id = id;
@@ -66,9 +68,8 @@ public class ScrumUser {
 		this.password = password;
 		this.email = email;
 		this.role = role;
-		//this.roleId = roleId;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -88,7 +89,7 @@ public class ScrumUser {
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}

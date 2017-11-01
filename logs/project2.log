@@ -1,0 +1,37 @@
+[32m10-31-17 21:14:56 INFO  - Root WebApplicationContext: initialization started
+[m[32m10-31-17 21:14:56 INFO  - Refreshing Root WebApplicationContext: startup date [Tue Oct 31 21:14:56 EDT 2017]; root of context hierarchy
+[m[32m10-31-17 21:14:56 INFO  - Loading XML bean definitions from ServletContext resource [/WEB-INF/applicationContext.xml]
+[m[32m10-31-17 21:14:56 INFO  - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+[m[32m10-31-17 21:14:57 INFO  - HHH000412: Hibernate Core {5.2.4.Final}
+[m[32m10-31-17 21:14:57 INFO  - HHH000206: hibernate.properties not found
+[m[32m10-31-17 21:14:57 INFO  - HHH000021: Bytecode provider name : javassist
+[m[32m10-31-17 21:14:57 INFO  - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+[m[32m10-31-17 21:14:59 INFO  - HHH000400: Using dialect: org.hibernate.dialect.Oracle10gDialect
+[m[32m10-31-17 21:15:00 INFO  - Mapped "{[/main]}" onto public org.springframework.web.servlet.ModelAndView com.revature.controllers.BaseController.mainRequest()
+[m[32m10-31-17 21:15:00 INFO  - Mapped "{[/authenticateLogin],methods=[POST],consumes=[application/json],produces=[application/json]}" onto public org.springframework.http.ResponseEntity<com.revature.model.ScrumUser> com.revature.controllers.LoginController.handleTodo(com.revature.model.ScrumUser,javax.servlet.http.HttpServletRequest)
+[m[32m10-31-17 21:15:01 INFO  - Looking for @ControllerAdvice: Root WebApplicationContext: startup date [Tue Oct 31 21:14:56 EDT 2017]; root of context hierarchy
+[m[32m10-31-17 21:15:01 INFO  - Looking for @ControllerAdvice: Root WebApplicationContext: startup date [Tue Oct 31 21:14:56 EDT 2017]; root of context hierarchy
+[m[32m10-31-17 21:15:01 INFO  - Mapped URL path [/resources/**] onto handler 'org.springframework.web.servlet.resource.ResourceHttpRequestHandler#0'
+[m[32m10-31-17 21:15:01 INFO  - Using DataSource [org.apache.commons.dbcp.BasicDataSource@1aadbd0b] of Hibernate SessionFactory for HibernateTransactionManager
+[m[32m10-31-17 21:15:01 INFO  - Root WebApplicationContext: initialization completed in 5504 ms
+[m[32m10-31-17 21:15:03 INFO  - FrameworkServlet 'MasterServlet': initialization started
+[m[32m10-31-17 21:15:03 INFO  - Refreshing WebApplicationContext for namespace 'MasterServlet-servlet': startup date [Tue Oct 31 21:15:03 EDT 2017]; parent: Root WebApplicationContext
+[m[32m10-31-17 21:15:03 INFO  - Loading XML bean definitions from ServletContext resource [/WEB-INF/applicationContext.xml]
+[m[32m10-31-17 21:15:03 INFO  - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+[m[32m10-31-17 21:15:04 INFO  - HHH000400: Using dialect: org.hibernate.dialect.Oracle10gDialect
+[m[32m10-31-17 21:15:04 INFO  - Mapped "{[/main]}" onto public org.springframework.web.servlet.ModelAndView com.revature.controllers.BaseController.mainRequest()
+[m[32m10-31-17 21:15:04 INFO  - Mapped "{[/authenticateLogin],methods=[POST],consumes=[application/json],produces=[application/json]}" onto public org.springframework.http.ResponseEntity<com.revature.model.ScrumUser> com.revature.controllers.LoginController.handleTodo(com.revature.model.ScrumUser,javax.servlet.http.HttpServletRequest)
+[m[32m10-31-17 21:15:05 INFO  - Looking for @ControllerAdvice: WebApplicationContext for namespace 'MasterServlet-servlet': startup date [Tue Oct 31 21:15:03 EDT 2017]; parent: Root WebApplicationContext
+[m[32m10-31-17 21:15:05 INFO  - Looking for @ControllerAdvice: WebApplicationContext for namespace 'MasterServlet-servlet': startup date [Tue Oct 31 21:15:03 EDT 2017]; parent: Root WebApplicationContext
+[m[32m10-31-17 21:15:05 INFO  - Mapped URL path [/resources/**] onto handler 'org.springframework.web.servlet.resource.ResourceHttpRequestHandler#0'
+[m[32m10-31-17 21:15:05 INFO  - Using DataSource [org.apache.commons.dbcp.BasicDataSource@7aed0c8d] of Hibernate SessionFactory for HibernateTransactionManager
+[m[32m10-31-17 21:15:05 INFO  - FrameworkServlet 'MasterServlet': initialization completed in 2008 ms
+[m[33m10-31-17 21:15:05 WARN  - No mapping found for HTTP request with URI [/TestSpringSetup/] in DispatcherServlet with name 'MasterServlet'
+[m[32m10-31-17 21:15:11 INFO  - BEFORE: method-execution - ScrumUser com.revature.service.MainService.getScrumUserByUsernameAndPassword(ScrumUser)
+[m[32m10-31-17 21:15:11 INFO  - BEFORE: method-execution - ScrumUser com.revature.dao.DAOImpl.getScrumUserByUsername(ScrumUser)
+[m[32m10-31-17 21:15:11 INFO  - HHH000397: Using ASTQueryTranslatorFactory
+[m[32m10-31-17 21:15:11 INFO  - SUCCESS: method-execution - ScrumUser com.revature.dao.DAOImpl.getScrumUserByUsername(ScrumUser)
+[m[32m10-31-17 21:15:11 INFO  - SUCCESS: method-execution - ScrumUser com.revature.service.MainService.getScrumUserByUsernameAndPassword(ScrumUser)
+[m[32m10-31-17 21:15:25 INFO  - Closing WebApplicationContext for namespace 'MasterServlet-servlet': startup date [Tue Oct 31 21:15:03 EDT 2017]; parent: Root WebApplicationContext
+[m[32m10-31-17 21:15:25 INFO  - Closing Root WebApplicationContext: startup date [Tue Oct 31 21:14:56 EDT 2017]; root of context hierarchy
+[m
