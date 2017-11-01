@@ -15,10 +15,7 @@ buildNumber.properties
 bin/
 logs/
 RemoteSystemsTempFiles/
-<<<<<<< HEAD
-=======
 .tern-project
->>>>>>> c897b67c7dc633f9f4c70cefff6cc70438c26283
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
