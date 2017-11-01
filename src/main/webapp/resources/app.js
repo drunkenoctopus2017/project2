@@ -47,7 +47,6 @@ app.config(function($routeProvider, urlBase) {
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
 	$scope.login = function() {
-		console.log("login");
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
 			function (response) {
@@ -71,7 +70,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				while(response.data.scrumBoards.length > 0) {
 					loginUserBoards.push(response.data.scrumBoards.pop());
 				}
-				console.log("here we are");
 				$location.path("/mainMenu");
 			}, function (error) {
 				console.log(error);
@@ -96,10 +94,12 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser) {
+app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
 	$scope.create = function() {
 		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
 			function (response) {
+				//Refresh the data for the main menu without doing another server request (because you don't need to);
+				loginUserBoards.push(response.data);
 				$location.path("/mainMenu");
 			}, function (error) {
 				alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
