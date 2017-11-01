@@ -37,13 +37,24 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-app.controller("GlobalController", function() {
-	//this in addition to the "global as GlobalController" syntax will allow us to access
-	//variables and references in this code block in other codeblocks (eg test controller, see below)
-	//This is where we'll store "global" variables instead of $rootScope.
-	//Do not put stuff here lightly.
-	//Use constant() and value() instead.
-	global = this;
+app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+
+	$scope.logout = function(){
+		loginUser.firstName = "not logged in";
+		loginUser.lastName = "";
+		while(loginUserBoards.length > 0){
+			loginUserBoards.pop();	
+		}
+		loginUserService.logout().then(
+			function(response){
+				$location.path("/");
+			},
+			function(error){
+				console.log(error);
+				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
+			}
+		);
+	}
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserBoards) {
@@ -66,7 +77,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
-				traverseObject(response.data);
+//				traverseObject(response.data);
 //				loginUserBoards = response.data.scrumBoards; //can't just reassign arrays for some reason
 				while(response.data.scrumBoards.length > 0){
 					loginUserBoards.push(response.data.scrumBoards.pop());
@@ -87,7 +98,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 
 app.controller("mainMenuController", function($scope, loginUser, loginUserBoards) {
 	console.log("mainMenu");
-	console.log(loginUserBoards);
+//	console.log(loginUserBoards);
 	//$scope.firstName = global.scrumUser.firstName;
 	//$scope.lastName = global.scrumUser.lastName;
 	$scope.firstName = loginUser.firstName;
@@ -100,6 +111,9 @@ app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
+		},
+		logout: function(){
+			return $http.get("logout");
 		}
 	};
 });
