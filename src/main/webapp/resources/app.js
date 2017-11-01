@@ -58,6 +58,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserBoards) {
+
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -77,12 +78,16 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//All other data should be stored on the server.
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
+
 //				traverseObject(response.data);
+
 //				loginUserBoards = response.data.scrumBoards; //can't just reassign arrays for some reason
 				while(response.data.scrumBoards.length > 0){
 					loginUserBoards.push(response.data.scrumBoards.pop());
+
 				}
 				$location.path("/mainMenu");
+
 			}, function (error) {
 				console.log(error);
 				//The error object above has: 
