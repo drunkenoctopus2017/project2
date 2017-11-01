@@ -51,6 +51,27 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
+
+app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+
+	$scope.logout = function(){
+		loginUser.firstName = "not logged in";
+		loginUser.lastName = "";
+		while(loginUserBoards.length > 0){
+			loginUserBoards.pop();	
+		}
+		loginUserService.logout().then(
+			function(response){
+				$location.path("/");
+			},
+			function(error){
+				console.log(error);
+				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
+			}
+		);
+	}
+});
+
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
@@ -135,6 +156,17 @@ app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
+		},
+		logout: function(){
+			return $http.get("logout");
+		}
+	};
+});
+
+app.factory("scrumBoardService", function($http) {
+	return {
+		createNewScrumBoard: function(name, startDate, duration) {
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		}
 	};
 });

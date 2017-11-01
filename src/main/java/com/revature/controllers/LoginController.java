@@ -2,6 +2,8 @@ package com.revature.controllers;
 
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,17 @@ public class LoginController {
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
+	@RequestMapping(value="/logout")
+	public void logout(HttpSession session) {
+		System.out.println("logging out");
+		if(session != null) {
+			session.removeAttribute("user");
+			session.invalidate();
+			System.out.println("session invalidated?");
+		}
+//		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
+	}
+
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
 	 * 
@@ -57,6 +70,7 @@ public class LoginController {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e) {
+
 		e.printStackTrace(); //TODO wrap this in Aspect
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
