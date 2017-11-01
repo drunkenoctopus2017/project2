@@ -10,7 +10,11 @@ buildNumber.properties
 .classpath
 .project
 .springBeans
-
+.metadata
+.settings
+bin/
+logs/
+RemoteSystemsTempFiles/
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
