@@ -36,4 +36,12 @@ public class MainService {
 		return sb;
 	}
 	
+	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
+		sb.setUserId(su.getId());
+		sb = dao.updateScrumBoard(sb);
+		su.getScrumBoards().add(sb);
+		su = dao.updateScrumUser(su);
+		return sb;
+	}
+	
 }

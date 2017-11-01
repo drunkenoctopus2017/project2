@@ -29,6 +29,12 @@ public class DAOImpl implements DAO{
 		return sb;
 	}
 	
+	public ScrumBoard updateScrumBoard(ScrumBoard sb) {
+		Session session = sessionFactory.getCurrentSession();
+		sb = (ScrumBoard) session.merge(sb);
+		return sb;
+	}
+	
 	public ScrumUser getScrumUserByUsername(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from ScrumUser where username = :username");

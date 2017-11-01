@@ -7,6 +7,8 @@ public interface DAO {
 	
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb);
 	
+	public ScrumBoard updateScrumBoard(ScrumBoard sb);
+	
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
 	
 	public ScrumUser updateScrumUser(ScrumUser su);
