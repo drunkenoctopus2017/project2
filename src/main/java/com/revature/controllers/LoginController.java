@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
 import com.revature.service.MainService;
 
@@ -35,6 +36,12 @@ public class LoginController {
 	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
 		request.getSession().setAttribute("user", su);
+		
+		System.out.println(su.toString());
+		
+		ScrumBoard test = su.getScrumBoards().get(0);
+		System.out.println(test.toString());
+		System.out.println("test: " + test.getStories());
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	

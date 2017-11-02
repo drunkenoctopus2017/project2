@@ -31,6 +31,13 @@ app.value("loginUserRole", {
 	id: 0, 
 	roleName: "unauthorized"
 });
+app.value("currentScrumBoard", {
+	id: 0,
+	userId: 0,
+	name: 'no scrum board selected',
+	startDate: 0,
+	duration: 0
+});
 
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
@@ -42,6 +49,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
+	}).when("/viewScrumBoard", {
+		templateUrl: urlBase + "scrumBoardView.html",
+		controller: "scrumBoardViewController"
 	});
 });
 
@@ -84,7 +94,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards) {
+app.controller("mainMenuController", function($scope, $rootScope, $location, loginUser, loginUserRole, loginUserBoards) {
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -92,11 +102,19 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
+	$scope.viewBoard = function(b){
+		currentScrumBoard = b;
+		
+		$rootScope.currentScrumBoard = b
+		traverseObject(b);
+		$location.path("/viewScrumBoard");
+
+	}
 });
 
 app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
 	$scope.create = function() {
-		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration, $scope.stories).then(
 			function (response) {
 				//Refresh the data for the main menu without doing another server request (because you don't need to);
 				loginUserBoards.push(response.data);
@@ -107,6 +125,18 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 		);
 	}
 });
+
+
+app.controller("scrumBoardViewController", function($scope, $rootScope){
+	console.log("Scrum Board View Controller");
+	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
+	$scope.scrumBoardStories = $rootScope.currentScrumBoard.Stories;
+
+	//scrum boards console logging as null?
+	console.log($scope.scrumBoardStories);
+});
+
+
 
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
@@ -120,7 +150,7 @@ app.factory("loginUserService", function($http) {
 app.factory("scrumBoardService", function($http) {
 	return {
 		createNewScrumBoard: function(name, startDate, duration) {
-			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration, stories: stories});
 		}
 	};
 });
@@ -141,3 +171,7 @@ function getObjectString(obj, indent) {
 	}
 	return s;
 }
+
+//function checkId(array){
+//	
+//}

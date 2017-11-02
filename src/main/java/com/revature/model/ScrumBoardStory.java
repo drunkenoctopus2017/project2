@@ -3,7 +3,11 @@ package com.revature.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="SB_STORIES")
@@ -13,8 +17,21 @@ public class ScrumBoardStory {
 	@Column(name="SBS_ID")
 	private int sbsId;
 	
-	@Column(name="SB_ID")
-	private int sbId;
+	//@Column(name="SB_ID")
+	//private int sbId;
+	
+	@ManyToOne
+	@JoinColumn(name="SB_ID")
+	private ScrumBoard scrumBoard;
+	
+	@JsonIgnore
+	public ScrumBoard getScrumBoard() {
+		return scrumBoard;
+	}
+
+	public void setScrumBoard(ScrumBoard scrumBoard) {
+		this.scrumBoard = scrumBoard;
+	}
 	
 	@Column(name="SBS_DESCRIPTION")
 	private String descriptions;
@@ -38,7 +55,7 @@ public class ScrumBoardStory {
 	public void setSbsId(int sbsId) {
 		this.sbsId = sbsId;
 	}
-
+/*
 	public int getSbId() {
 		return sbId;
 	}
@@ -46,7 +63,7 @@ public class ScrumBoardStory {
 	public void setSbId(int sbId) {
 		this.sbId = sbId;
 	}
-
+*/
 	public String getDescriptions() {
 		return descriptions;
 	}
@@ -81,7 +98,7 @@ public class ScrumBoardStory {
 
 	@Override
 	public String toString() {
-		return "SbStories [sbsId=" + sbsId + ", sbId=" + sbId + ", descriptions=" + descriptions + ", points=" + points
+		return "SbStories [sbsId=" + sbsId + ", descriptions=" + descriptions + ", points=" + points
 				+ ", laneId=" + laneId + ", finishTime=" + finishTime + "]";
 	}
 	
