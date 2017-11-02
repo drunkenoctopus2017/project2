@@ -38,8 +38,8 @@ public class ScrumBoardController {
 		ScrumBoard sb = service.editExistingScrumBoard(newScrumBoard, su);
 		System.out.println("new board that should be in users list: "+sb);
 		System.out.println("updated user: "+su);
-		return new ResponseEntity<ScrumBoard>(newScrumBoard, HttpStatus.OK); //200
-//		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
+//		return new ResponseEntity<ScrumBoard>(newScrumBoard, HttpStatus.OK); //200
+		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	
 	/**

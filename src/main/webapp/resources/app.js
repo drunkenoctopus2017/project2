@@ -40,6 +40,8 @@ app.value("editing", {
 app.value("currentBoard", {
 	id: 0,
 	name: "no board selected",
+	startDate: undefined,
+	duration: 0
 	//add properties as necessary
 }); 
 
@@ -140,7 +142,11 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 		editing.value = true;
 		//set the current board properties to the properties of board associated with the button that called this function
 		currentBoard.id = board.id;
-		currentBoard.name = board.name; 
+		currentBoard.name = board.name;
+		console.log(board.startDate);
+		currentBoard.startDate = board.startDate;
+		console.log(board.duration);
+		currentBoard.duration = board.duration;
 		$location.path("/createScrumBoard");
 	}
 });
@@ -149,6 +155,7 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	$scope.editing = editing.value;
 	$scope.boardName = currentBoard.name;
 	$scope.createOrEdit = function() {
+		//change functionality depending on value of editing
 		if(!editing.value){
 			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
 				function (response) {
@@ -160,13 +167,24 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 				}
 			);
 		} else {
-			scrumBoardService.editExistingScrumBoard(currentBoard.id, $scope.sbName, $scope.startDate, $scope.duration).then(
+			//if any of the input is empty, use the previous value
+			nameToUse = $scope.sbName;
+			if($scope.sbName == undefined){
+				nameToUse = currentBoard.name;
+			}
+			startDateToUse = $scope.startDate;
+			if($scope.startDate == undefined){
+				startDateToUse = currentBoard.startDate;
+			}
+			durationToUse = $scope.duration;
+			if($scope.duration == undefined){
+				durationToUse = currentBoard.duration;
+			}
+			scrumBoardService.editExistingScrumBoard(currentBoard.id, nameToUse, startDateToUse, durationToUse).then(
 					function (response) {
 						//Refresh the data for the main menu without doing another server request (because you don't need to);
 						//need to remove the outdated board from JS-side list
-						console.log("before removing old: "+loginUserBoards);
 						loginUserBoards.forEach(function(board, index, array) {
-							console.log(board, index);
 							//find the outdated board
 							if(board.id == currentBoard.id){
 								//remove it
@@ -175,7 +193,6 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 						});
 						//push the new one into the JS-side list
 						loginUserBoards.push(response.data);
-						console.log("after removal and adding new: "+loginUserBoards);
 						$location.path("/mainMenu");
 					}, function (error) {
 						alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
