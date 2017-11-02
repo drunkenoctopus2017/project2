@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class ScrumBoardLane {
 	@Id
 	@Column(name="SBL_ID")
-	private int sblId;
+	private int id;
 	
 	@Column(name="SBL_NAME")
 	private String sblName;
@@ -18,12 +18,12 @@ public class ScrumBoardLane {
 	public ScrumBoardLane() {
 	}
 
-	public int getSblId() {
-		return sblId;
+	public int getId() {
+		return id;
 	}
 
-	public void setSblId(int sblId) {
-		this.sblId = sblId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getSblName() {
@@ -36,7 +36,7 @@ public class ScrumBoardLane {
 
 	@Override
 	public String toString() {
-		return "SbLane [sblId=" + sblId + ", sblName=" + sblName + "]";
+		return "SbLane [id=" + id + ", sblName=" + sblName + "]";
 	}
 	
 	

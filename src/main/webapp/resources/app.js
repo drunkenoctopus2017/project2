@@ -55,6 +55,12 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
+app.directive('myCustomer', function(urlBase) {
+	return {
+		templateUrl: urlBase + "myComponent.html"
+	};
+});
+
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
