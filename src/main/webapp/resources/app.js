@@ -228,14 +228,6 @@ app.factory("scrumBoardService", function($http) {
 	return {
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
-		}
-	};
-});
-
-app.factory("scrumBoardService", function($http) {
-	return {
-		createNewScrumBoard: function(name, startDate, duration) {
-			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
 		editExistingScrumBoard: function(id, name, startDate, duration){
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
