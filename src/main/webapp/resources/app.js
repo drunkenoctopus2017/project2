@@ -27,6 +27,24 @@ app.value("loginUser", {
 
 app.value("loginUserBoards", []);
 
+//for controlling what shows up on createScrumBoardView
+//false, if you're creating a board
+//true, if you're editing a board
+app.value("editing", {
+	value: false,	
+});
+
+//variable that stores the id of a single board
+//possibly useful for looking at a single board,
+//editing a single board, etc
+app.value("currentBoard", {
+	id: 0,
+	name: "no board selected",
+	startDate: undefined,
+	duration: 0
+	//add properties as necessary
+}); 
+
 //The authorization level of the user.
 app.value("loginUserRole", {
 	id: 0, 
@@ -40,11 +58,15 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/mainMenu", {
 		templateUrl: urlBase + "mainMenuView.html", 
 		controller: "mainMenuController"
-  }).when("/createScrumBoard", {
+	}).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
+	}).when("/editScrumBoard", {
+		templateUrl: urlBase + "editScrumBoardView.html",
+		controller: "editScrumBoardController"
 	});
 });
+
 
 app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
 
@@ -105,7 +127,15 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards) {
+app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+	//reset the value of editing, so that it doesn't stay true forever after you edit something
+	editing.value = false;
+	//clear currentBoard
+	currentBoard.id = 0;
+	currentBoard.name = "no board selected";
+	currentBoard.startDate = undefined;
+	currentBoard.duration = 0;
+	//fill in html fields
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -113,19 +143,72 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
+	$scope.editScrumBoard = function(board) {
+		editing.value = true;
+		//set the current board properties to the properties of board associated with the button that called this function
+		currentBoard.id = board.id;
+		currentBoard.name = board.name;
+		currentBoard.startDate = board.startDate;
+		currentBoard.duration = board.duration;
+		$location.path("/createScrumBoard");
+	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
-	$scope.create = function() {
-		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
-			function (response) {
-				//Refresh the data for the main menu without doing another server request (because you don't need to);
-				loginUserBoards.push(response.data);
-				$location.path("/mainMenu");
-			}, function (error) {
-				alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
+	$scope.editing = editing.value;
+	if(editing.value){
+		//fill in the fields with the old values
+		$scope.sbName = currentBoard.name;
+		//have to recast it as a Date in order for it to show up properly
+		$scope.startDate = new Date(currentBoard.startDate);
+		$scope.duration = currentBoard.duration;
+	}
+	$scope.boardName = currentBoard.name;
+	$scope.createOrEdit = function() {
+		//change functionality depending on value of editing
+		if(!editing.value){
+			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+				function (response) {
+					//Refresh the data for the main menu without doing another server request (because you don't need to);
+					loginUserBoards.push(response.data);
+					$location.path("/mainMenu");
+				}, function (error) {
+					alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+				}
+			);
+		} else {
+			//if any of the input is empty, use the previous value
+			nameToUse = $scope.sbName;
+			if($scope.sbName == undefined){
+				nameToUse = currentBoard.name;
 			}
-		);
+			startDateToUse = $scope.startDate;
+			if($scope.startDate == undefined){
+				startDateToUse = currentBoard.startDate;
+			}
+			durationToUse = $scope.duration;
+			if($scope.duration == undefined){
+				durationToUse = currentBoard.duration;
+			}
+			scrumBoardService.editExistingScrumBoard(currentBoard.id, nameToUse, startDateToUse, durationToUse).then(
+					function (response) {
+						//Refresh the data for the main menu without doing another server request (because you don't need to);
+						//need to remove the outdated board from JS-side list
+						loginUserBoards.forEach(function(board, index, array) {
+							//find the outdated board
+							if(board.id == currentBoard.id){
+								//remove it
+								loginUserBoards.splice(index, 1);
+							}	
+						});
+						//adds the new one to the front of the JS-side list
+						loginUserBoards.unshift(response.data);
+						$location.path("/mainMenu");
+					}, function (error) {
+						alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
+					}
+				);
+		}
 	}
 });
 
@@ -148,6 +231,9 @@ app.factory("scrumBoardService", function($http) {
 	return {
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
+		},
+		editExistingScrumBoard: function(id, name, startDate, duration){
+			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
 		}
 	};
 });
@@ -156,17 +242,17 @@ app.factory("scrumBoardService", function($http) {
 
 //TODO delete before pushing to master
 function traverseObject(obj) {
-    let s = getObjectString(obj, 0);
-    console.log("traverse: " + s);
+	let s = getObjectString(obj, 0);
+	console.log("traverse: " + s);
 }
 
 function getObjectString(obj, indent) {
-    let s = "";
-    for (p in obj) {
-        s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
-        if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
-            s += getObjectString(obj[p], indent + 1);
-        }
-    }
-    return s;
+	let s = "";
+	for (p in obj) {
+		s += "\t".repeat(indent) + "key: " + p + " value: " + obj[p] + "\n";
+		if (typeof obj[p] == "object" && !Array.isArray(obj[p])) {
+			s += getObjectString(obj[p], indent + 1);
+		}
+	}
+	return s;
 }

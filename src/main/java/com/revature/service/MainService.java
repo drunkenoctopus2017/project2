@@ -38,7 +38,25 @@ public class MainService {
 		return sb;
 	}
 	
+<<<<<<< HEAD
 	public List<ScrumUser> getAllUsers(){
 		return dao.getAllUsers();
 	}
+=======
+	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
+		sb.setUserId(su.getId());
+		//this is necessary^
+		sb = dao.updateScrumBoard(sb);
+		//make sure the scrumboard object in the user's list is updated, dunno if it would automatically do this
+		for(ScrumBoard osb : su.getScrumBoards()) {
+			if(osb.getId() == sb.getId()) {
+				su.getScrumBoards().remove(osb);
+				su.getScrumBoards().add(sb);
+				return sb;
+			}
+		}
+		return sb;
+	}
+	
+>>>>>>> 7a9f60e2f012ff95ab9494a311f93d6397d0c044
 }
