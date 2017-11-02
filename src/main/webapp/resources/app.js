@@ -102,7 +102,7 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
-	$scope.viewBoard = function(b){
+	$scope.viewBoard = function(b) {
 		currentScrumBoard = b;
 		
 		$rootScope.currentScrumBoard = b
@@ -130,8 +130,8 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 app.controller("scrumBoardViewController", function($scope, $rootScope){
 	console.log("Scrum Board View Controller");
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
-	$scope.scrumBoardStories = $rootScope.currentScrumBoard.Stories;
-
+	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	traverseObject(currentScrumBoard);
 	//scrum boards console logging as null?
 	console.log($scope.scrumBoardStories);
 });

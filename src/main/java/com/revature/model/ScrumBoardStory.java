@@ -109,12 +109,14 @@ public class ScrumBoardStory {
     public void setTasks(List<ScrumBoardTask> tasks) {
 		this.tasks = tasks;
 	}
-    
+
 	@Override
 	public String toString() {
-		return "SbStories [sbsId=" + sbsId + ", descriptions=" + descriptions + ", points=" + points
-				+ ", laneId=" + laneId + ", finishTime=" + finishTime + "]";
+		return "ScrumBoardStory [sbsId=" + sbsId + ", descriptions=" + descriptions + ", points=" + points + ", laneId="
+				+ laneId + ", finishTime=" + finishTime + ", tasks=" + tasks + "]";
 	}
+    
+	
 	
 	
 }
