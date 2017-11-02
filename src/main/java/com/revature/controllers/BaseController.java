@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  */
 public class BaseController {
+
 	@RequestMapping("/main")
 	public ModelAndView mainRequest() {
 		return new ModelAndView("/resources/app.html");
