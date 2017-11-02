@@ -129,6 +129,9 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
+
+
+
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
@@ -148,6 +151,8 @@ app.factory("scrumBoardService", function($http) {
 		}
 	};
 });
+
+
 
 //TODO delete before pushing to master
 function traverseObject(obj) {

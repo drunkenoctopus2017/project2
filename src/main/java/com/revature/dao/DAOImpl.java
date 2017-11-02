@@ -1,12 +1,16 @@
 package com.revature.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
@@ -42,5 +46,12 @@ public class DAOImpl implements DAO{
 		Session session = sessionFactory.getCurrentSession();
 		su = (ScrumUser) session.merge(su);
 		return su;
+	}
+	public List<ScrumUser> getAllUsers(){
+		Session session = sessionFactory.getCurrentSession();
+		List<ScrumUser> users = new ArrayList<>();
+		Query query = session.createQuery("from ScrumUser");
+		users = query.getResultList();
+		return users;
 	}
 }
