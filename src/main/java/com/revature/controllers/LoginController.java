@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.ScrumBoard;
+import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
 import com.revature.service.MainService;
 
@@ -39,9 +40,11 @@ public class LoginController {
 		
 		System.out.println(su.toString());
 		
-		ScrumBoard test = su.getScrumBoards().get(0);
-		System.out.println(test.toString());
-		System.out.println("test: " + test.getStories());
+		ScrumBoard testBoard = su.getScrumBoards().get(0);
+		System.out.println(testBoard.toString());
+		System.out.println("test: " + testBoard.getStories());
+		
+		ScrumBoardTask testTask = testBoard.getStories().get(0).getTasks().get(0);
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	

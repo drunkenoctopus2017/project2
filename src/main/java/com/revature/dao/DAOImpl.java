@@ -1,5 +1,8 @@
 package com.revature.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -34,6 +37,11 @@ public class DAOImpl implements DAO{
 		Query query = session.createQuery("from ScrumUser where username = :username");
 		query.setParameter("username", su.getUsername());
 		ScrumUser user = (ScrumUser)query.getSingleResult();
+		List <ScrumBoard> boards = new ArrayList<ScrumBoard>();
+		
+		boards = user.getScrumBoards();
+		
+		System.out.println(boards.get(0));
 		return user;
 	}
 	
