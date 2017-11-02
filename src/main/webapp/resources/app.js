@@ -150,6 +150,13 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 
 app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
 	$scope.editing = editing.value;
+	if(editing.value){
+		//fill in the fields with the old values
+		$scope.sbName = currentBoard.name;
+		//have to recast it as a Date in order for it to show up properly
+		$scope.startDate = new Date(currentBoard.startDate);
+		$scope.duration = currentBoard.duration;
+	}
 	$scope.boardName = currentBoard.name;
 	$scope.createOrEdit = function() {
 		//change functionality depending on value of editing
