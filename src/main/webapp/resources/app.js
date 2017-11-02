@@ -58,12 +58,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/mainMenu", {
 		templateUrl: urlBase + "mainMenuView.html", 
 		controller: "mainMenuController"
-	}).when("/createScrumBoard", {
-		templateUrl: urlBase + "createScrumBoardView.html", 
-		controller: "createScrumBoardController"
-	}).when("/editScrumBoard", {
-		templateUrl: urlBase + "editScrumBoardView.html",
-		controller: "editScrumBoardController"
+	}).when("/createOrEditScrumBoard", {
+		templateUrl: urlBase + "createOrEditScrumBoardView.html", 
+		controller: "createOrEditScrumBoardController"
 	});
 });
 
@@ -141,7 +138,7 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.boards = loginUserBoards;
 	$scope.role = loginUserRole.id;
 	$scope.createScrumBoard = function() {
-		$location.path("/createScrumBoard");
+		$location.path("/createOrEditScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
 		editing.value = true;
@@ -150,11 +147,11 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 		currentBoard.name = board.name;
 		currentBoard.startDate = board.startDate;
 		currentBoard.duration = board.duration;
-		$location.path("/createScrumBoard");
+		$location.path("/createOrEditScrumBoard");
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
+app.controller("createOrEditScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
 	$scope.editing = editing.value;
 	if(editing.value){
 		//fill in the fields with the old values
