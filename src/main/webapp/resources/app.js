@@ -201,8 +201,8 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 								loginUserBoards.splice(index, 1);
 							}	
 						});
-						//push the new one into the JS-side list
-						loginUserBoards.push(response.data);
+						//adds the new one to the front of the JS-side list
+						loginUserBoards.unshift(response.data);
 						$location.path("/mainMenu");
 					}, function (error) {
 						alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
