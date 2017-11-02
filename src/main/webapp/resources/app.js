@@ -138,14 +138,11 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 		$location.path("/createScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
-		console.log("going to edit!")
 		editing.value = true;
 		//set the current board properties to the properties of board associated with the button that called this function
 		currentBoard.id = board.id;
 		currentBoard.name = board.name;
-		console.log(board.startDate);
 		currentBoard.startDate = board.startDate;
-		console.log(board.duration);
 		currentBoard.duration = board.duration;
 		$location.path("/createScrumBoard");
 	}
