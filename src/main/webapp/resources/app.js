@@ -130,6 +130,12 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
 	//reset the value of editing, so that it doesn't stay true forever after you edit something
 	editing.value = false;
+	//clear currentBoard
+	currentBoard.id = 0;
+	currentBoard.name = "no board selected";
+	currentBoard.startDate = undefined;
+	currentBoard.duration = 0;
+	//fill in html fields
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
