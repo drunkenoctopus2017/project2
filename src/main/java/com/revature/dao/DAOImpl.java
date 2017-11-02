@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
 
@@ -27,6 +26,12 @@ public class DAOImpl implements DAO{
 		Session session = sessionFactory.getCurrentSession();
 		Integer id = (Integer) session.save(sb);
 		sb.setId(id);
+		return sb;
+	}
+	
+	public ScrumBoard updateScrumBoard(ScrumBoard sb) {
+		Session session = sessionFactory.getCurrentSession();
+		sb = (ScrumBoard) session.merge(sb);
 		return sb;
 	}
 	

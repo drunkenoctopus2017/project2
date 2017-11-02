@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="info">
 	<Properties>
-		<Property name="filename">/Users/Ben/my_git_repos/project2/logs/project2.log</Property>
+		<Property name="filename">/Users/Elvis/my_git_repos/project2/logs/project2.log</Property>
 	</Properties>
 	<Appenders>
 	 	<Console name="Console" target="SYSTEM_OUT">
