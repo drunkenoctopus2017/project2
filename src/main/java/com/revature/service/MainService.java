@@ -40,8 +40,14 @@ public class MainService {
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		sb = dao.updateScrumBoard(sb);
-		su.getScrumBoards().add(sb);
-		su = dao.updateScrumUser(su);
+		//make sure the scrumboard object in the user's list is updated, dunno if it would automatically do this
+		for(ScrumBoard osb : su.getScrumBoards()) {
+			if(osb.getId() == sb.getId()) {
+				su.getScrumBoards().remove(osb);
+				su.getScrumBoards().add(sb);
+				return sb;
+			}
+		}
 		return sb;
 	}
 	

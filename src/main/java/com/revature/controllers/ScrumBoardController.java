@@ -31,10 +31,15 @@ public class ScrumBoardController {
 	}
 	
 	@RequestMapping(value="/editExistingScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumBoard> editExistingScrumBoard(@RequestBody ScrumBoard oldScrumBoard, HttpServletRequest request) {
+	public ResponseEntity<ScrumBoard> editExistingScrumBoard(@RequestBody ScrumBoard newScrumBoard, HttpServletRequest request) {
 		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
-		ScrumBoard sb = service.editExistingScrumBoard(oldScrumBoard, su);
-		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
+		System.out.println("new board info: "+newScrumBoard);
+		System.out.println("outdated user: "+su);
+		ScrumBoard sb = service.editExistingScrumBoard(newScrumBoard, su);
+		System.out.println("new board that should be in users list: "+sb);
+		System.out.println("updated user: "+su);
+		return new ResponseEntity<ScrumBoard>(newScrumBoard, HttpStatus.OK); //200
+//		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	
 	/**

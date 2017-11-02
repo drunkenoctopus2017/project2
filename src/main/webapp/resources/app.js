@@ -27,7 +27,21 @@ app.value("loginUser", {
 
 app.value("loginUserBoards", []);
 
-app.value("editing", false);
+//for controlling what shows up on createScrumBoardView
+//false, if you're creating a board
+//true, if you're editing a board
+app.value("editing", {
+	value: false,	
+});
+
+//variable that stores the id of a single board
+//possibly useful for looking at a single board,
+//editing a single board, etc
+app.value("currentBoard", {
+	id: 0,
+	name: "no board selected",
+	//add properties as necessary
+}); 
 
 //The authorization level of the user.
 app.value("loginUserRole", {
@@ -111,7 +125,9 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing) {
+app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+	//reset the value of editing, so that it doesn't stay true forever after you edit something
+	editing.value = false;
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -120,14 +136,20 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 		$location.path("/createScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
-		editing = true;
+		console.log("going to edit!")
+		editing.value = true;
+		//set the current board properties to the properties of board associated with the button that called this function
+		currentBoard.id = board.id;
+		currentBoard.name = board.name; 
 		$location.path("/createScrumBoard");
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing) {
-	$scope.create = function() {
-		if(!editing){
+app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
+	$scope.editing = editing.value;
+	$scope.boardName = currentBoard.name;
+	$scope.createOrEdit = function() {
+		if(!editing.value){
 			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
 				function (response) {
 					//Refresh the data for the main menu without doing another server request (because you don't need to);
@@ -138,10 +160,22 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 				}
 			);
 		} else {
-			scrumBoardService.editExistingScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+			scrumBoardService.editExistingScrumBoard(currentBoard.id, $scope.sbName, $scope.startDate, $scope.duration).then(
 					function (response) {
 						//Refresh the data for the main menu without doing another server request (because you don't need to);
-//						loginUserBoards.push(response.data);
+						//need to remove the outdated board from JS-side list
+						console.log("before removing old: "+loginUserBoards);
+						loginUserBoards.forEach(function(board, index, array) {
+							console.log(board, index);
+							//find the outdated board
+							if(board.id == currentBoard.id){
+								//remove it
+								loginUserBoards.splice(index, 1);
+							}	
+						});
+						//push the new one into the JS-side list
+						loginUserBoards.push(response.data);
+						console.log("after removal and adding new: "+loginUserBoards);
 						$location.path("/mainMenu");
 					}, function (error) {
 						alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
@@ -176,8 +210,8 @@ app.factory("scrumBoardService", function($http) {
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
-		editExistingScrumBoard: function(name, startDate, duration){
-			return $http.post("editExistingScrumBoard", {name: name, startDate: startDate, duration: duration});
+		editExistingScrumBoard: function(id, name, startDate, duration){
+			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
 		}
 	};
 });
