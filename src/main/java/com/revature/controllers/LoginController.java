@@ -42,6 +42,7 @@ public class LoginController {
 		ScrumBoard test = su.getScrumBoards().get(0);
 		System.out.println(test.toString());
 		System.out.println("test: " + test.getStories());
+		//System.out.println();
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
@@ -64,7 +65,7 @@ public class LoginController {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e) {
-		e.printStackTrace(); //TODO wrap this in Aspect
+		e.printStackTrace(); //TODO wrap this in Aspect, send to Log on DB
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }
