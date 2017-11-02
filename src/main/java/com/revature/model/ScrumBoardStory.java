@@ -1,10 +1,15 @@
 package com.revature.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,9 +21,6 @@ public class ScrumBoardStory {
 	@Id
 	@Column(name="SBS_ID")
 	private int sbsId;
-	
-	//@Column(name="SB_ID")
-	//private int sbId;
 	
 	@ManyToOne
 	@JoinColumn(name="SB_ID")
@@ -33,6 +35,7 @@ public class ScrumBoardStory {
 		this.scrumBoard = scrumBoard;
 	}
 	
+
 	@Column(name="SBS_DESCRIPTION")
 	private String descriptions;
 	
@@ -96,6 +99,17 @@ public class ScrumBoardStory {
 		this.finishTime = finishTime;
 	}
 
+	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
+	private List<ScrumBoardTask> tasks = new ArrayList<>();
+	
+    public List<ScrumBoardTask> getTasks() {
+		return tasks;
+	}
+	
+    public void setTasks(List<ScrumBoardTask> tasks) {
+		this.tasks = tasks;
+	}
+    
 	@Override
 	public String toString() {
 		return "SbStories [sbsId=" + sbsId + ", descriptions=" + descriptions + ", points=" + points
