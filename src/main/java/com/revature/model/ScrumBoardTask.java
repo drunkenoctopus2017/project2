@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ScrumBoardTask {
 	@Id
 	@Column(name="SBT_ID")
-	private int sbtId;
+	private int id;
 	
 	//@Column(name="SBS_ID")
 	//private int sbsId;
@@ -35,12 +35,12 @@ public class ScrumBoardTask {
 	public ScrumBoardTask() {
 	}
 
-	public int getSbtId() {
-		return sbtId;
+	public int getId() {
+		return id;
 	}
 
-	public void setSbtId(int sbtId) {
-		this.sbtId = sbtId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getStatus() {
@@ -92,6 +92,6 @@ public class ScrumBoardTask {
 	
 	@Override
 	public String toString() {
-		return "SbTasks [sbtId=" + sbtId + ", status=" + status + ", description=" + description + "]";
+		return "SbTasks [id=" + id + ", status=" + status + ", description=" + description + "]";
 	}
 }

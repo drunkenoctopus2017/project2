@@ -88,7 +88,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				}
 				$location.path("/mainMenu");
 			}, function (error) {
-				console.log(error);
 				//The error object above has: 
 				//data, 
 				//status, 
@@ -132,7 +131,6 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 });
 
 app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoardService) {
-	console.log("Scrum Board View Controller");
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.filterStoriesByLane = function(laneId) {
@@ -141,10 +139,8 @@ app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoa
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {
-			console.log("data: " + response.data.length);
 			$scope.lanes = response.data;
 		}, function (error) {
-			console.log("LANES NG");
 		}
 	);
 	
