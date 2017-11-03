@@ -64,9 +64,8 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-
 app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
-
+	navbar = this;
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
 		loginUser.lastName = "";
@@ -103,6 +102,9 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				//Save the data to the loginUser value, declared above.
 				//Update if necessary to store more info, but the name is currently all that is necessary.
 				//All other data should be stored on the server.
+//				navbar.firstName = response.data.firstName;
+//				console.log(navbar.firstName);
+//				navbar.lastName = response.data.lastName;
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
 				loginUserRole.id = response.data.role.id;
