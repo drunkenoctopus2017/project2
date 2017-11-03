@@ -70,7 +70,7 @@ app.config(function($routeProvider, urlBase) {
 		controller: "createScrumBoardController"
 	}).when("/viewScrumBoard", {
 		templateUrl: urlBase + "scrumBoardView.html",
-		controller: "scrumBoardViewController
+		controller: "scrumBoardViewController"
 	}).when("/editScrumBoard", {
 		templateUrl: urlBase + "editScrumBoardView.html",
 		controller: "editScrumBoardController"
