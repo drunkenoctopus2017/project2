@@ -1,5 +1,6 @@
 package com.revature.service;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,21 @@ public class MainService {
 		sb = dao.createNewScrumBoard(sb);
 		su.getScrumBoards().add(sb);
 		su = dao.updateScrumUser(su);
+		return sb;
+	}
+	
+	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
+		sb.setUserId(su.getId());
+		//this is necessary^
+		sb = dao.updateScrumBoard(sb);
+		//make sure the scrumboard object in the user's list is updated, dunno if it would automatically do this
+		for(ScrumBoard osb : su.getScrumBoards()) {
+			if(osb.getId() == sb.getId()) {
+				su.getScrumBoards().remove(osb);
+				su.getScrumBoards().add(sb);
+				return sb;
+			}
+		}
 		return sb;
 	}
 	

@@ -40,6 +40,13 @@ public class ScrumBoardController {
 		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	
+	@RequestMapping(value="/editExistingScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumBoard> editExistingScrumBoard(@RequestBody ScrumBoard newScrumBoard, HttpServletRequest request) {
+		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
+		ScrumBoard sb = service.editExistingScrumBoard(newScrumBoard, su);
+		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
+	}
+	
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
 	 * 
