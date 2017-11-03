@@ -26,6 +26,7 @@ app.value("loginUser", {
 });
 
 app.value("loginUserBoards", []);
+app.value("allUsers", []);
 
 //for controlling what shows up on createScrumBoardView
 //false, if you're creating a board
@@ -64,6 +65,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/editScrumBoard", {
 		templateUrl: urlBase + "editScrumBoardView.html",
 		controller: "editScrumBoardController"
+	}).when("/getAllUsers", {
+		templateUrl: urlBase + "addUserView.html", 
+		controller: "getAllUsersController"
 	});
 });
 
@@ -152,6 +156,16 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 		currentBoard.duration = board.duration;
 		$location.path("/createScrumBoard");
 	}
+
+	if($scope.role == 200){
+		$scope.getAllUsers = function(board) {
+			currentBoard.id = board.id;
+			currentBoard.name = board.name;
+			currentBoard.startDate = board.startDate;
+			currentBoard.duration = board.duration;
+			$location.path("/getAllUsers");
+		}
+	}
 });
 
 app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
@@ -212,6 +226,17 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+	getAllUsersService.getAllExistingUsers().then(
+			function(response){
+				while(response.data.length > 0){
+					allUsers.push(response.data.pop());
+				}
+				$scope.board = currentBoard.name;
+				$scope.allUsers = allUsers.reverse();
+			});
+});
+
 
 
 
@@ -238,6 +263,14 @@ app.factory("scrumBoardService", function($http) {
 	};
 });
 
+app.factory("getAllUsersService", function($http){
+	return {
+		getAllExistingUsers: function(){
+			
+			return $http.get("getAllExistingUsers");
+		}
+	};
+});
 
 
 //TODO delete before pushing to master

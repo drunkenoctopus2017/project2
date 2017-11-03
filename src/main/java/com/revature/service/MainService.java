@@ -38,11 +38,11 @@ public class MainService {
 		return sb;
 	}
 	
-<<<<<<< HEAD
+
 	public List<ScrumUser> getAllUsers(){
 		return dao.getAllUsers();
 	}
-=======
+
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^
@@ -57,6 +57,4 @@ public class MainService {
 		}
 		return sb;
 	}
-	
->>>>>>> 7a9f60e2f012ff95ab9494a311f93d6397d0c044
 }

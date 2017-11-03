@@ -27,6 +27,7 @@ public class DAOImpl implements DAO{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	@Override
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb) {
 		Session session = sessionFactory.getCurrentSession();
 		Integer id = (Integer) session.save(sb);
@@ -34,12 +35,13 @@ public class DAOImpl implements DAO{
 		return sb;
 	}
 	
+	@Override
 	public ScrumBoard updateScrumBoard(ScrumBoard sb) {
 		Session session = sessionFactory.getCurrentSession();
 		sb = (ScrumBoard) session.merge(sb);
 		return sb;
 	}
-	
+	@Override
 	public ScrumUser getScrumUserByUsername(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from ScrumUser where username = :username");
@@ -47,12 +49,13 @@ public class DAOImpl implements DAO{
 		ScrumUser user = (ScrumUser)query.getSingleResult();
 		return user;
 	}
-	
+	@Override
 	public ScrumUser updateScrumUser(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
 		su = (ScrumUser) session.merge(su);
 		return su;
 	}
+	@Override
 	public List<ScrumUser> getAllUsers(){
 		Session session = sessionFactory.getCurrentSession();
 		List<ScrumUser> users = new ArrayList<>();
