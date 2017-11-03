@@ -35,6 +35,16 @@ public class ScrumBoardStory {
 		this.scrumBoard = scrumBoard;
 	}
 	
+	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
+	private List<ScrumBoardTask> tasks = new ArrayList<>();
+	
+    public List<ScrumBoardTask> getTasks() {
+		return tasks;
+	}
+	
+    public void setTasks(List<ScrumBoardTask> tasks) {
+		this.tasks = tasks;
+	}
 
 	@Column(name="SBS_DESCRIPTION")
 	private String description;
@@ -97,17 +107,6 @@ public class ScrumBoardStory {
 
 	public void setFinishTime(String finishTime) {
 		this.finishTime = finishTime;
-	}
-
-	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
-	private List<ScrumBoardTask> tasks = new ArrayList<>();
-	
-    public List<ScrumBoardTask> getTasks() {
-		return tasks;
-	}
-	
-    public void setTasks(List<ScrumBoardTask> tasks) {
-		this.tasks = tasks;
 	}
 
 	@Override

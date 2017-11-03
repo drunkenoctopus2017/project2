@@ -38,11 +38,6 @@ public class DAOImpl implements DAO{
 		Query query = session.createQuery("from ScrumUser where username = :username");
 		query.setParameter("username", su.getUsername());
 		ScrumUser user = (ScrumUser)query.getSingleResult();
-		List <ScrumBoard> boards = new ArrayList<ScrumBoard>();
-		
-		boards = user.getScrumBoards();
-		
-		System.out.println(boards.get(0));
 		return user;
 	}
 	

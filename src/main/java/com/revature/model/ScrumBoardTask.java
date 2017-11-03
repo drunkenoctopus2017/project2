@@ -28,10 +28,19 @@ public class ScrumBoardTask {
 	@Column(name="SBT_DESCRIPTION")
 	private String description;
 	
-	@OneToMany
+	@ManyToOne
 	@JoinColumn(name="SBS_ID")
-	private List<ScrumBoardStory> scrumBoardStorys;
-
+	private ScrumBoardStory story;
+	
+	@JsonIgnore
+	public ScrumBoardStory getStory() {
+		return story;
+	}
+	
+	public void setStory(ScrumBoardStory story) {
+		this.story = story;
+	}
+	
 	public ScrumBoardTask() {
 	}
 
@@ -55,14 +64,6 @@ public class ScrumBoardTask {
 		return description;
 	}
 	
-	@JsonIgnore
-	public List<ScrumBoardStory>  getScrumBoardTask() {
-		return scrumBoardStorys;
-	}
-	 
-	public void setScrumBoardTask(List<ScrumBoardStory> scrumBoardStorys) {
-		this.scrumBoardStorys  = scrumBoardStorys;
-	}
 	
 
 	public void setDescription(String description) {
@@ -77,18 +78,7 @@ public class ScrumBoardTask {
 	//	this.sbsId = sbsId;
 	//}
 	
-	@ManyToOne
-	@JoinColumn(name="SBS_ID")
-	private ScrumBoardStory story;
 	
-	@JsonIgnore
-	public ScrumBoardStory getStory() {
-		return story;
-	}
-
-	public void setStory(ScrumBoardStory story) {
-		this.story = story;
-	}
 	
 	@Override
 	public String toString() {
