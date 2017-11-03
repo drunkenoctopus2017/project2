@@ -1,19 +1,26 @@
 package com.revature.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="SB_TASKS")
 public class ScrumBoardTask {
 	@Id
 	@Column(name="SBT_ID")
-	private int sbtId;
+	private int id;
 	
-	@Column(name="SBS_ID")
-	private int sbsId;
+	//@Column(name="SBS_ID")
+	//private int sbsId;
 	
 	@Column(name="SBT_STATUS")
 	private int status; //or boolean? 0=incomplete 1= complete
@@ -21,16 +28,28 @@ public class ScrumBoardTask {
 	@Column(name="SBT_DESCRIPTION")
 	private String description;
 	
-
+	@ManyToOne
+	@JoinColumn(name="SBS_ID")
+	private ScrumBoardStory story;
+	
+	@JsonIgnore
+	public ScrumBoardStory getStory() {
+		return story;
+	}
+	
+	public void setStory(ScrumBoardStory story) {
+		this.story = story;
+	}
+	
 	public ScrumBoardTask() {
 	}
 
-	public int getSbtId() {
-		return sbtId;
+	public int getId() {
+		return id;
 	}
 
-	public void setSbtId(int sbtId) {
-		this.sbtId = sbtId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getStatus() {
@@ -44,20 +63,25 @@ public class ScrumBoardTask {
 	public String getDescription() {
 		return description;
 	}
+	
+	
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public int getSbsId() {
-		return sbsId;
-	}
+	//public int getSbsId() {
+	//	return sbsId;
+	//}
 
-	public void setSbsId(int sbsId) {
-		this.sbsId = sbsId;
-	}
+	//public void setSbsId(int sbsId) {
+	//	this.sbsId = sbsId;
+	//}
+	
+	
+	
 	@Override
 	public String toString() {
-		return "SbTasks [sbtId=" + sbtId + ", status=" + status + ", description=" + description + "]";
+		return "SbTasks [id=" + id + ", status=" + status + ", description=" + description + "]";
 	}
 }

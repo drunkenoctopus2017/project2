@@ -1,5 +1,8 @@
 package com.revature.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.ScrumBoard;
+import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumUser;
 
 @Transactional
@@ -41,6 +45,13 @@ public class DAOImpl implements DAO{
 		query.setParameter("username", su.getUsername());
 		ScrumUser user = (ScrumUser)query.getSingleResult();
 		return user;
+	}
+	
+	public List<ScrumBoardLane> getScrumBoardLanes() {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from ScrumBoardLane");
+		List<ScrumBoardLane> results = (List<ScrumBoardLane>) query.getResultList();
+		return results;
 	}
 	
 	public ScrumUser updateScrumUser(ScrumUser su) {

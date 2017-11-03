@@ -50,6 +50,13 @@ app.value("loginUserRole", {
 	id: 0, 
 	roleName: "unauthorized"
 });
+app.value("currentScrumBoard", {
+	id: 0,
+	userId: 0,
+	name: 'no scrum board selected',
+	startDate: 0,
+	duration: 0
+});
 
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
@@ -61,6 +68,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
+	}).when("/viewScrumBoard", {
+		templateUrl: urlBase + "scrumBoardView.html",
+		controller: "scrumBoardViewController"
 	}).when("/editScrumBoard", {
 		templateUrl: urlBase + "editScrumBoardView.html",
 		controller: "editScrumBoardController"
@@ -85,7 +95,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
 			}
 		);
-	}
+  }
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
@@ -115,7 +125,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				}
 				$location.path("/mainMenu");
 			}, function (error) {
-				console.log(error);
 				//The error object above has: 
 				//data, 
 				//status, 
@@ -127,7 +136,8 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+
+app.controller("mainMenuController", function($scope, $rootScope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
 	//reset the value of editing, so that it doesn't stay true forever after you edit something
 	editing.value = false;
 	//clear currentBoard
@@ -135,7 +145,7 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	currentBoard.name = "no board selected";
 	currentBoard.startDate = undefined;
 	currentBoard.duration = 0;
-	//fill in html fields
+	//fill in html field
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -143,7 +153,14 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
-	$scope.editScrumBoard = function(board) {
+  $scope.viewBoard = function(b) {
+		currentScrumBoard = b;
+		$rootScope.currentScrumBoard = b
+		traverseObject(b);
+		$location.path("/viewScrumBoard");
+
+	}
+  $scope.editScrumBoard = function(board) {
 		editing.value = true;
 		//set the current board properties to the properties of board associated with the button that called this function
 		currentBoard.id = board.id;
@@ -212,6 +229,25 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
+app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoardService) {
+	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
+	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.filterStoriesByLane = function(laneId) {
+		let stories = $rootScope.currentScrumBoard.stories;
+		return stories.filter(s => s.laneId == laneId);
+	}
+	scrumBoardService.getScrumBoardLanes().then(
+		function (response) {
+			$scope.lanes = response.data;
+		}, function (error) {
+		}
+	);
+	
+	traverseObject(currentScrumBoard);
+});
+
+
+
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
@@ -226,6 +262,9 @@ app.factory("loginUserService", function($http) {
 
 app.factory("scrumBoardService", function($http) {
 	return {
+		getScrumBoardLanes: function() {
+			return $http.get("getScrumBoardLanes");
+		}, 
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
@@ -251,3 +290,7 @@ function getObjectString(obj, indent) {
 	}
 	return s;
 }
+
+//function checkId(array){
+//	
+//}
