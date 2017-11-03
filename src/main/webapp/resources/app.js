@@ -110,7 +110,6 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 	}
 	$scope.viewBoard = function(b) {
 		currentScrumBoard = b;
-		
 		$rootScope.currentScrumBoard = b
 		traverseObject(b);
 		$location.path("/viewScrumBoard");
@@ -132,14 +131,24 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
-
-app.controller("scrumBoardViewController", function($scope, $rootScope){
+app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoardService) {
 	console.log("Scrum Board View Controller");
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.filterStoriesByLane = function(laneId) {
+		let stories = $rootScope.currentScrumBoard.stories;
+		return stories.filter(s => s.laneId == laneId);
+	}
+	scrumBoardService.getScrumBoardLanes().then(
+		function (response) {
+			console.log("data: " + response.data.length);
+			$scope.lanes = response.data;
+		}, function (error) {
+			console.log("LANES NG");
+		}
+	);
+	
 	traverseObject(currentScrumBoard);
-	//scrum boards console logging as null?
-	console.log($scope.scrumBoardStories);
 });
 
 
@@ -155,6 +164,9 @@ app.factory("loginUserService", function($http) {
 
 app.factory("scrumBoardService", function($http) {
 	return {
+		getScrumBoardLanes: function() {
+			return $http.get("getScrumBoardLanes");
+		}, 
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration, stories: stories});
 		}

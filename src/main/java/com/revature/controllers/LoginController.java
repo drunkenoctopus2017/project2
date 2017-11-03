@@ -46,7 +46,7 @@ public class LoginController {
 		System.out.println("test: " + testBoard.getStories());
 		
 		ScrumBoardTask testTask = testBoard.getStories().get(0).getTasks().get(0);
-
+		
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	

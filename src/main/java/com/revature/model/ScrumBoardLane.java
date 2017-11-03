@@ -13,7 +13,7 @@ public class ScrumBoardLane {
 	private int id;
 	
 	@Column(name="SBL_NAME")
-	private String sblName;
+	private String name;
 	
 	public ScrumBoardLane() {
 	}
@@ -26,17 +26,17 @@ public class ScrumBoardLane {
 		this.id = id;
 	}
 
-	public String getSblName() {
-		return sblName;
+	public String getName() {
+		return name;
 	}
 
-	public void setSblName(String sblName) {
-		this.sblName = sblName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "SbLane [id=" + id + ", sblName=" + sblName + "]";
+		return "SbLane [id=" + id + ", name=" + name + "]";
 	}
 	
 	

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.ScrumBoard;
+import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumUser;
 
 @Transactional
@@ -43,6 +44,13 @@ public class DAOImpl implements DAO{
 		
 		System.out.println(boards.get(0));
 		return user;
+	}
+	
+	public List<ScrumBoardLane> getScrumBoardLanes() {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from ScrumBoardLane");
+		List<ScrumBoardLane> results = (List<ScrumBoardLane>) query.getResultList();
+		return results;
 	}
 	
 	public ScrumUser updateScrumUser(ScrumUser su) {

@@ -2,71 +2,21 @@
 	<h1>Drunken Octopus Scrum Board System</h1>
 	<div class="jumbotron">
 		<p>{{scrumBoardName}}</p>
-		
-		<div data-my-customer></div>
-		<div data-ng-repeat="n in [1, 2, 3, 4, 5, 6] track by $index">
-		  	{{n}}
-		</div>
-		<!-- We need to make this a directive. -->
-		<!-- in version two. Which will never get implemented. -->
-				
-		<!-- 
-		<div class="row">
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Backlog</h3>
-					</div>
-					<div class="panel-body">
-						<div class="panel panel-default" ng-repeat="story in scrumBoardStories">
-							<div class="panel-body">
-								{{story.name}}
-							</div>
+	</div>
+	<div class="row">
+		<div data-ng-repeat="lane in lanes" class="col-xs-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{lane.name}}</h3>
+				</div>
+				<div class="panel-body">
+					<div class="panel panel-default" data-ng-repeat="story in filterStoriesByLane(lane.id)">
+						<div class="panel-body">
+							<p>{{story.description}}</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">TODO</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">In Progress</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Test</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Verify</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Done</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
 		</div>
-		-->
 	</div>
 </div>

@@ -20,7 +20,7 @@ public class ScrumBoardStory {
 	
 	@Id
 	@Column(name="SBS_ID")
-	private int sbsId;
+	private int id;
 	
 	@ManyToOne
 	@JoinColumn(name="SB_ID")
@@ -37,7 +37,7 @@ public class ScrumBoardStory {
 	
 
 	@Column(name="SBS_DESCRIPTION")
-	private String descriptions;
+	private String description;
 	
 	@Column(name="SBS_POINTS")
 	private int points;
@@ -51,12 +51,12 @@ public class ScrumBoardStory {
 	public ScrumBoardStory() {
 	}
 
-	public int getSbsId() {
-		return sbsId;
+	public int getId() {
+		return id;
 	}
 
-	public void setSbsId(int sbsId) {
-		this.sbsId = sbsId;
+	public void setId(int id) {
+		this.id = id;
 	}
 /*
 	public int getSbId() {
@@ -67,12 +67,12 @@ public class ScrumBoardStory {
 		this.sbId = sbId;
 	}
 */
-	public String getDescriptions() {
-		return descriptions;
+	public String getdescription() {
+		return description;
 	}
 
-	public void setDescriptions(String descriptions) {
-		this.descriptions = descriptions;
+	public void setdescription(String description) {
+		this.description = description;
 	}
 
 	public int getPoints() {
@@ -112,7 +112,7 @@ public class ScrumBoardStory {
 
 	@Override
 	public String toString() {
-		return "ScrumBoardStory [sbsId=" + sbsId + ", descriptions=" + descriptions + ", points=" + points + ", laneId="
+		return "ScrumBoardStory [id=" + id + ", description=" + description + ", points=" + points + ", laneId="
 				+ laneId + ", finishTime=" + finishTime + ", tasks=" + tasks + "]";
 	}
     
