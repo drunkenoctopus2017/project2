@@ -52,6 +52,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/viewScrumBoard", {
 		templateUrl: urlBase + "scrumBoardView.html",
 		controller: "scrumBoardViewController"
+	}).when("/createStory", {
+		templateUrl : urlBase + "createStoryView.html",
+		controller: "createStoryViewController"
 	});
 });
 
@@ -115,6 +118,7 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 		$location.path("/viewScrumBoard");
 
 	}
+	
 });
 
 app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
@@ -131,7 +135,8 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
-app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoardService) {
+
+app.controller("scrumBoardViewController", function($scope, $rootScope, $location, scrumBoardService) {
 	console.log("Scrum Board View Controller");
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
@@ -148,10 +153,25 @@ app.controller("scrumBoardViewController", function($scope, $rootScope, scrumBoa
 		}
 	);
 	
+	$scope.createStory =function(){
+		$location.path("/createStory")
+	}
+	
 	traverseObject(currentScrumBoard);
 });
 
-
+app.controller("createStoryViewController", function($scope){
+	console.log("Create Story View Controller");
+	$scope.taskList =[];
+	
+	$scope.addTask = function(){
+		//$scope.
+	}
+	
+	$scope.removeTask = function(){
+		
+	}
+});
 
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
@@ -168,7 +188,10 @@ app.factory("scrumBoardService", function($http) {
 			return $http.get("getScrumBoardLanes");
 		}, 
 		createNewScrumBoard: function(name, startDate, duration) {
-			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration, stories: stories});
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
+		},
+		getScrumBoardStory : function(){
+			return $http.get("getScrumBoardStory");
 		}
 	};
 });

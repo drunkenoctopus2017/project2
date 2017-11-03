@@ -13,8 +13,10 @@
 					<div class="panel panel-default" data-ng-repeat="story in filterStoriesByLane(lane.id)">
 						<div class="panel-body">
 							<p>{{story.description}}</p>
+							<button type="button" class="btn btn-default" data-ng-click="viewTasks()">View Tasks</button>
 						</div>
 					</div>
+					<button type="button" class="btn btn-default" data-ng-click="createStory()">Create Story</button>
 				</div>
 			</div>
 		</div>

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.dao.DAO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumUser;
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
@@ -41,5 +42,6 @@ public class MainService {
 		su = dao.updateScrumUser(su);
 		return sb;
 	}
+	
 	
 }
