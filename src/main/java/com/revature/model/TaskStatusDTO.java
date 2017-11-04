@@ -9,9 +9,4 @@ package com.revature.model;
 public class TaskStatusDTO {
 	public int id;
 	public int status;
-	
-	@Override
-	public String toString() {
-		return "TastStatusDTO [id=" + id + ", status=" + status + "]";
-	}
 }

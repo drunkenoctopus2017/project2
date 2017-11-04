@@ -2,6 +2,7 @@ package com.revature.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.dao.DAO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
+import com.revature.model.StoryLaneDTO;
 import com.revature.model.TaskStatusDTO;
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
@@ -61,11 +64,18 @@ public class MainService {
 		return sb;
 	}
 	
+	public ScrumBoardStory changeScrumBoardStoryLane(StoryLaneDTO params) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(params.storyId);
+		story.setLaneId(params.laneId);
+		story.setFinishTime(new Date());
+		story = dao.updateScrumBoardStory(story);
+		return story;
+	}
+	
 	public ScrumBoardTask updateScrumBoardTaskStatus(TaskStatusDTO params) {
 		ScrumBoardTask task = dao.getScrumBoardTaskById(params.id);
 		task.setStatus(params.status);
 		task = dao.updateScrumBoardTask(task);
 		return task;
 	}
-	
 }

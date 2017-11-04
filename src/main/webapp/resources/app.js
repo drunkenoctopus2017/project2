@@ -84,7 +84,6 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 				$location.path("/");
 			},
 			function(error){
-				console.log(error);
 				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
 			}
 		);
@@ -228,8 +227,19 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		let stories = $rootScope.currentScrumBoard.stories;
 		return stories.filter(s => s.laneId == laneId);
 	}
+	$scope.changeLane = function (story, lane) {
+		console.log("story: " + story.id + " lane dir: " + lane.id);
+		story.laneId = lane.id;
+		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
+			function(response){
+				//no action necessary
+			},
+			function(error){
+				alert(error.status + " " + error.statusText + "\nThere was an error changing lanes!");
+			}
+		);
+	}
 	$scope.updateTask = function (task) {
-		traverseObject(task);
 		scrumBoardService.updateScrumBoardTaskStatus(task.id, task.status).then(
 			function (response) {
 				//no action necessary
@@ -276,6 +286,9 @@ app.factory("scrumBoardService", function($http) {
 		}, 
 		updateScrumBoardTaskStatus: function(id, status) {
 			return $http.post("updateScrumBoardTask", {id: id, status: status});
+		}, 
+		changeScrumBoardStoryLane: function (storyId, laneId) {
+			return $http.post("changeScrumBoardStoryLane", {storyId: storyId, laneId: laneId});
 		}
 		//Delete
 		//none currently

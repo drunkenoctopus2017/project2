@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
+import com.revature.model.StoryLaneDTO;
 import com.revature.model.TaskStatusDTO;
 import com.revature.service.MainService;
 
@@ -58,6 +60,11 @@ public class ScrumBoardController {
 		return new ResponseEntity<ScrumBoardTask>(task, HttpStatus.OK); //200
 	}
 	
+	@RequestMapping(value="/changeScrumBoardStoryLane", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumBoardStory> changeScrumBoardStoryLane(@RequestBody StoryLaneDTO params, HttpServletRequest request) {
+		ScrumBoardStory story = service.changeScrumBoardStoryLane(params);
+		return new ResponseEntity<ScrumBoardStory>(story, HttpStatus.OK); //200
+	}
 	//Delete
 	
 	/**
