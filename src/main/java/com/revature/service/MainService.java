@@ -2,6 +2,7 @@ package com.revature.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class MainService {
 	public ScrumBoardStory changeScrumBoardStoryLane(StoryLaneDTO params) {
 		ScrumBoardStory story = dao.getScrumBoardStoryById(params.storyId);
 		story.setLaneId(params.laneId);
+		story.setFinishTime(new Date());
 		story = dao.updateScrumBoardStory(story);
 		return story;
 	}
