@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.dao.DAO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
+import com.revature.model.TaskStatusDTO;
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
 @Transactional
@@ -46,6 +48,7 @@ public class MainService {
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^
+		//TODO: explain why this is necessary! Even if you don't know why. SAY you don't know why! ;-)
 		sb = dao.updateScrumBoard(sb);
 		//make sure the scrumboard object in the user's list is updated, dunno if it would automatically do this
 		for(ScrumBoard osb : su.getScrumBoards()) {
@@ -56,6 +59,13 @@ public class MainService {
 			}
 		}
 		return sb;
+	}
+	
+	public ScrumBoardTask updateScrumBoardTaskStatus(TaskStatusDTO params) {
+		ScrumBoardTask task = dao.getScrumBoardTaskById(params.id);
+		task.setStatus(params.status);
+		task = dao.updateScrumBoardTask(task);
+		return task;
 	}
 	
 }
