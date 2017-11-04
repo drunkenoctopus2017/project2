@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
 
@@ -51,6 +52,11 @@ public class DAOImpl implements DAO{
 		return results;
 	}
 	
+	public ScrumBoardStory getScrumBoardStoryById(int id) {
+		Session session = sessionFactory.getCurrentSession();
+		return session.get(ScrumBoardStory.class, id);
+	}
+	
 	public ScrumBoardTask getScrumBoardTaskById(int id) {
 		Session session = sessionFactory.getCurrentSession();
 		return session.get(ScrumBoardTask.class, id);
@@ -67,6 +73,12 @@ public class DAOImpl implements DAO{
 		Session session = sessionFactory.getCurrentSession();
 		sb = (ScrumBoard) session.merge(sb);
 		return sb;
+	}
+	
+	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory story) {
+		Session session = sessionFactory.getCurrentSession();
+		story = (ScrumBoardStory) session.merge(story);
+		return story;
 	}
 	
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task) {

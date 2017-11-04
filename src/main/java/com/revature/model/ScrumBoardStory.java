@@ -1,6 +1,7 @@
 package com.revature.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -55,8 +56,14 @@ public class ScrumBoardStory {
 	@Column(name="SBL_ID")
 	private int laneId;
 	
+	/**
+	 * TODO: 
+	 * This should simply represent the last time the story's lane status was updated.
+	 * So a finished story will be finished when it is moved to the the Done lane.
+	 * But each time the story changes lanes, this variable will be updated.
+	 */
 	@Column(name="SBS_DONE")
-	private String finishTime;
+	private Date finishTime;
 	
 	public ScrumBoardStory() {
 	}
@@ -101,11 +108,11 @@ public class ScrumBoardStory {
 		this.laneId = laneId;
 	}
 
-	public String getFinishTime() {
+	public Date getFinishTime() {
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime) {
+	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
 	}
 
