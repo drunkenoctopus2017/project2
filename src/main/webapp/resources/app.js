@@ -238,14 +238,38 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
 	
 	$scope.users = [];
+	$scope.getAvailableUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return false;
+				}
+			}
+			return true;
+		})
+	}
+	$scope.getBoardUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return true;
+				}
+			}
+			return false;
+		})
+	}
 	
 	getAllUsersService.getAllExistingUsers().then (
 		function(response) {
-			while(response.data.length > 0)	{
-				users = response.data;
-			}
+			$scope.users = response.data;
 			$scope.board = currentBoard.name;
-			$scope.allUsers = allUsers.reverse();
+			
 		}
 	);
 	
@@ -253,15 +277,17 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
 			function (response) {
 				//no action necessary
-				console.log("heya");
-				traverseObject(response.data);
+				let temp = $scope.users;
+				$location.path("/mainMenu");
 				$scope.board = response.data.name;
 			}, function (error) {
-				alert(error.status + " " + error.statusText + "\nORMYGORD!");
+				alert(error.status + " " + error.statusText + "\nThere was an error!");
 			}
 		);
 	}
 });
+
+
 
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
