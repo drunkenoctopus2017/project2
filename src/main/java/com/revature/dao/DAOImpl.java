@@ -63,4 +63,18 @@ public class DAOImpl implements DAO{
 		users = query.getResultList();
 		return users;
 	}
+
+	@Override
+	public ScrumUser getScrumUserById(int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		ScrumUser user = session.get(ScrumUser.class, userId);
+		return user;
+	}
+
+	@Override
+	public ScrumBoard getScrumBoardById(int boardId) {
+		Session session = sessionFactory.getCurrentSession();
+		ScrumBoard board = session.get(ScrumBoard.class, boardId);
+		return board;
+	}
 }

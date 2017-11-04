@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.dao.DAO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
+import com.revature.model.UserBoardDTO;
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
 @Transactional
@@ -56,5 +57,14 @@ public class MainService {
 			}
 		}
 		return sb;
+	}
+	
+	
+	
+	public void addUserToBoard(UserBoardDTO ub) {
+		ScrumUser user = dao.getScrumUserById(ub.getUserId());
+		ScrumBoard board = dao.getScrumBoardById(ub.getBoardId());
+		user.getScrumBoards().add(board);
+		user = dao.updateScrumUser(user);
 	}
 }

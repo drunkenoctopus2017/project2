@@ -11,7 +11,11 @@ public interface DAO {
 
 	public List<ScrumUser> getAllUsers();
 	
+	public ScrumUser getScrumUserById(int userId);
+	
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
+	
+	public ScrumBoard getScrumBoardById(int boardId);
 	
 	public ScrumUser updateScrumUser(ScrumUser su);
 	

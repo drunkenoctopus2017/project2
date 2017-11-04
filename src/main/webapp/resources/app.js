@@ -235,6 +235,16 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 				$scope.board = currentBoard.name;
 				$scope.allUsers = allUsers.reverse();
 			});
+	$scope.addUserToBoard = function(user){
+		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
+				function(response){
+					if(response.data == true) {
+						$location.path("/mainMenu");
+					} else {
+						$location.path("/getAllUsers");
+					}
+				});
+	}
 });
 
 
@@ -266,8 +276,11 @@ app.factory("scrumBoardService", function($http) {
 app.factory("getAllUsersService", function($http){
 	return {
 		getAllExistingUsers: function(){
-			
 			return $http.get("getAllExistingUsers");
+		}, 
+		addUserToBoard: function(userId, boardId){
+			
+			return $http.post("addUserToBoard", {userId: userId, boardId: boardId});
 		}
 	};
 });
