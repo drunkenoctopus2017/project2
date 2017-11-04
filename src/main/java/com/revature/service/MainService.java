@@ -13,11 +13,10 @@ import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-<<<<<<< HEAD
+
 import com.revature.model.UserBoardDTO;
-=======
 import com.revature.model.TaskStatusDTO;
->>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
+
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
 @Transactional
@@ -68,10 +67,7 @@ public class MainService {
 			}
 		}
 		return sb;
-	}
-	
-<<<<<<< HEAD
-	
+	}	
 	
 	public void addUserToBoard(UserBoardDTO ub) {
 		ScrumUser user = dao.getScrumUserById(ub.getUserId());
@@ -79,13 +75,11 @@ public class MainService {
 		user.getScrumBoards().add(board);
 		user = dao.updateScrumUser(user);
 	}
-=======
+	
 	public ScrumBoardTask updateScrumBoardTaskStatus(TaskStatusDTO params) {
 		ScrumBoardTask task = dao.getScrumBoardTaskById(params.id);
 		task.setStatus(params.status);
 		task = dao.updateScrumBoardTask(task);
 		return task;
 	}
-	
->>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
 }

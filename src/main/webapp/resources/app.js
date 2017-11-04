@@ -235,11 +235,14 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
-<<<<<<< HEAD
-app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
-	getAllUsersService.getAllExistingUsers().then(
-			function(response){
-				while(response.data.length > 0){
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) 
+{
+	getAllUsersService.getAllExistingUsers().then
+	(
+			function(response)
+			{
+				while(response.data.length > 0)
+				{
 					allUsers.push(response.data.pop());
 				}
 				$scope.board = currentBoard.name;
@@ -248,14 +251,16 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	$scope.addUserToBoard = function(user){
 		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
 				function(response){
-					if(response.data == true) {
+					if(response.data == true) 
+					{
 						$location.path("/mainMenu");
 					} else {
 						$location.path("/getAllUsers");
 					}
 				});
 	}
-=======
+});
+
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
@@ -279,15 +284,9 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		}, function (error) {
 		}
 	);
->>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
 });
 
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
