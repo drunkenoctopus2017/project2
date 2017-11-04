@@ -15,7 +15,7 @@
 							<p>{{story.description}}</p>
 							<div class="checkbox" data-ng-repeat="task in story.tasks">
 								<label>
-									<input type="checkbox" ng-model="task.status">{{task.description}}
+									<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
 								</label>
 							</div>
 						</div>
