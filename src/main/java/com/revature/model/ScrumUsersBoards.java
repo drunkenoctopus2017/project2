@@ -7,6 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="USERS_BOARDS")
+@Deprecated
 public class ScrumUsersBoards {
 	@Id
 	@Column(name="USER_ID")

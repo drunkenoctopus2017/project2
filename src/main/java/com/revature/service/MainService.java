@@ -2,6 +2,7 @@ package com.revature.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -13,10 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.dao.DAO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
+<<<<<<< HEAD
 import com.revature.model.ScrumUsersBoards;
 import com.revature.model.UserBoardDTO;
+=======
+import com.revature.model.StoryLaneDTO;
+>>>>>>> 54730e7c13a9ac823763275b356e4db2da53031f
 import com.revature.model.TaskStatusDTO;
 
 
@@ -90,6 +96,14 @@ public class MainService {
 	}
 	//--Quarantined-------------------------------------------------
 	
+	
+	public ScrumBoardStory changeScrumBoardStoryLane(StoryLaneDTO params) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(params.storyId);
+		story.setLaneId(params.laneId);
+		story.setFinishTime(new Date());
+		story = dao.updateScrumBoardStory(story);
+		return story;
+	}
 	
 	public ScrumBoardTask updateScrumBoardTaskStatus(TaskStatusDTO params) {
 		ScrumBoardTask task = dao.getScrumBoardTaskById(params.id);
