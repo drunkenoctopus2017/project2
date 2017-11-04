@@ -68,7 +68,7 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+app.controller("navbarController", function($scope, $rootScope, $location, loginUser, loginUserBoards, loginUserService) {
 	navbar = this;
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
@@ -78,6 +78,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 		}
 		loginUserService.logout().then(
 			function(response){
+				$rootScope.loggedIn = false; // make the dropdown thing on the top right disappear
 				$location.path("/");
 			},
 			function(error){
@@ -88,7 +89,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
   }
 });
 
-app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
+app.controller("loginController", function($scope, $rootScope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
 	$scope.login = function() {
 		// note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -109,11 +110,9 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				// Update if necessary to store more info, but the name is
 				// currently all that is necessary.
 				// All other data should be stored on the server.
-//				navbar.firstName = response.data.firstName;
-//				console.log(navbar.firstName);
-//				navbar.lastName = response.data.lastName;
 				loginUser.firstName = response.data.firstName;
 				loginUser.lastName = response.data.lastName;
+				$rootScope.loggedIn = true; // makes the dropdown thing on the top right appear once you're logged in
 				loginUserRole.id = response.data.role.id;
 				loginUserRole.roleName = response.data.role.roleName;
 				while(response.data.scrumBoards.length > 0) {
