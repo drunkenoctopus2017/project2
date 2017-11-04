@@ -17,12 +17,10 @@ import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-<<<<<<< HEAD
+
 import com.revature.model.ScrumUsersBoards;
 import com.revature.model.UserBoardDTO;
-=======
 import com.revature.model.StoryLaneDTO;
->>>>>>> 54730e7c13a9ac823763275b356e4db2da53031f
 import com.revature.model.TaskStatusDTO;
 
 
