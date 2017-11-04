@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.model.ScrumBoard;
+import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
 import com.revature.service.MainService;
 
@@ -70,8 +72,7 @@ public class LoginController {
 	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Exception> handleException(Exception e) {
-
-		e.printStackTrace(); //TODO wrap this in Aspect
+		e.printStackTrace(); //TODO wrap this in Aspect, send to Log on DB
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);
 	}
 }

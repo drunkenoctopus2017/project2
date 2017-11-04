@@ -1,0 +1,27 @@
+<div class="container">
+	<h1>Drunken Octopus Scrum Board System</h1>
+	<div class="jumbotron">
+		<p>{{scrumBoardName}}</p>
+	</div>
+	<div class="row">
+		<div data-ng-repeat="lane in lanes" class="col-xs-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{lane.name}}</h3>
+				</div>
+				<div class="panel-body">
+					<div class="panel panel-default" data-ng-repeat="story in filterStoriesByLane(lane.id)">
+						<div class="panel-body">
+							<p>{{story.description}}</p>
+							<div class="checkbox" data-ng-repeat="task in story.tasks">
+								<label>
+									<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

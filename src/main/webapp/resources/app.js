@@ -62,6 +62,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
+	}).when("/viewScrumBoard", {
+		templateUrl: urlBase + "scrumBoardView.html",
+		controller: "scrumBoardViewController"
 	}).when("/editScrumBoard", {
 		templateUrl: urlBase + "editScrumBoardView.html",
 		controller: "editScrumBoardController"
@@ -89,7 +92,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
 			}
 		);
-	}
+  }
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
@@ -119,7 +122,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				}
 				$location.path("/mainMenu");
 			}, function (error) {
-				console.log(error);
 				//The error object above has: 
 				//data, 
 				//status, 
@@ -131,7 +133,8 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+
+app.controller("mainMenuController", function($scope, $rootScope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
 	//reset the value of editing, so that it doesn't stay true forever after you edit something
 	editing.value = false;
 	//clear currentBoard
@@ -139,7 +142,7 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	currentBoard.name = "no board selected";
 	currentBoard.startDate = undefined;
 	currentBoard.duration = 0;
-	//fill in html fields
+	//fill in html field
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -147,7 +150,13 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
-	$scope.editScrumBoard = function(board) {
+  $scope.viewBoard = function(b) {
+		$rootScope.currentScrumBoard = b
+		traverseObject(b);
+		$location.path("/viewScrumBoard");
+
+	}
+  $scope.editScrumBoard = function(board) {
 		editing.value = true;
 		//set the current board properties to the properties of board associated with the button that called this function
 		currentBoard.id = board.id;
@@ -178,7 +187,7 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 		$scope.duration = currentBoard.duration;
 	}
 	$scope.boardName = currentBoard.name;
-	$scope.createOrEdit = function() {
+	$scope.createOrEdit = function () {
 		//change functionality depending on value of editing
 		if(!editing.value){
 			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
@@ -205,27 +214,28 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 				durationToUse = currentBoard.duration;
 			}
 			scrumBoardService.editExistingScrumBoard(currentBoard.id, nameToUse, startDateToUse, durationToUse).then(
-					function (response) {
-						//Refresh the data for the main menu without doing another server request (because you don't need to);
-						//need to remove the outdated board from JS-side list
-						loginUserBoards.forEach(function(board, index, array) {
-							//find the outdated board
-							if(board.id == currentBoard.id){
-								//remove it
-								loginUserBoards.splice(index, 1);
-							}	
-						});
-						//adds the new one to the front of the JS-side list
-						loginUserBoards.unshift(response.data);
-						$location.path("/mainMenu");
-					}, function (error) {
-						alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
-					}
-				);
+				function (response) {
+					//Refresh the data for the main menu without doing another server request (because you don't need to);
+					//need to remove the outdated board from JS-side list
+					loginUserBoards.forEach(function (board, index, array) {
+						//find the outdated board
+						if(board.id == currentBoard.id){
+							//remove it
+							loginUserBoards.splice(index, 1);
+						}	
+					});
+					//adds the new one to the front of the JS-side list
+					loginUserBoards.unshift(response.data);
+					$location.path("/mainMenu");
+				}, function (error) {
+					alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
+				}
+			);
 		}
 	}
 });
 
+<<<<<<< HEAD
 app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
 	getAllUsersService.getAllExistingUsers().then(
 			function(response){
@@ -245,18 +255,46 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 					}
 				});
 	}
+=======
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
+	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
+	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.filterStoriesByLane = function (laneId) {
+		let stories = $rootScope.currentScrumBoard.stories;
+		return stories.filter(s => s.laneId == laneId);
+	}
+	$scope.updateTask = function (task) {
+		traverseObject(task);
+		scrumBoardService.updateScrumBoardTaskStatus(task.id, task.status).then(
+			function (response) {
+				//no action necessary
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nTask could not be updated!");
+			}
+		);
+	}
+	scrumBoardService.getScrumBoardLanes().then(
+		function (response) {
+			$scope.lanes = response.data;
+		}, function (error) {
+		}
+	);
+>>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
 });
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d46aa66e2099e34b9682cd2bc8da0772fa8d8f1f
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
 		},
-		logout: function(){
+		logout: function() {
 			return $http.get("logout");
 		}
 	};
@@ -264,12 +302,23 @@ app.factory("loginUserService", function($http) {
 
 app.factory("scrumBoardService", function($http) {
 	return {
+		//Create
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
-		editExistingScrumBoard: function(id, name, startDate, duration){
+		//Read
+		getScrumBoardLanes: function() {
+			return $http.get("getScrumBoardLanes");
+		}, 
+		//Update
+		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
+		}, 
+		updateScrumBoardTaskStatus: function(id, status) {
+			return $http.post("updateScrumBoardTask", {id: id, status: status});
 		}
+		//Delete
+		//none currently
 	};
 });
 
@@ -302,3 +351,7 @@ function getObjectString(obj, indent) {
 	}
 	return s;
 }
+
+//function checkId(array){
+//	
+//}

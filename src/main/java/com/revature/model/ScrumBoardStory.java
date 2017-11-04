@@ -1,9 +1,18 @@
 package com.revature.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="SB_STORIES")
@@ -11,13 +20,34 @@ public class ScrumBoardStory {
 	
 	@Id
 	@Column(name="SBS_ID")
-	private int sbsId;
+	private int id;
 	
-	@Column(name="SB_ID")
-	private int sbId;
+	@ManyToOne
+	@JoinColumn(name="SB_ID")
+	private ScrumBoard scrumBoard;
 	
+	@JsonIgnore
+	public ScrumBoard getScrumBoard() {
+		return scrumBoard;
+	}
+
+	public void setScrumBoard(ScrumBoard scrumBoard) {
+		this.scrumBoard = scrumBoard;
+	}
+	
+	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
+	private List<ScrumBoardTask> tasks = new ArrayList<>();
+	
+    public List<ScrumBoardTask> getTasks() {
+		return tasks;
+	}
+	
+    public void setTasks(List<ScrumBoardTask> tasks) {
+		this.tasks = tasks;
+	}
+
 	@Column(name="SBS_DESCRIPTION")
-	private String descriptions;
+	private String description;
 	
 	@Column(name="SBS_POINTS")
 	private int points;
@@ -31,14 +61,14 @@ public class ScrumBoardStory {
 	public ScrumBoardStory() {
 	}
 
-	public int getSbsId() {
-		return sbsId;
+	public int getId() {
+		return id;
 	}
 
-	public void setSbsId(int sbsId) {
-		this.sbsId = sbsId;
+	public void setId(int id) {
+		this.id = id;
 	}
-
+/*
 	public int getSbId() {
 		return sbId;
 	}
@@ -46,13 +76,13 @@ public class ScrumBoardStory {
 	public void setSbId(int sbId) {
 		this.sbId = sbId;
 	}
-
-	public String getDescriptions() {
-		return descriptions;
+*/
+	public String getdescription() {
+		return description;
 	}
 
-	public void setDescriptions(String descriptions) {
-		this.descriptions = descriptions;
+	public void setdescription(String description) {
+		this.description = description;
 	}
 
 	public int getPoints() {
@@ -81,9 +111,11 @@ public class ScrumBoardStory {
 
 	@Override
 	public String toString() {
-		return "SbStories [sbsId=" + sbsId + ", sbId=" + sbId + ", descriptions=" + descriptions + ", points=" + points
-				+ ", laneId=" + laneId + ", finishTime=" + finishTime + "]";
+		return "ScrumBoardStory [id=" + id + ", description=" + description + ", points=" + points + ", laneId="
+				+ laneId + ", finishTime=" + finishTime + ", tasks=" + tasks + "]";
 	}
+    
+	
 	
 	
 }

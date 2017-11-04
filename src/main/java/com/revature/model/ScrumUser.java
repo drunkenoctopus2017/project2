@@ -136,6 +136,6 @@ public class ScrumUser {
 	@Override
 	public String toString() {
 		return "ScrumUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + ", email=" + email + ", role=" + role + " scrumBoards=" + scrumBoards + "]";
+				+ ", password=" + password + ", email=" + email + ", role=" + role + " scrumBoards=" + scrumBoards.size() + "]";
 	}
 }
