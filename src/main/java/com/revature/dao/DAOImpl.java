@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
+import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumUser;
 
 @Transactional
@@ -31,6 +32,13 @@ public class DAOImpl implements DAO{
 		Integer id = (Integer) session.save(sb);
 		sb.setId(id);
 		return sb;
+	}
+	
+	public ScrumBoardStory createNewStory(ScrumBoardStory s) {
+		Session session = sessionFactory.getCurrentSession();
+		Integer id = (Integer) session.save(s);
+		s.setId(id);
+		return s;
 	}
 	
 	public ScrumUser getScrumUserByUsername(ScrumUser su) {
@@ -57,5 +65,11 @@ public class DAOImpl implements DAO{
 		Session session = sessionFactory.getCurrentSession();
 		su = (ScrumUser) session.merge(su);
 		return su;
+	}
+	
+	public ScrumBoard updateScrumBoard(ScrumBoard sb) {
+		Session session = sessionFactory.getCurrentSession();
+		sb = (ScrumBoard) session.merge(sb);
+		return sb;
 	}
 }

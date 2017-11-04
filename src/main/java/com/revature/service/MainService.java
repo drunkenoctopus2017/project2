@@ -43,5 +43,15 @@ public class MainService {
 		return sb;
 	}
 	
+	public ScrumBoardStory createNewStory(ScrumBoardStory s, ScrumBoard sb) {
+		s.setScrumBoard(sb);
+		ScrumBoard initialBoard = new ScrumBoard();
+		s.setScrumBoard(initialBoard);
+		s = dao.createNewStory(s);
+		sb.getStories().add(s);
+		sb = dao.updateScrumBoard(sb);
+		return s;
+	}
+	
 	
 }

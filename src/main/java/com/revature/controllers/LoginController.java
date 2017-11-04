@@ -37,6 +37,7 @@ public class LoginController {
 	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
 		request.getSession().setAttribute("user", su);
+		request.getSession().setAttribute("board", su.getScrumBoards());
 		
 		System.out.println(su.toString());
 		

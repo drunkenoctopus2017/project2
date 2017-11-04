@@ -39,6 +39,7 @@ app.value("currentScrumBoard", {
 	duration: 0
 });
 
+
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -137,7 +138,6 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 
 
 app.controller("scrumBoardViewController", function($scope, $rootScope, $location, scrumBoardService) {
-	console.log("Scrum Board View Controller");
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.filterStoriesByLane = function(laneId) {
@@ -146,7 +146,6 @@ app.controller("scrumBoardViewController", function($scope, $rootScope, $locatio
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {
-			console.log("data: " + response.data.length);
 			$scope.lanes = response.data;
 		}, function (error) {
 			console.log("LANES NG");
@@ -165,8 +164,9 @@ app.controller("createStoryViewController", function($scope){
 	$scope.taskList =[];
 	
 	$scope.addTask = function(){
-		$scope.taskList.push({task:$scope.taskInput, done:false});
+		$scope.taskList.push({task:$scope.taskInput, done:false, points: $scope.points});
 		$scope.taskInput = "";
+		$scope.points = "";
 	}
 	
 	$scope.removeTask = function(){
@@ -176,7 +176,10 @@ app.controller("createStoryViewController", function($scope){
 			if(!t.done)
 				$scope.taskList.push(t);
 				})
-		console.log( $scope.taskList)
+	}
+	
+	$scope.createStory = function(){
+		
 	}
 });
 
@@ -198,7 +201,7 @@ app.factory("scrumBoardService", function($http) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
 		getScrumBoardStory : function(){
-			return $http.get("getScrumBoardStory");
+			return $http.post("createNewStory", {taskId: taskId, done: done, points: points});
 		}
 	};
 });

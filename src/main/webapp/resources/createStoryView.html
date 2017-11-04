@@ -4,12 +4,15 @@
 		<div>
 			<form data-ng-submit="addTask()">
 				<input type="text" data-ng-model="taskInput" placeholder="Add New Task">
+				<input type="number" data-ng-model="points" placeholder="Enter task value">
+				
 				<button type="submit" value="Add Task" class="btn btn-default">Add Task</button>
 			</form>
 			<br>
 			
 			<div data-ng-repeat="t in taskList">
 				<input type="checkbox" data-ng-model="t.done"><span data-ng-bind="t.task"></span>
+				<span data-ng-bind="t.points"></span>
 			</div>
 			<button data-ng-click="removeTask()"class="btn btn-default">Remove marked task</button>
 			<br><br>
