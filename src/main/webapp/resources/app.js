@@ -69,7 +69,7 @@ app.config(function($routeProvider, urlBase) {
 });
 
 app.controller("navbarController", function($scope, $rootScope, $location, loginUser, loginUserBoards, loginUserService) {
-	navbar = this;
+//	navbar = this;
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
 		loginUser.lastName = "";
