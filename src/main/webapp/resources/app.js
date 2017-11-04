@@ -165,11 +165,18 @@ app.controller("createStoryViewController", function($scope){
 	$scope.taskList =[];
 	
 	$scope.addTask = function(){
-		//$scope.
+		$scope.taskList.push({task:$scope.taskInput, done:false});
+		$scope.taskInput = "";
 	}
 	
 	$scope.removeTask = function(){
-		
+		var oldTaskList = $scope.taskList;
+		$scope.taskList = [];
+		angular.forEach(oldTaskList, function(t){
+			if(!t.done)
+				$scope.taskList.push(t);
+				})
+		console.log( $scope.taskList)
 	}
 });
 
