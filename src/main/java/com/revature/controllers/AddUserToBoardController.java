@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumUser;
 import com.revature.model.UserBoardDTO;
 import com.revature.service.MainService;
@@ -29,9 +30,9 @@ public class AddUserToBoardController {
 	}
 	
 	@RequestMapping(value="/addUserToBoard",  method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> addUserToBoard(@RequestBody UserBoardDTO ub){
-		service.addUserToBoard(ub);
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	public ResponseEntity<ScrumBoard> addUserToBoard(@RequestBody UserBoardDTO ub){
+		ScrumBoard sb = service.addUserToBoard(ub);
+		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(Exception.class)

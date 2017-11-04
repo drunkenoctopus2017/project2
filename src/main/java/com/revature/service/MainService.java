@@ -4,6 +4,8 @@ package com.revature.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,7 @@ import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-
+import com.revature.model.ScrumUsersBoards;
 import com.revature.model.UserBoardDTO;
 import com.revature.model.TaskStatusDTO;
 
@@ -69,12 +71,25 @@ public class MainService {
 		return sb;
 	}	
 	
-	public void addUserToBoard(UserBoardDTO ub) {
-		ScrumUser user = dao.getScrumUserById(ub.getUserId());
-		ScrumBoard board = dao.getScrumBoardById(ub.getBoardId());
-		user.getScrumBoards().add(board);
-		user = dao.updateScrumUser(user);
+	//--Quarantined-------------------------------------------------
+	//DEBUG LATER.
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	public ScrumBoard addUserToBoard(UserBoardDTO ub) {
+		//TODO: This is not the right way.
+		//But it is currently, the ONLY way to get this to work.
+		Session session = sessionFactory.getCurrentSession();
+		ScrumUsersBoards userBoardJoin = new ScrumUsersBoards();
+		userBoardJoin.setSbId(ub.getBoardId());
+		userBoardJoin.setUserId(ub.getUserId());
+		session.save(userBoardJoin);
+		
+		ScrumBoard sb = session.get(ScrumBoard.class, ub.getBoardId());
+		return sb;
 	}
+	//--Quarantined-------------------------------------------------
+	
 	
 	public ScrumBoardTask updateScrumBoardTaskStatus(TaskStatusDTO params) {
 		ScrumBoardTask task = dao.getScrumBoardTaskById(params.id);

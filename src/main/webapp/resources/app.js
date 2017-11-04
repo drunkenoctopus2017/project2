@@ -235,29 +235,31 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
-app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) 
-{
-	getAllUsersService.getAllExistingUsers().then
-	(
-			function(response)
-			{
-				while(response.data.length > 0)
-				{
-					allUsers.push(response.data.pop());
-				}
-				$scope.board = currentBoard.name;
-				$scope.allUsers = allUsers.reverse();
-			});
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+	
+	$scope.users = [];
+	
+	getAllUsersService.getAllExistingUsers().then (
+		function(response) {
+			while(response.data.length > 0)	{
+				users = response.data;
+			}
+			$scope.board = currentBoard.name;
+			$scope.allUsers = allUsers.reverse();
+		}
+	);
+	
 	$scope.addUserToBoard = function(user){
 		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
-				function(response){
-					if(response.data == true) 
-					{
-						$location.path("/mainMenu");
-					} else {
-						$location.path("/getAllUsers");
-					}
-				});
+			function (response) {
+				//no action necessary
+				console.log("heya");
+				traverseObject(response.data);
+				$scope.board = response.data.name;
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nORMYGORD!");
+			}
+		);
 	}
 });
 
