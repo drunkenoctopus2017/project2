@@ -290,14 +290,14 @@ app.controller("updateStoryController", function ($scope, $rootScope, scrumBoard
 	
 	$rootScope.$on("editStory", function (event, story) {
 		$scope.points = story.points;
-		$scope.descript = story.description;
+		$scope.desc = story.description;
 		$scope.updateStory = function(){
 			
 			$scope.points = document.getElementById('storyPoints').value;
 			$scope.descript = document.getElementById('storyText').value;
 		
 			story.points = $scope.points;
-			story.description = $scope.descript;
+			story.description = $scope.desc;
 		
 			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
 					function(response){
