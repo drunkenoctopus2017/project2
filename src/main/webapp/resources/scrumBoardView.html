@@ -2,25 +2,27 @@
 	<h1>Drunken Octopus Scrum Board System</h1>
 	<div class="jumbotron">
 		<p>{{scrumBoardName}}</p>
+		<!-- Trigger the modal with a button -->
+		<button type="button" class="btn btn-default btn-lg"
+			data-toggle="modal" data-target="#myModal">View Burndown
+			Chart</button>
 	</div>
 	<div class="container">
-		<h2>Modal Example</h2>
-		<!-- Trigger the modal with a button -->
-		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-			data-target="#myModal">Open Modal</button>
 
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Modal Header</h4>
+						<h4 class="modal-title">Burndown Chart</h4>
 					</div>
 					<div class="modal-body">
-						<p>Some text in the modal.</p>
+						<div fusioncharts width="600" height="400" type="line"
+							dataSource="{{burndownData}}"></div>
+						<!-- {{burndownData}} -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -38,19 +40,20 @@
 					<h3 class="panel-title">{{lane.name}}</h3>
 				</div>
 				<div class="panel-body">
-					<div data-ng-repeat="story in filterStoriesByLane(lane.id)" style="border-top: solid">
-						<a style="float: left" data-ng-hide="$parent.$first" data-ng-click="changeLane(story, lanes[$parent.$index - 1])">
-							<span class="glyphicon glyphicon-triangle-left"></span> 
-						</a>
-						<span class="label label-default">Points {{story.points}}</span>
-						<a style="float: right" data-ng-hide="$parent.$last" data-ng-click="changeLane(story, lanes[$parent.$index + 1])">
-							<span class="glyphicon glyphicon-triangle-right"></span> 
-						</a>
-						<br />
-						<span>{{story.description}}</span>
+					<div data-ng-repeat="story in filterStoriesByLane(lane.id)"
+						style="border-top: solid">
+						<a style="float: left" data-ng-hide="$parent.$first"
+							data-ng-click="changeLane(story, lanes[$parent.$index - 1])">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						</a> <span class="label label-default">Points {{story.points}}</span>
+						<a style="float: right" data-ng-hide="$parent.$last"
+							data-ng-click="changeLane(story, lanes[$parent.$index + 1])">
+							<span class="glyphicon glyphicon-triangle-right"></span>
+						</a> <br /> <span>{{story.description}}</span>
 						<div class="checkbox" data-ng-repeat="task in story.tasks">
-							<label>
-								<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
+							<label> <input type="checkbox"
+								data-ng-model="task.status" data-ng-true-value="1"
+								data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
 							</label>
 						</div>
 					</div>

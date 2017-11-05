@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.model.ChartDataDTO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -44,6 +45,16 @@ public class ScrumBoardController {
 		List<ScrumBoardLane> sbLanes = service.getScrumBoardLanes();
 		System.out.println("lanes: " + sbLanes);
 		return new ResponseEntity<List<ScrumBoardLane>>(sbLanes, HttpStatus.OK); //200
+	}
+	
+	@RequestMapping(value="/getScrumBoardBurndownData", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ChartDataDTO> getScrumBoardBurndownData() {
+		ChartDataDTO cdd = new ChartDataDTO();
+		System.out.println("data: " + cdd);
+		ResponseEntity<ChartDataDTO> re = new ResponseEntity<ChartDataDTO>(cdd, HttpStatus.OK);
+		System.out.println(re);
+//		return new ResponseEntity<ChartDataDTO>(cdd, HttpStatus.OK); //200
+		return re;
 	}
 	
 	//Update
