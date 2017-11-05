@@ -395,9 +395,6 @@ app.factory("scrumBoardService", function($http) {
 		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
 		}, 
-		updateScrumBoardStory: function(storyId, storyDescription, storyPoints, storyFinishTime) {
-			return $http.post("updateScrumBoardStory", {id: storyId, description: storyDescription, points: storyPoints, finishTime: storyFinishTime});
-		}, 
 		updateScrumBoardTaskStatus: function(id, status) {
 			return $http.post("updateScrumBoardTask", {id: id, status: status});
 		}, 
