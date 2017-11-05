@@ -159,30 +159,18 @@ app.controller("scrumBoardViewController", function($scope, $rootScope, $locatio
 	traverseObject(currentScrumBoard);
 });
 
-app.controller("createStoryViewController", function($scope, $location, scrumBoardService){
+app.controller("createStoryViewController", function($scope, $location, $rootScope, scrumBoardService){
 	console.log("Create Story View Controller");
 	$scope.taskList =[];
-	
-	$scope.addTask = function(){
-		$scope.taskList.push({task:$scope.taskInput, done:false, points: $scope.points});
-		$scope.taskInput = "";
-		$scope.points = "";
-	}
-	
-	$scope.removeTask = function(){
-		var oldTaskList = $scope.taskList;
-		$scope.taskList = [];
-		angular.forEach(oldTaskList, function(t){
-			if(!t.done)
-				$scope.taskList.push(t);
-				})
-	}
 	
 	$scope.createStory = function () {
 		console.log("desc: " + $scope.description);
 		scrumBoardService.createNewStory($scope.description, 5, currentScrumBoard.id).then(
 				function (response) {
+					$rootScope.currentScrumBoard.stories.push(response.data);
+					
 					$location.path("/viewScrumBoard");
+					
 				}, function (error) {
 					console.log("createStory messed up");
 				}
