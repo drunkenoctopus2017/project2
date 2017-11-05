@@ -1,6 +1,9 @@
 <div class="container">
 	<div class="jumbotron">
-		<p>Create New Scrum Board</p>
+
+		<p data-ng-show="editing == false" >Create New Scrum Board</p>
+		<p data-ng-show="editing == true" >Edit {{boardName}}<p>
+
 		<div>
 			<div class="form-group">
 				<label for="sbNameInput">Name</label>
@@ -14,7 +17,9 @@
 				<label for="durationInput">Duration</label>
 				<input id="durationInput" data-ng-model="duration" type="number" class="form-control" min="1" max="90" placeholder="# days (defaults to 14)">
 			</div>
-			<button data-ng-click="create()" class="btn btn-default">Create New Board</button>
+
+			<button data-ng-click="createOrEdit()" class="btn btn-default">Submit</button>
+
 		</div>
 	</div>
 </div>

@@ -4,12 +4,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<display-name>DrunkenOctopus</display-name>
-	
+
 	<!-- This seems a bad way to force the root to get accessed. -->
 	<welcome-file-list>
 		<welcome-file>/main</welcome-file>
 	</welcome-file-list>
-	
+
 	<!-- Map the front controller of Spring -->
 	<servlet>
 		<servlet-name>MasterServlet</servlet-name>
@@ -25,6 +25,23 @@
 		<servlet-name>MasterServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+	<listener>
+		<listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>log4jServletFilter</filter-name>
+		<filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>log4jServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
 
 	<!-- listen to start the container: applicationContext -->
 	<listener>

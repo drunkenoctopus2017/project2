@@ -26,11 +26,25 @@ app.value("loginUser", {
 });
 
 app.value("loginUserBoards", []);
-//The authorization level of the user.
-app.value("loginUserRole", {
-	id: 0, 
-	roleName: "unauthorized"
+app.value("allUsers", []);
+
+//for controlling what shows up on createScrumBoardView
+//false, if you're creating a board
+//true, if you're editing a board
+app.value("editing", {
+	value: false,	
 });
+
+//variable that stores the id of a single board
+//possibly useful for looking at a single board,
+//editing a single board, etc
+app.value("currentBoard", {
+	id: 0,
+	name: "no board selected",
+	startDate: undefined,
+	duration: 0
+	//add properties as necessary
+}); 
 
 //The authorization level of the user.
 app.value("loginUserRole", {
@@ -48,6 +62,15 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/createScrumBoard", {
 		templateUrl: urlBase + "createScrumBoardView.html", 
 		controller: "createScrumBoardController"
+	}).when("/viewScrumBoard", {
+		templateUrl: urlBase + "scrumBoardView.html",
+		controller: "scrumBoardViewController"
+	}).when("/editScrumBoard", {
+		templateUrl: urlBase + "editScrumBoardView.html",
+		controller: "editScrumBoardController"
+	}).when("/getAllUsers", {
+		templateUrl: urlBase + "addUserView.html", 
+		controller: "getAllUsersController"
 	});
 });
 
@@ -64,11 +87,10 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
 				$location.path("/");
 			},
 			function(error){
-				console.log(error);
 				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
 			}
 		);
-	}
+  }
 });
 
 app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
@@ -98,7 +120,6 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				}
 				$location.path("/mainMenu");
 			}, function (error) {
-				console.log(error);
 				//The error object above has: 
 				//data, 
 				//status, 
@@ -110,7 +131,16 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 	}
 });
 
-app.controller("mainMenuController", function($scope, $location, loginUser, loginUserRole, loginUserBoards) {
+
+app.controller("mainMenuController", function($scope, $rootScope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+	//reset the value of editing, so that it doesn't stay true forever after you edit something
+	editing.value = false;
+	//clear currentBoard
+	currentBoard.id = 0;
+	currentBoard.name = "no board selected";
+	currentBoard.startDate = undefined;
+	currentBoard.duration = 0;
+	//fill in html field
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
@@ -118,21 +148,181 @@ app.controller("mainMenuController", function($scope, $location, loginUser, logi
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
+  $scope.viewBoard = function(b) {
+		$rootScope.currentScrumBoard = b
+		traverseObject(b);
+		$location.path("/viewScrumBoard");
+
+	}
+  $scope.editScrumBoard = function(board) {
+		editing.value = true;
+		//set the current board properties to the properties of board associated with the button that called this function
+		currentBoard.id = board.id;
+		currentBoard.name = board.name;
+		currentBoard.startDate = board.startDate;
+		currentBoard.duration = board.duration;
+		$location.path("/createScrumBoard");
+	}
+
+	if($scope.role == 200){
+		$scope.getAllUsers = function(board) {
+			currentBoard.id = board.id;
+			currentBoard.name = board.name;
+			currentBoard.startDate = board.startDate;
+			currentBoard.duration = board.duration;
+			$location.path("/getAllUsers");
+		}
+	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards) {
-	$scope.create = function() {
-		scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
+	$scope.editing = editing.value;
+	if(editing.value){
+		//fill in the fields with the old values
+		$scope.sbName = currentBoard.name;
+		//have to recast it as a Date in order for it to show up properly
+		$scope.startDate = new Date(currentBoard.startDate);
+		$scope.duration = currentBoard.duration;
+	}
+	$scope.boardName = currentBoard.name;
+	$scope.createOrEdit = function () {
+		//change functionality depending on value of editing
+		if(!editing.value){
+			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
+				function (response) {
+					//Refresh the data for the main menu without doing another server request (because you don't need to);
+					loginUserBoards.push(response.data);
+					$location.path("/mainMenu");
+				}, function (error) {
+					alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+				}
+			);
+		} else {
+			//if any of the input is empty, use the previous value
+			nameToUse = $scope.sbName;
+			if($scope.sbName == undefined){
+				nameToUse = currentBoard.name;
+			}
+			startDateToUse = $scope.startDate;
+			if($scope.startDate == undefined){
+				startDateToUse = currentBoard.startDate;
+			}
+			durationToUse = $scope.duration;
+			if($scope.duration == undefined){
+				durationToUse = currentBoard.duration;
+			}
+			scrumBoardService.editExistingScrumBoard(currentBoard.id, nameToUse, startDateToUse, durationToUse).then(
+				function (response) {
+					//Refresh the data for the main menu without doing another server request (because you don't need to);
+					//need to remove the outdated board from JS-side list
+					loginUserBoards.forEach(function (board, index, array) {
+						//find the outdated board
+						if(board.id == currentBoard.id){
+							//remove it
+							loginUserBoards.splice(index, 1);
+						}	
+					});
+					//adds the new one to the front of the JS-side list
+					loginUserBoards.unshift(response.data);
+					$location.path("/mainMenu");
+				}, function (error) {
+					alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
+				}
+			);
+		}
+	}
+});
+
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+	
+	$scope.users = [];
+	$scope.getAvailableUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return false;
+				}
+			}
+			return true;
+		})
+	}
+	$scope.getBoardUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return true;
+				}
+			}
+			return false;
+		})
+	}
+	
+	getAllUsersService.getAllExistingUsers().then (
+		function(response) {
+			$scope.users = response.data;
+			$scope.board = currentBoard.name;
+			
+		}
+	);
+	
+	$scope.addUserToBoard = function(user){
+		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
 			function (response) {
-				//Refresh the data for the main menu without doing another server request (because you don't need to);
-				loginUserBoards.push(response.data);
+				//no action necessary
+				let temp = $scope.users;
 				$location.path("/mainMenu");
+				$scope.board = response.data.name;
 			}, function (error) {
-				alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
+				alert(error.status + " " + error.statusText + "\nThere was an error!");
 			}
 		);
 	}
 });
+
+
+
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
+	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
+	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.filterStoriesByLane = function (laneId) {
+		let stories = $rootScope.currentScrumBoard.stories;
+		return stories.filter(s => s.laneId == laneId);
+	}
+	$scope.changeLane = function (story, lane) {
+		console.log("story: " + story.id + " lane dir: " + lane.id);
+		story.laneId = lane.id;
+		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
+			function(response){
+				//no action necessary
+			},
+			function(error){
+				alert(error.status + " " + error.statusText + "\nThere was an error changing lanes!");
+			}
+		);
+	}
+	$scope.updateTask = function (task) {
+		scrumBoardService.updateScrumBoardTaskStatus(task.id, task.status).then(
+			function (response) {
+				//no action necessary
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nTask could not be updated!");
+			}
+		);
+	}
+	scrumBoardService.getScrumBoardLanes().then(
+		function (response) {
+			$scope.lanes = response.data;
+		}, function (error) {
+		}
+	);
+});
+
 
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
@@ -140,7 +330,7 @@ app.factory("loginUserService", function($http) {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
 		},
-		logout: function(){
+		logout: function() {
 			return $http.get("logout");
 		}
 	};
@@ -148,19 +338,41 @@ app.factory("loginUserService", function($http) {
 
 app.factory("scrumBoardService", function($http) {
 	return {
+		//Create
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
+		},
+		//Read
+		getScrumBoardLanes: function() {
+			return $http.get("getScrumBoardLanes");
+		}, 
+		//Update
+		editExistingScrumBoard: function(id, name, startDate, duration) {
+			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
+		}, 
+		updateScrumBoardTaskStatus: function(id, status) {
+			return $http.post("updateScrumBoardTask", {id: id, status: status});
+		}, 
+		changeScrumBoardStoryLane: function (storyId, laneId) {
+			return $http.post("changeScrumBoardStoryLane", {storyId: storyId, laneId: laneId});
+		}
+		//Delete
+		//none currently
+	};
+});
+
+app.factory("getAllUsersService", function($http){
+	return {
+		getAllExistingUsers: function(){
+			return $http.get("getAllExistingUsers");
+		}, 
+		addUserToBoard: function(userId, boardId){
+			
+			return $http.post("addUserToBoard", {userId: userId, boardId: boardId});
 		}
 	};
 });
 
-app.factory("scrumBoardService", function($http) {
-	return {
-		createNewScrumBoard: function(name, startDate, duration) {
-			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
-		}
-	};
-});
 
 //TODO delete before pushing to master
 function traverseObject(obj) {
@@ -178,3 +390,7 @@ function getObjectString(obj, indent) {
 	}
 	return s;
 }
+
+//function checkId(array){
+//	
+//}
