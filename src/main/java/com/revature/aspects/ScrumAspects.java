@@ -17,13 +17,13 @@ public class ScrumAspects {
 	
 	@Before("execution(* getScrumUserByUsername*(..))")
 	public void beforeGetting(JoinPoint jp) {
-		log.info("BEFORE: " + jp.getKind() + " - " + jp.getSignature());
+		log.warn("BEFORE: " + jp.getKind() + " - " + jp.getSignature());
 
 	}
 	
 	@AfterReturning("execution(* getScrumUserByUsername*(..))")
 	public void afterGetSucceeds(JoinPoint jp) {
-		log.info("SUCCESS: " + jp.getKind() + " - " + jp.getSignature());
+		log.warn("SUCCESS: " + jp.getKind() + " - " + jp.getSignature());
 	}
 	
 	@AfterThrowing("execution(* getScrumUserByUsername*(..))")

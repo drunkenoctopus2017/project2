@@ -26,6 +26,7 @@ app.value("loginUser", {
 });
 
 app.value("loginUserBoards", []);
+app.value("allUsers", []);
 
 //for controlling what shows up on createScrumBoardView
 //false, if you're creating a board
@@ -67,6 +68,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/editScrumBoard", {
 		templateUrl: urlBase + "editScrumBoardView.html",
 		controller: "editScrumBoardController"
+	}).when("/getAllUsers", {
+		templateUrl: urlBase + "addUserView.html", 
+		controller: "getAllUsersController"
 	});
 });
 
@@ -160,6 +164,16 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 		currentBoard.duration = board.duration;
 		$location.path("/createScrumBoard");
 	}
+
+	if($scope.role == 200){
+		$scope.getAllUsers = function(board) {
+			currentBoard.id = board.id;
+			currentBoard.name = board.name;
+			currentBoard.startDate = board.startDate;
+			currentBoard.duration = board.duration;
+			$location.path("/getAllUsers");
+		}
+	}
 });
 
 app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
@@ -220,6 +234,60 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+	
+	$scope.users = [];
+	$scope.getAvailableUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return false;
+				}
+			}
+			return true;
+		})
+	}
+	$scope.getBoardUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return true;
+				}
+			}
+			return false;
+		})
+	}
+	
+	getAllUsersService.getAllExistingUsers().then (
+		function(response) {
+			$scope.users = response.data;
+			$scope.board = currentBoard.name;
+			
+		}
+	);
+	
+	$scope.addUserToBoard = function(user){
+		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
+			function (response) {
+				//no action necessary
+				let temp = $scope.users;
+				$location.path("/mainMenu");
+				$scope.board = response.data.name;
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nThere was an error!");
+			}
+		);
+	}
+});
+
+
+
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
@@ -255,7 +323,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		}
 	);
 });
-
 
 
 //Factory, Service, or Provider? Which to use?
@@ -294,6 +361,19 @@ app.factory("scrumBoardService", function($http) {
 		//none currently
 	};
 });
+
+app.factory("getAllUsersService", function($http){
+	return {
+		getAllExistingUsers: function(){
+			return $http.get("getAllExistingUsers");
+		}, 
+		addUserToBoard: function(userId, boardId){
+			
+			return $http.post("addUserToBoard", {userId: userId, boardId: boardId});
+		}
+	};
+});
+
 
 //TODO delete before pushing to master
 function traverseObject(obj) {
