@@ -19,13 +19,34 @@
 							<span class="glyphicon glyphicon-triangle-right"></span> 
 						</a>
 						<br />
-						<span>{{story.description}}</span>
+						<p>{{story.description}}</p>
 						<div class="checkbox" data-ng-repeat="task in story.tasks">
 							<label>
 								<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
 							</label>
 						</div>
+						<button data-ng-show="role == 200" data-toggle="modal" data-target="#editStoryModal" data-ng-click="setEditStoryTarget(story)" class="btn btn-default btn-xs">Edit Story</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div data-ng-controller="updateStoryController" class="modal fade" id="editStoryModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<label>points:</label><input id="storyPoints" type="number" value={{points}} /><br>
+					<label>description:</label><input id="storyText" type="text" value={{descript}} /><br>
+					<button data-ng-click="updateStory()" type="submit">Save</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>

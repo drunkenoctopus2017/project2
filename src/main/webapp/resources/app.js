@@ -286,9 +286,38 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
+app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) {
+	console.log("updateStory controller ");
+	
+	$rootScope.$on("editStory", function (event, story) {
+		console.log("edityStory came through! " + story.id);
+		$scope.points = story.points;
+		$scope.descript = story.description;
+		$scope.updateStory = function(){
+			console.log('updating story');
+			
+			$scope.points = document.getElementById('storyPoints').value;
+			$scope.descript = document.getElementById('storyText').value;
+		
+			story.points = $scope.points;
+			story.description = $scope.descript;
+		
+			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
+					function(response){
+						console.log(response.data);
+					},
+					function(error){
+						alert(error.status + " " + error.statusText + "\nThere was an error updating story!");
+					}
+				);
+		}
+	});
+});
 
 
-app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
+
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
+	$scope.role = loginUserRole.id;
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.filterStoriesByLane = function (laneId) {
@@ -315,6 +344,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 				alert(error.status + " " + error.statusText + "\nTask could not be updated!");
 			}
 		);
+	}
+	$scope.setEditStoryTarget = function (story) {
+		console.log("story: " + story);
+		console.log("desc: " + story.description);
+		//$rootScope.currentStory = story;
+		$rootScope.$emit("editStory", story)
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {
@@ -356,6 +391,9 @@ app.factory("scrumBoardService", function($http) {
 		}, 
 		changeScrumBoardStoryLane: function (storyId, laneId) {
 			return $http.post("changeScrumBoardStoryLane", {storyId: storyId, laneId: laneId});
+		},
+		updateScrumBoardStory: function(storyId, storyDescription, storyPoints, storyFinishTime) {
+			return $http.post("updateScrumBoardStory", {id: storyId, description: storyDescription, points: storyPoints, finishTime: storyFinishTime});
 		}
 		//Delete
 		//none currently

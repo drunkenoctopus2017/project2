@@ -1,6 +1,7 @@
 package com.revature.service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,5 +109,14 @@ public class MainService {
 		task.setStatus(params.status);
 		task = dao.updateScrumBoardTask(task);
 		return task;
+	}
+	
+	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory sbs) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(sbs.getId());
+		story.setFinishTime(new Date());
+		story.setdescription(sbs.getdescription());
+		story.setPoints(sbs.getPoints());
+		story = dao.updateScrumBoardStory(story);
+		return story;
 	}
 }
