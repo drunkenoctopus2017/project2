@@ -21,6 +21,7 @@ import com.revature.model.ScrumUser;
 import com.revature.model.ScrumUsersBoards;
 import com.revature.model.UserBoardDTO;
 import com.revature.model.StoryLaneDTO;
+import com.revature.model.StoryTaskDTO;
 import com.revature.model.TaskStatusDTO;
 
 
@@ -30,6 +31,28 @@ public class MainService {
 
 	@Autowired
 	private DAO dao;
+	
+	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
+		sb.setUserId(su.getId());
+		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
+		initialUsers.add(su);
+		sb.setScrumUsers(initialUsers);
+		sb = dao.createNewScrumBoard(sb);
+		su.getScrumBoards().add(sb);
+		su = dao.updateScrumUser(su);
+		return sb;
+	}
+	
+	public ScrumBoardTask createNewScrumBoardTask(StoryTaskDTO newTask) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(newTask.storyId);
+		ScrumBoardTask task = new ScrumBoardTask(newTask.description, story);
+		task = dao.createNewScrumBoardTask(task);
+		return task;
+	}
+
+	public List<ScrumUser> getAllUsers(){
+		return dao.getAllUsers();
+	}
 	
 	public ScrumUser getScrumUserByUsernameAndPassword(ScrumUser su) {
 		ScrumUser user = dao.getScrumUserByUsername(su);
@@ -43,22 +66,6 @@ public class MainService {
 		return dao.getScrumBoardLanes();
 	}
 	
-	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
-		sb.setUserId(su.getId());
-		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
-		initialUsers.add(su);
-		sb.setScrumUsers(initialUsers);
-		sb = dao.createNewScrumBoard(sb);
-		su.getScrumBoards().add(sb);
-		su = dao.updateScrumUser(su);
-		return sb;
-	}
-	
-
-	public List<ScrumUser> getAllUsers(){
-		return dao.getAllUsers();
-	}
-
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^
