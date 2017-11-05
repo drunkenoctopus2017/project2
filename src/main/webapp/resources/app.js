@@ -285,6 +285,30 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
+app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) 
+	$rootScope.$on("editStory", function (event, story) {
+		$scope.points = story.points;
+		$scope.desc = story.description;
+		$scope.updateStory = function(){
+			
+			$scope.points = document.getElementById('storyPoints').value;
+			$scope.descript = document.getElementById('storyText').value;
+		
+			story.points = $scope.points;
+			story.description = $scope.desc;
+		
+			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
+					function(response){
+						//no action necessary
+					},
+					function(error){
+						alert(error.status + " " + error.statusText + "\nThere was an error updating story!");
+					}
+				);
+		}
+	});
+});
+
 app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
 	$rootScope.$on("createNewTask", function (event, story) {
 		$scope.story = story;
@@ -302,6 +326,7 @@ app.controller("newTaskController", function ($scope, $rootScope, scrumBoardServ
 });
 
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
+	$scope.role = loginUserRole.id;
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.role = loginUserRole.id;
@@ -310,7 +335,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		return stories.filter(s => s.laneId == laneId);
 	}
 	$scope.changeLane = function (story, lane) {
-		console.log("story: " + story.id + " lane dir: " + lane.id);
+		
 		story.laneId = lane.id;
 		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
 			function (response) {
@@ -330,8 +355,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			}
 		);
 	}
+
+	$scope.setEditStoryTarget = function (story) {
+		$rootScope.$emit("editStory", story);
+  }
 	$scope.setNewTaskTarget = function (story) {
-		$rootScope.$emit("createNewTask", story)
+		$rootScope.$emit("createNewTask", story);
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {
@@ -376,6 +405,9 @@ app.factory("scrumBoardService", function($http) {
 		}, 
 		changeScrumBoardStoryLane: function (storyId, laneId) {
 			return $http.post("changeScrumBoardStoryLane", {storyId: storyId, laneId: laneId});
+		},
+		updateScrumBoardStory: function(storyId, storyDescription, storyPoints, storyFinishTime) {
+			return $http.post("updateScrumBoardStory", {id: storyId, description: storyDescription, points: storyPoints, finishTime: storyFinishTime});
 		}
 		//Delete
 		//none currently

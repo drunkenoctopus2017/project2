@@ -17,12 +17,11 @@ import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-
 import com.revature.model.ScrumUsersBoards;
-import com.revature.model.UserBoardDTO;
 import com.revature.model.StoryLaneDTO;
 import com.revature.model.StoryTaskDTO;
 import com.revature.model.TaskStatusDTO;
+import com.revature.model.UserBoardDTO;
 
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
@@ -115,5 +114,14 @@ public class MainService {
 		task.setStatus(params.status);
 		task = dao.updateScrumBoardTask(task);
 		return task;
+	}
+	
+	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory sbs) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(sbs.getId());
+		story.setFinishTime(new Date());
+		story.setdescription(sbs.getdescription());
+		story.setPoints(sbs.getPoints());
+		story = dao.updateScrumBoardStory(story);
+		return story;
 	}
 }
