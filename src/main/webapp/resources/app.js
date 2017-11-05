@@ -302,9 +302,10 @@ app.controller("newTaskController", function ($scope, $rootScope, scrumBoardServ
 	}
 });
 
-app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.role = loginUserRole.id;
 	$scope.filterStoriesByLane = function (laneId) {
 		let stories = $rootScope.currentScrumBoard.stories;
 		return stories.filter(s => s.laneId == laneId);
