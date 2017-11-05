@@ -324,10 +324,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		}, function (error) {
 		}
 	);
-	scrumBoardService.getScrumBoardBurndownData($rootScope.currentScrumBoard, chartData).then(
+	$rootScope.burndownData = chartData;
+	scrumBoardService.getScrumBoardBurndownData($rootScope.currentScrumBoard).then(
 		function (response) {
 			console.log("what im sending to fusionchart: "+JSON.stringify(response.data));
 			$rootScope.burndownData = JSON.stringify(response.data);
+//			$rootScope.burndownData = chartData;
 		}, function (error) {
 			alert(error.status + " " + error.statusText + "\nThere was an error obtaining the burndown chart!");
 		}
