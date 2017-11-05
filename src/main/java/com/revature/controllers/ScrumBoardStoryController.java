@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.List;
+
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumUser;
 import com.revature.service.MainService;
@@ -23,11 +26,12 @@ public class ScrumBoardStoryController {
 	@Autowired
 	private MainService service;
 	
-	@RequestMapping(value="/creatNewStory", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumBoardStory> createNewStory(@RequestBody ScrumBoardStory newStory, HttpServletRequest request){
-		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
-		ScrumBoardStory story = service.createNewStory(newStory, su.getScrumBoards().get(0));
-		return new ResponseEntity<ScrumBoardStory>(story, HttpStatus.OK);
+	@RequestMapping(value="/createNewStory", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumUser> createNewStory(@RequestBody ScrumBoardStory newStory, HttpServletRequest request){
+		ScrumUser su = (ScrumUser ) request.getSession().getAttribute("user");
+		List <ScrumBoard> boards = su.getScrumBoards();
+
+		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK);
 	}
 	
 	/**

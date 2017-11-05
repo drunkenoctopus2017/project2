@@ -179,7 +179,7 @@ app.controller("createStoryViewController", function($scope){
 	}
 	
 	$scope.createStory = function(){
-		
+		$location.path("/viewScrumBoard");
 	}
 });
 
