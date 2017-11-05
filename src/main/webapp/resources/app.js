@@ -72,7 +72,7 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+app.controller("navbarController", function($scope, $rootScope, $location, loginUser, loginUserBoards, loginUserService) {
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
 		loginUser.lastName = "";
@@ -162,7 +162,7 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 				sumDone += b.stories[i].points;
 			}
 		}
-		let percent = (sumDone*100)/sumPts;
+		let percent = Math.floor((sumDone*100)/sumPts);
 		return percent;
 	}
 	$scope.role = loginUserRole.id;
@@ -384,34 +384,72 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			sumPts += b.stories[i].points;
 		}
 		let prevValue = sumPts;
-		for(var i = 0;i < b.duration; i++){
+		for(var i = 1;i < b.duration+1; i++){
 			// check the next story to see if it matches current day from startDate 
-			if(doneStoryCounter < doneStories.length && 
-					(daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime)) == i)){
-				// if it does AND you haven't already gone through all the finished stories
-				// add a coordinate with an updated point level, representing a day in the chart where points got burned down
-				prevValue = prevValue - doneStories[doneStoryCounter].points;
-				let coordinate = {label:"",value:""};
-				coordinate.label = ""+i;
-				coordinate.value = ""+prevValue;
-				console.log("adding a real datapoint");
-				walkTheDOM(coordinate, console.log);
-				$scope.burndownData.data.push(coordinate);
-				doneStoryCounter++;
-			}
-			else{
-				// if it doesn't OR if you're already finished will all the done stories
-				// add a filler coordinate with the same value as before for this day
-				// only if there are still stories to be checked
-				if(!doneStoryCounter < doneStories.length){
+//			console.log("this is the board's startDate: "+b.startDate)
+			console.log("value of doneStoryCounter + doneStories.length: "+doneStoryCounter+" "+doneStories.length);
+			if(doneStoryCounter < doneStories.length){
+				let difference = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
+				if(difference == i){
+					// if it does AND you haven't already gone through all the finished stories
+					// add a coordinate with an updated point level, representing a day in the chart where points got burned down
+					console.log("points to subtract from prevValue: "+doneStories[doneStoryCounter].points)
+					prevValue = prevValue - doneStories[doneStoryCounter].points;
+					// you've calculated burndown for this story, can start looking at next one
+					doneStoryCounter++;
+					// if there is a next one
+					if(doneStoryCounter < doneStories.length){
+						let nextDiff = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
+						// if it also finished on the same day
+						if(nextDiff == difference){
+							// restart the process for this day
+							i--;
+						}
+						else{
+							// if it didn't then just make a point
+							console.log("new prevValue: "+prevValue);
+							let coordinate = {label:"",value:""};
+							coordinate.label = ""+i;
+							coordinate.value = ""+prevValue;
+							console.log("adding a real datapoint");
+							walkTheDOM(coordinate, console.log);
+							$scope.burndownData.data.push(coordinate);
+						}
+					}
+					else{
+						// if it's the last story, don't need to check for anymore stories that are possibly done on the same day
+						console.log("new prevValue: "+prevValue);
+						let coordinate = {label:"",value:""};
+						coordinate.label = ""+i;
+						coordinate.value = ""+prevValue;
+						console.log("adding a real datapoint");
+						walkTheDOM(coordinate, console.log);
+						$scope.burndownData.data.push(coordinate);
+					}
+				}
+				else{
+					// if it doesn't OR if you're already finished with all the done stories
+					// add a filler coordinate with the same value as before for this day
+					// only if there are still stories to be checked
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = ""+prevValue;
 					console.log("adding a filler datapoint");
 					walkTheDOM(coordinate, console.log);
 					$scope.burndownData.data.push(coordinate);
+					
+					//if there are no more stories to be checked, don't add any more coordinates
 				}
-				//if there are no more stories to be checked, don't add any more coordinates
+			}
+			else{
+				// if done with all stories and still have duration left
+				// then fill with empty points
+				let coordinate = {label:"",value:""};
+				coordinate.label = ""+i;
+				coordinate.value = "";
+				console.log("adding a filler datapoint");
+				walkTheDOM(coordinate, console.log);
+				$scope.burndownData.data.push(coordinate);
 			}
 		}
 	}
@@ -492,7 +530,7 @@ function daysBetween( date1, date2 ) {
 	var difference_ms = date2_ms - date1_ms;
 	    
 	// Convert back to days and return
-	return Math.round(difference_ms/one_day); 
+	return Math.floor(difference_ms/one_day); 
 }
 
 //TODO delete before pushing to master
