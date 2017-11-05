@@ -50,13 +50,4 @@ public class MainService {
 		sbs = dao.createNewStory(sbs);
 		return sbs;
 	}
-	
-	/*
-	public ScrumBoardTask createNewScrumBoardTask(StoryTaskDTO newTask) {
-		ScrumBoardStory story = dao.getScrumBoardStoryById(newTask.storyId);
-		ScrumBoardTask task = new ScrumBoardTask(newTask.description, story);
-		task = dao.createNewScrumBoardTask(task);
-		return task;
-	}
-	 */
 }
