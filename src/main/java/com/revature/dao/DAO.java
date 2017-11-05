@@ -16,4 +16,5 @@ public interface DAO {
 	public List<ScrumBoardLane> getScrumBoardLanes();
 	public ScrumUser updateScrumUser(ScrumUser su);
 	public ScrumBoard updateScrumBoard(ScrumBoard sb);
+	public ScrumBoard getScrumBoardById(int boardId);
 }

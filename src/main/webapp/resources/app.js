@@ -53,7 +53,7 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/viewScrumBoard", {
 		templateUrl: urlBase + "scrumBoardView.html",
 		controller: "scrumBoardViewController"
-	}).when("/createStory", {
+	}).when("/createStoryView", {
 		templateUrl : urlBase + "createStoryView.html",
 		controller: "createStoryViewController"
 	});
@@ -153,13 +153,13 @@ app.controller("scrumBoardViewController", function($scope, $rootScope, $locatio
 	);
 	
 	$scope.createStory =function(){
-		$location.path("/createStory")
+		$location.path("/createStoryView")
 	}
 	
 	traverseObject(currentScrumBoard);
 });
 
-app.controller("createStoryViewController", function($scope){
+app.controller("createStoryViewController", function($scope, $location, scrumBoardService){
 	console.log("Create Story View Controller");
 	$scope.taskList =[];
 	
@@ -178,8 +178,15 @@ app.controller("createStoryViewController", function($scope){
 				})
 	}
 	
-	$scope.createStory = function(){
-		$location.path("/viewScrumBoard");
+	$scope.createStory = function () {
+		console.log("desc: " + $scope.description);
+		scrumBoardService.createNewStory($scope.description, 5, currentScrumBoard.id).then(
+				function (response) {
+					$location.path("/viewScrumBoard");
+				}, function (error) {
+					console.log("createStory messed up");
+				}
+		);
 	}
 });
 
@@ -200,8 +207,10 @@ app.factory("scrumBoardService", function($http) {
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		},
-		getScrumBoardStory : function(){
-			return $http.post("createNewStory", {taskId: taskId, done: done, points: points});
+		createNewStory : function(description, points, sbId){
+			console.log("desc: " + description);
+			console.log("points: " + points);
+			return $http.post("createNewStory", {description: description, points: points, sbId:sbId});
 		}
 	};
 });

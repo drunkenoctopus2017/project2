@@ -61,6 +61,12 @@ public class DAOImpl implements DAO{
 		return results;
 	}
 	
+	public ScrumBoard getScrumBoardById(int boardId) {
+        Session session = sessionFactory.getCurrentSession();
+        ScrumBoard board = session.get(ScrumBoard.class, boardId);
+        return board;
+	}
+	
 	public ScrumUser updateScrumUser(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
 		su = (ScrumUser) session.merge(su);
@@ -68,8 +74,8 @@ public class DAOImpl implements DAO{
 	}
 	
 	public ScrumBoard updateScrumBoard(ScrumBoard sb) {
-		Session session = sessionFactory.getCurrentSession();
-		sb = (ScrumBoard) session.merge(sb);
-		return sb;
-	}
+        Session session = sessionFactory.getCurrentSession();
+        sb = (ScrumBoard) session.merge(sb);
+        return sb;
+    }
 }

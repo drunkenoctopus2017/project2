@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.dao.DAO;
+import com.revature.model.NewStoryDTO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -43,14 +44,24 @@ public class MainService {
 		return sb;
 	}
 	
-	public ScrumBoardStory createNewStory(ScrumBoardStory s, ScrumBoard sb) {
-		s.setScrumBoard(sb);
-		ScrumBoard initialBoard = new ScrumBoard();
-		s.setScrumBoard(initialBoard);
-		s = dao.createNewStory(s);
-		sb.getStories().add(s);
+	public ScrumBoardStory createNewStory(NewStoryDTO dto) {
+		ScrumBoardStory sbs = new ScrumBoardStory();
+		sbs.setPoints(dto.points);
+		System.out.println("1" + sbs);
+		sbs.setdescription(dto.description);
+		System.out.println("2" +sbs);
+		ScrumBoard sb = dao.getScrumBoardById(dto.sbId);
+		System.out.println("3" +sb);
+		sbs.setScrumBoard(sb);
+		System.out.println("4" +sbs);
+		sb.getStories().add(sbs);
+		System.out.println("5" +sb);
+		
+		sbs = dao.createNewStory(sbs);
+		System.out.println("6" +sbs);
 		sb = dao.updateScrumBoard(sb);
-		return s;
+		System.out.println("7" +sb);
+		return sbs;
 	}
 	
 	
