@@ -27,6 +27,7 @@ app.value("loginUser", {
 });
 
 app.value("loginUserBoards", []);
+app.value("allUsers", []);
 
 // for controlling what shows up on createScrumBoardView
 // false, if you're creating a board
@@ -126,10 +127,13 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/viewScrumBoard", {
 		templateUrl: urlBase + "scrumBoardView.html",
 		controller: "scrumBoardViewController"
+	}).when("/getAllUsers", {
+		templateUrl: urlBase + "addUserView.html", 
+		controller: "getAllUsersController"
 	});
 });
 
-app.controller("navbarController", function($scope, $rootScope, $location, loginUser, loginUserBoards, loginUserService) {
+app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
 		loginUser.lastName = "";
@@ -228,6 +232,16 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 		currentBoard.duration = board.duration;
 		$location.path("/createOrEditScrumBoard");
 	}
+
+	if($scope.role == 200){
+		$scope.getAllUsers = function(board) {
+			currentBoard.id = board.id;
+			currentBoard.name = board.name;
+			currentBoard.startDate = board.startDate;
+			currentBoard.duration = board.duration;
+			$location.path("/getAllUsers");
+		}
+	}
 });
 
 app.controller("createOrEditScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
@@ -290,6 +304,58 @@ app.controller("createOrEditScrumBoardController", function($scope, $location, s
 	}
 });
 
+app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+	
+	$scope.users = [];
+	$scope.getAvailableUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return false;
+				}
+			}
+			return true;
+		})
+	}
+	$scope.getBoardUsers = function(){
+		return $scope.users.filter(function(u){
+			
+			let boards = u.scrumBoards;
+			for(let i=0; i < boards.length; i++){
+				let boardId =  boards[i].id;
+				if(boardId == currentBoard.id){
+					return true;
+				}
+			}
+			return false;
+		})
+	}
+	
+	getAllUsersService.getAllExistingUsers().then (
+		function(response) {
+			$scope.users = response.data;
+			$scope.board = currentBoard.name;
+			
+		}
+	);
+	
+	$scope.addUserToBoard = function(user){
+		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
+			function (response) {
+				//no action necessary
+				let temp = $scope.users;
+				$location.path("/mainMenu");
+				$scope.board = response.data.name;
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nThere was an error!");
+			}
+		);
+	}
+});
+
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, chartData) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
@@ -336,8 +402,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 	);
 });
 
-
-
 // Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
@@ -380,16 +444,28 @@ app.factory("scrumBoardService", function($http) {
 	};
 });
 
-// TODO delete before pushing to master
-function walkTheDOM(node, func) {
-	   func(node);
-	   node = node.firstChild;
-	   while (node) {
-	       walkTheDOM(node, func);
-	       node = node.nextSibling;
-	   }
-	}
+app.factory("getAllUsersService", function($http){
+	return {
+		getAllExistingUsers: function(){
+			return $http.get("getAllExistingUsers");
+		}, 
+		addUserToBoard: function(userId, boardId){
+			
+			return $http.post("addUserToBoard", {userId: userId, boardId: boardId});
+		}
+	};
+});
 
+
+//TODO delete before pushing to master
+function walkTheDOM(node, func) {
+	func(node);
+	node = node.firstChild;
+	while (node) {
+	    walkTheDOM(node, func);
+	    node = node.nextSibling;
+	}
+}
 
 function traverseObject(obj) {
 	let s = getObjectString(obj, 0);

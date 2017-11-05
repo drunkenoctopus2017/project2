@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +17,12 @@ import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
+
+import com.revature.model.ScrumUsersBoards;
+import com.revature.model.UserBoardDTO;
 import com.revature.model.StoryLaneDTO;
 import com.revature.model.TaskStatusDTO;
+
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
 @Transactional
@@ -48,6 +54,11 @@ public class MainService {
 		return sb;
 	}
 	
+
+	public List<ScrumUser> getAllUsers(){
+		return dao.getAllUsers();
+	}
+
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^
@@ -62,7 +73,27 @@ public class MainService {
 			}
 		}
 		return sb;
+	}	
+	
+	//--Quarantined-------------------------------------------------
+	//DEBUG LATER.
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	public ScrumBoard addUserToBoard(UserBoardDTO ub) {
+		//TODO: This is not the right way.
+		//But it is currently, the ONLY way to get this to work.
+		Session session = sessionFactory.getCurrentSession();
+		ScrumUsersBoards userBoardJoin = new ScrumUsersBoards();
+		userBoardJoin.setSbId(ub.getBoardId());
+		userBoardJoin.setUserId(ub.getUserId());
+		session.save(userBoardJoin);
+		
+		ScrumBoard sb = session.get(ScrumBoard.class, ub.getBoardId());
+		return sb;
 	}
+	//--Quarantined-------------------------------------------------
+	
 	
 	public ScrumBoardStory changeScrumBoardStoryLane(StoryLaneDTO params) {
 		ScrumBoardStory story = dao.getScrumBoardStoryById(params.storyId);

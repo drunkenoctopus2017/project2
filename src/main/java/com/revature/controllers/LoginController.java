@@ -48,7 +48,7 @@ public class LoginController {
 		if(session != null) {
 			session.removeAttribute("user");
 			session.invalidate();
-			System.out.println("session invalidated?");
+			System.out.println("session invalidated");
 		}
 //		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
