@@ -45,24 +45,18 @@ public class MainService {
 	}
 	
 	public ScrumBoardStory createNewStory(NewStoryDTO dto) {
-		ScrumBoardStory sbs = new ScrumBoardStory();
-		sbs.setPoints(dto.points);
-		System.out.println("1" + sbs);
-		sbs.setdescription(dto.description);
-		System.out.println("2" +sbs);
 		ScrumBoard sb = dao.getScrumBoardById(dto.sbId);
-		System.out.println("3" +sb);
-		sbs.setScrumBoard(sb);
-		System.out.println("4" +sbs);
-		sb.getStories().add(sbs);
-		System.out.println("5" +sb);
-		
+		ScrumBoardStory sbs = new ScrumBoardStory(sb, dto.description, dto.points, 10);
 		sbs = dao.createNewStory(sbs);
-		System.out.println("6" +sbs);
-		sb = dao.updateScrumBoard(sb);
-		System.out.println("7" +sb);
 		return sbs;
 	}
 	
-	
+	/*
+	public ScrumBoardTask createNewScrumBoardTask(StoryTaskDTO newTask) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(newTask.storyId);
+		ScrumBoardTask task = new ScrumBoardTask(newTask.description, story);
+		task = dao.createNewScrumBoardTask(task);
+		return task;
+	}
+	 */
 }

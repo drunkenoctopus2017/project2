@@ -41,6 +41,17 @@ public class DAOImpl implements DAO{
 		return s;
 	}
 	
+	/*
+	 public ScrumBoardTask createNewScrumBoardTask(ScrumBoardTask task) {
+		Session session = sessionFactory.getCurrentSession();
+		Integer id = (Integer) session.save(task);
+		//Maybe instead of setting the id (which might be dangerous???),
+		//we should session.get(id) to return the newly created task...?
+		task.setId(id);
+		return task;
+	}
+	 */
+	
 	public ScrumUser getScrumUserByUsername(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from ScrumUser where username = :username");
