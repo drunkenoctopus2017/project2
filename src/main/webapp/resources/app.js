@@ -53,67 +53,6 @@ app.value("loginUserRole", {
 	roleName: "unauthorized"
 });
 
-app.value("chartData", {
-    "chart": {
-        "caption": "Monthly revenue for last year",
-        "subCaption": "Harry's SuperMart",
-        "xAxisName": "Month",
-        "yAxisName": "Revenues (In USD)",
-        "numberPrefix": "$",
-        "theme": "fint"
-    },
-    "data": [
-        {
-            "label": "Jan",
-            "value": "420000"
-        },
-        {
-            "label": "Feb",
-            "value": "810000"
-        },
-        {
-            "label": "Mar",
-            "value": "720000"
-        },
-        {
-            "label": "Apr",
-            "value": "550000"
-        },
-        {
-            "label": "May",
-            "value": "910000"
-        },
-        {
-            "label": "Jun",
-            "value": "510000"
-        },
-        {
-            "label": "Jul",
-            "value": "680000"
-        },
-        {
-            "label": "Aug",
-            "value": "620000"
-        },
-        {
-            "label": "Sep",
-            "value": "610000"
-        },
-        {
-            "label": "Oct",
-            "value": "490000"
-        },
-        {
-            "label": "Nov",
-            "value": "900000"
-        },
-        {
-            "label": "Dec",
-            "value": "730000"
-        }
-    ]
-});
-
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -213,13 +152,26 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 	$rootScope.firstName = loginUser.firstName;
 	$rootScope.lastName = loginUser.lastName;
 	$scope.boards = loginUserBoards;
+	// get the value for b's progress bar
+	$scope.percentComplete = function(b){
+		let sumPts = 0;
+		let sumDone = 0;
+		for(var i = 0; i < b.stories.length;i++){
+			sumPts += b.stories[i].points;
+			if(b.stories[i].laneId == 60){
+				sumDone += b.stories[i].points;
+			}
+		}
+		let percent = (sumDone*100)/sumPts;
+		return percent;
+	}
 	$scope.role = loginUserRole.id;
 	$scope.createScrumBoard = function() {
 		$location.path("/createOrEditScrumBoard");
 	}
 	$scope.viewBoard = function(b) {
 		$rootScope.currentScrumBoard = b
-// traverseObject(b);
+// 		traverseObject(b);
 		$location.path("/viewScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
@@ -305,7 +257,6 @@ app.controller("createOrEditScrumBoardController", function($scope, $location, s
 });
 
 app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
-	
 	$scope.users = [];
 	$scope.getAvailableUsers = function(){
 		return $scope.users.filter(function(u){
@@ -356,7 +307,7 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, chartData) {
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService){
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.filterStoriesByLane = function (laneId) {
@@ -390,16 +341,89 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		}, function (error) {
 		}
 	);
-	$rootScope.burndownData = chartData;
-	scrumBoardService.getScrumBoardBurndownData($rootScope.currentScrumBoard).then(
-		function (response) {
-			console.log("what im sending to fusionchart: "+JSON.stringify(response.data));
-			$rootScope.burndownData = JSON.stringify(response.data);
-//			$rootScope.burndownData = chartData;
-		}, function (error) {
-			alert(error.status + " " + error.statusText + "\nThere was an error obtaining the burndown chart!");
+	// make the burndown chart data
+	let b = $rootScope.currentScrumBoard;
+	$scope.burndownData = {
+		chart:{
+			caption: ""+b.name,
+		    subCaption: "Burndown Chart",
+		    xAxisName: "Days",
+		    yAxisName: "Points",
+		    theme: "fint",
+	    	showValues: "0"
+		},
+		data:[]
+	};
+	// if current board has a startDate and stories
+	if(b.stories.length > 0 && b.startDate != undefined){
+		let doneStories = [];
+		walkTheDOM(doneStories, console.log);
+		for(var t = 0;t < b.stories.length; t++){
+			// if it's in done lane, do this:
+			console.log("what's the lane id? "+b.stories[t].laneId);
+			if(b.stories[t].laneId == 60){
+				// add it to array of finished stories
+				console.log("what I'm pushing to done Stories: ");
+				walkTheDOM(b.stories[t], console.log);
+				doneStories.push(b.stories[t]);
+				console.log("list of done stories so far: ");
+				walkTheDOM(doneStories, console.log);
+			}
 		}
-	);
+		// sort the done stories by days from b.startDate, ascending so earlier completed stories are first
+		doneStories.sort(function(a, c){
+			return daysBetween(new Date(b.startDate), new Date(a.finishTime)) - daysBetween(new Date(b.startDate), new Date(c.finishTime));
+			}
+		);
+		console.log("list of done stories after sorting: ");
+		walkTheDOM(doneStories, console.log);
+		let doneStoryCounter = 0;
+		let sumPts = 0;
+		for(var i = 0; i < b.stories.length;i++){
+			console.log("adding this to sumPts: "+b.stories[i].points);
+			sumPts += b.stories[i].points;
+		}
+		let prevValue = sumPts;
+		for(var i = 0;i < b.duration; i++){
+			// check the next story to see if it matches current day from startDate 
+			if(doneStoryCounter < doneStories.length && 
+					(daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime)) == i)){
+				// if it does AND you haven't already gone through all the finished stories
+				// add a coordinate with an updated point level, representing a day in the chart where points got burned down
+				prevValue = prevValue - doneStories[doneStoryCounter].points;
+				let coordinate = {label:"",value:""};
+				coordinate.label = ""+i;
+				coordinate.value = ""+prevValue;
+				console.log("adding a real datapoint");
+				walkTheDOM(coordinate, console.log);
+				$scope.burndownData.data.push(coordinate);
+				doneStoryCounter++;
+			}
+			else{
+				// if it doesn't OR if you're already finished will all the done stories
+				// add a filler coordinate with the same value as before for this day
+				// only if there are still stories to be checked
+				if(!doneStoryCounter < doneStories.length){
+					let coordinate = {label:"",value:""};
+					coordinate.label = ""+i;
+					coordinate.value = ""+prevValue;
+					console.log("adding a filler datapoint");
+					walkTheDOM(coordinate, console.log);
+					$scope.burndownData.data.push(coordinate);
+				}
+				//if there are no more stories to be checked, don't add any more coordinates
+			}
+		}
+	}
+	console.log($scope.burndownData);
+//	scrumBoardService.getScrumBoardBurndownData($rootScope.currentScrumBoard).then(
+//		function (response) {
+//			console.log("what im sending to fusionchart: "+JSON.stringify(response.data));
+//			$rootScope.burndownData = JSON.stringify(response.data);
+//		}, function (error) {
+//			alert(error.status + " " + error.statusText + "\nThere was an error obtaining the burndown chart!");
+//		}
+//	);
 });
 
 // Factory, Service, or Provider? Which to use?
@@ -425,9 +449,8 @@ app.factory("scrumBoardService", function($http) {
 			return $http.get("getScrumBoardLanes");
 		}, 
 		getScrumBoardBurndownData: function(b) {
-			console.log("printing board object to see it's params");
-			traverseObject(b);
-			return $http.post("getScrumBoardBurndownData", {id: b.id, name: b.name, startDate: b.startDate, duration: b.duration});
+			walkTheDOM(b, console.log);
+			return $http.post("getScrumBoardBurndownData", {id: b.id, name: b.name, startDate: b.startDate, duration: b.duration, stories: b.stories});
 		},
 		// Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {
@@ -456,6 +479,21 @@ app.factory("getAllUsersService", function($http){
 	};
 });
 
+// DON'T DELETE THIS, using to calculate burndown chart data
+function daysBetween( date1, date2 ) {
+	//Get 1 day in milliseconds
+	var one_day=1000*60*60*24;
+
+	// Convert both dates to milliseconds
+	var date1_ms = date1.getTime();
+	var date2_ms = date2.getTime();
+
+	// Calculate the difference in milliseconds
+	var difference_ms = date2_ms - date1_ms;
+	    
+	// Convert back to days and return
+	return Math.round(difference_ms/one_day); 
+}
 
 //TODO delete before pushing to master
 function walkTheDOM(node, func) {

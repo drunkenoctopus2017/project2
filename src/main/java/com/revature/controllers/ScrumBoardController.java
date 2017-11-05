@@ -43,18 +43,16 @@ public class ScrumBoardController {
 	@RequestMapping(value="/getScrumBoardLanes", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ScrumBoardLane>> getScrumBoardLanes() {
 		List<ScrumBoardLane> sbLanes = service.getScrumBoardLanes();
-		System.out.println("lanes: " + sbLanes);
+//		System.out.println("lanes: " + sbLanes);
 		return new ResponseEntity<List<ScrumBoardLane>>(sbLanes, HttpStatus.OK); //200
 	}
 	
 	@RequestMapping(value="/getScrumBoardBurndownData", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ChartDataDTO> getScrumBoardBurndownData() {
+	public ResponseEntity<ChartDataDTO> getScrumBoardBurndownData(@RequestBody ScrumBoard currentScrumBoard) {
+		System.out.println("the current scrumboard: "+currentScrumBoard);
 		ChartDataDTO cdd = new ChartDataDTO();
 		System.out.println("data: " + cdd);
-		ResponseEntity<ChartDataDTO> re = new ResponseEntity<ChartDataDTO>(cdd, HttpStatus.OK);
-		System.out.println(re);
-//		return new ResponseEntity<ChartDataDTO>(cdd, HttpStatus.OK); //200
-		return re;
+		return new ResponseEntity<ChartDataDTO>(cdd, HttpStatus.OK); //200
 	}
 	
 	//Update
