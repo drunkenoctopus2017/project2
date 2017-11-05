@@ -116,4 +116,13 @@ public class MainService {
 		task = dao.updateScrumBoardTask(task);
 		return task;
 	}
+	
+	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory sbs) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(sbs.getId());
+		story.setFinishTime(new Date());
+		story.setdescription(sbs.getdescription());
+		story.setPoints(sbs.getPoints());
+		story = dao.updateScrumBoardStory(story);
+		return story;
+	}
 }

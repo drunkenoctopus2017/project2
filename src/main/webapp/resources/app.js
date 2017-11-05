@@ -285,22 +285,6 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
-	$rootScope.$on("createNewTask", function (event, story) {
-		$scope.story = story;
-	});
-	$scope.saveTask = function () {
-		scrumBoardService.createNewTask($scope.taskName, $scope.story.id).then(
-			function (response) {
-				//traverseObject(response.data);
-				$scope.story.tasks.push(response.data);
-			}, function (error) {
-				alert(error.status + " " + error.statusText + "\nTask could not be saved!");
-			}
-		);
-	}
-});
-
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
@@ -330,6 +314,11 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			}
 		);
 	}
+	
+	$scope.setEditStoryTarget = function (story) {
+		$rootScope.$emit("editStory", story);
+	}
+	
 	$scope.setNewTaskTarget = function (story) {
 		$rootScope.$emit("createNewTask", story)
 	}
@@ -341,6 +330,41 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 	);
 });
 
+app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
+	$rootScope.$on("createNewTask", function (event, story) {
+		$scope.story = story;
+	});
+	$scope.saveTask = function () {
+		scrumBoardService.createNewTask($scope.taskName, $scope.story.id).then(
+			function (response) {
+				//traverseObject(response.data);
+				$scope.story.tasks.push(response.data);
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nTask could not be saved!");
+			}
+		);
+	}
+});
+
+app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) { 
+	$rootScope.$on("editStory", function (event, story) {
+		$scope.points = story.points;
+		$scope.desc = story.description;
+		$scope.updateStory = function(){
+			$scope.points = document.getElementById('storyPoints').value;
+			$scope.descript = document.getElementById('storyText').value;
+			story.points = $scope.points;
+			story.description = $scope.desc;
+			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
+				function(response){
+					//no action necessary
+				}, function(error){
+					alert(error.status + " " + error.statusText + "\nThere was an error updating story!");
+				}
+			);
+		}
+	});
+});
 
 //Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
@@ -370,6 +394,9 @@ app.factory("scrumBoardService", function($http) {
 		//Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
+		}, 
+		updateScrumBoardStory: function(storyId, storyDescription, storyPoints, storyFinishTime) {
+			return $http.post("updateScrumBoardStory", {id: storyId, description: storyDescription, points: storyPoints, finishTime: storyFinishTime});
 		}, 
 		updateScrumBoardTaskStatus: function(id, status) {
 			return $http.post("updateScrumBoardTask", {id: id, status: status});

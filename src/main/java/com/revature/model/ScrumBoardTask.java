@@ -83,13 +83,4 @@ public class ScrumBoardTask {
 		return "ScrumBoardTask [id=" + id + ", status=" + status + ", description=" + description + ", story=" + (story != null ? story.getId() : " no story parent found")
 				+ "]";
 	}
-
-	//public int getSbsId() {
-	//	return sbsId;
-	//}
-
-	//public void setSbsId(int sbsId) {
-	//	this.sbsId = sbsId;
-	//}
-	
 }
