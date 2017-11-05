@@ -357,17 +357,11 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 	// if current board has a startDate and stories
 	if(b.stories.length > 0 && b.startDate != undefined){
 		let doneStories = [];
-		walkTheDOM(doneStories, console.log);
 		for(var t = 0;t < b.stories.length; t++){
 			// if it's in done lane, do this:
-			console.log("what's the lane id? "+b.stories[t].laneId);
 			if(b.stories[t].laneId == 60){
 				// add it to array of finished stories
-				console.log("what I'm pushing to done Stories: ");
-				walkTheDOM(b.stories[t], console.log);
 				doneStories.push(b.stories[t]);
-				console.log("list of done stories so far: ");
-				walkTheDOM(doneStories, console.log);
 			}
 		}
 		// sort the done stories by days from b.startDate, ascending so earlier completed stories are first
@@ -375,25 +369,20 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			return daysBetween(new Date(b.startDate), new Date(a.finishTime)) - daysBetween(new Date(b.startDate), new Date(c.finishTime));
 			}
 		);
-		console.log("list of done stories after sorting: ");
-		walkTheDOM(doneStories, console.log);
 		let doneStoryCounter = 0;
 		let sumPts = 0;
 		for(var i = 0; i < b.stories.length;i++){
-			console.log("adding this to sumPts: "+b.stories[i].points);
 			sumPts += b.stories[i].points;
 		}
 		let prevValue = sumPts;
 		for(var i = 1;i < b.duration+1; i++){
 			// check the next story to see if it matches current day from startDate 
 //			console.log("this is the board's startDate: "+b.startDate)
-			console.log("value of doneStoryCounter + doneStories.length: "+doneStoryCounter+" "+doneStories.length);
 			if(doneStoryCounter < doneStories.length){
 				let difference = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
 				if(difference == i){
 					// if it does AND you haven't already gone through all the finished stories
 					// add a coordinate with an updated point level, representing a day in the chart where points got burned down
-					console.log("points to subtract from prevValue: "+doneStories[doneStoryCounter].points)
 					prevValue = prevValue - doneStories[doneStoryCounter].points;
 					// you've calculated burndown for this story, can start looking at next one
 					doneStoryCounter++;
@@ -407,23 +396,17 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 						}
 						else{
 							// if it didn't then just make a point
-							console.log("new prevValue: "+prevValue);
 							let coordinate = {label:"",value:""};
 							coordinate.label = ""+i;
 							coordinate.value = ""+prevValue;
-							console.log("adding a real datapoint");
-							walkTheDOM(coordinate, console.log);
 							$scope.burndownData.data.push(coordinate);
 						}
 					}
 					else{
 						// if it's the last story, don't need to check for anymore stories that are possibly done on the same day
-						console.log("new prevValue: "+prevValue);
 						let coordinate = {label:"",value:""};
 						coordinate.label = ""+i;
 						coordinate.value = ""+prevValue;
-						console.log("adding a real datapoint");
-						walkTheDOM(coordinate, console.log);
 						$scope.burndownData.data.push(coordinate);
 					}
 				}
@@ -434,8 +417,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = ""+prevValue;
-					console.log("adding a filler datapoint");
-					walkTheDOM(coordinate, console.log);
 					$scope.burndownData.data.push(coordinate);
 					
 					//if there are no more stories to be checked, don't add any more coordinates
@@ -447,21 +428,10 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 				let coordinate = {label:"",value:""};
 				coordinate.label = ""+i;
 				coordinate.value = "";
-				console.log("adding a filler datapoint");
-				walkTheDOM(coordinate, console.log);
 				$scope.burndownData.data.push(coordinate);
 			}
 		}
 	}
-	console.log($scope.burndownData);
-//	scrumBoardService.getScrumBoardBurndownData($rootScope.currentScrumBoard).then(
-//		function (response) {
-//			console.log("what im sending to fusionchart: "+JSON.stringify(response.data));
-//			$rootScope.burndownData = JSON.stringify(response.data);
-//		}, function (error) {
-//			alert(error.status + " " + error.statusText + "\nThere was an error obtaining the burndown chart!");
-//		}
-//	);
 });
 
 // Factory, Service, or Provider? Which to use?
@@ -486,10 +456,6 @@ app.factory("scrumBoardService", function($http) {
 		getScrumBoardLanes: function() {
 			return $http.get("getScrumBoardLanes");
 		}, 
-		getScrumBoardBurndownData: function(b) {
-			walkTheDOM(b, console.log);
-			return $http.post("getScrumBoardBurndownData", {id: b.id, name: b.name, startDate: b.startDate, duration: b.duration, stories: b.stories});
-		},
 		// Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
