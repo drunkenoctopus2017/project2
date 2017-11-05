@@ -79,11 +79,6 @@ public class ScrumBoardController {
 		return new ResponseEntity<ScrumBoardStory>(story, HttpStatus.OK); //200
 	}
 	
-	@RequestMapping(value="/updateScrumBoardStory", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ScrumBoardStory> updateScrumBoardStory(@RequestBody ScrumBoardStory sbs){
-		ScrumBoardStory story = service.updateScrumBoardStory(sbs);
-		return new ResponseEntity<ScrumBoardStory>(story, HttpStatus.OK);
-	}
 	//Delete
 	
 	/**
