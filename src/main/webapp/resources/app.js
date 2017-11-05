@@ -286,7 +286,14 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-
+app.controller("newTaskController", function ($scope, $rootScope) {
+	console.log("new task controller ");
+	
+	$rootScope.$on("test", function (event, story) {
+		console.log("test came through! " + story.id);
+		$scope.testVar = story.description;
+	});
+});
 
 app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
@@ -299,10 +306,10 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		console.log("story: " + story.id + " lane dir: " + lane.id);
 		story.laneId = lane.id;
 		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
-			function(response){
+			function (response) {
 				//no action necessary
 			},
-			function(error){
+			function (error) {
 				alert(error.status + " " + error.statusText + "\nThere was an error changing lanes!");
 			}
 		);
@@ -315,6 +322,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 				alert(error.status + " " + error.statusText + "\nTask could not be updated!");
 			}
 		);
+	}
+	$scope.setNewTaskTarget = function (story) {
+		console.log("story: " + story);
+		console.log("desc: " + story.description);
+		//$rootScope.currentStory = story;
+		$rootScope.$emit("test", story)
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {

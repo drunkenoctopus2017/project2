@@ -19,13 +19,32 @@
 							<span class="glyphicon glyphicon-triangle-right"></span> 
 						</a>
 						<br />
-						<span>{{story.description}}</span>
+						<p>{{story.description}}</p>
 						<div class="checkbox" data-ng-repeat="task in story.tasks">
 							<label>
 								<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
 							</label>
 						</div>
+						<button data-toggle="modal" data-target="#addTaskModal" data-ng-click="setNewTaskTarget(story)" class="btn btn-default btn-xs">Add task</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div data-ng-controller="newTaskController" class="modal fade" id="addTaskModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p>testVar {{testVar}}</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
