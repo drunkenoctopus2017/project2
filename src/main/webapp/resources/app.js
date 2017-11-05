@@ -287,14 +287,11 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 });
 
 app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) {
-	console.log("updateStory controller ");
 	
 	$rootScope.$on("editStory", function (event, story) {
-		console.log("edityStory came through! " + story.id);
 		$scope.points = story.points;
 		$scope.descript = story.description;
 		$scope.updateStory = function(){
-			console.log('updating story');
 			
 			$scope.points = document.getElementById('storyPoints').value;
 			$scope.descript = document.getElementById('storyText').value;
@@ -304,7 +301,7 @@ app.controller("updateStoryController", function ($scope, $rootScope, scrumBoard
 		
 			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
 					function(response){
-						console.log(response.data);
+						//no action necessary
 					},
 					function(error){
 						alert(error.status + " " + error.statusText + "\nThere was an error updating story!");
@@ -325,7 +322,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		return stories.filter(s => s.laneId == laneId);
 	}
 	$scope.changeLane = function (story, lane) {
-		console.log("story: " + story.id + " lane dir: " + lane.id);
+		
 		story.laneId = lane.id;
 		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
 			function(response){
@@ -346,9 +343,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		);
 	}
 	$scope.setEditStoryTarget = function (story) {
-		console.log("story: " + story);
-		console.log("desc: " + story.description);
-		//$rootScope.currentStory = story;
 		$rootScope.$emit("editStory", story)
 	}
 	scrumBoardService.getScrumBoardLanes().then(
