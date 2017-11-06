@@ -170,8 +170,7 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 		$location.path("/createOrEditScrumBoard");
 	}
 	$scope.viewBoard = function(b) {
-		$rootScope.currentScrumBoard = b
-// 		traverseObject(b);
+		$rootScope.currentScrumBoard = b;
 		$location.path("/viewScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
@@ -307,9 +306,11 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService){
+
+app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.role = loginUserRole.id;
 	$scope.filterStoriesByLane = function (laneId) {
 		let stories = $rootScope.currentScrumBoard.stories;
 		return stories.filter(s => s.laneId == laneId);
@@ -321,7 +322,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			function(response){
 				// no action necessary
 			},
-			function(error){
+			function (error) {
 				alert(error.status + " " + error.statusText + "\nThere was an error changing lanes!");
 			}
 		);
@@ -334,6 +335,14 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 				alert(error.status + " " + error.statusText + "\nTask could not be updated!");
 			}
 		);
+	}
+	
+	$scope.setEditStoryTarget = function (story) {
+		$rootScope.$emit("editStory", story);
+	}
+	
+	$scope.setNewTaskTarget = function (story) {
+		$rootScope.$emit("createNewTask", story)
 	}
 	scrumBoardService.getScrumBoardLanes().then(
 		function (response) {
@@ -377,7 +386,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		let prevValue = sumPts;
 		for(var i = 1;i < b.duration+1; i++){
 			// check the next story to see if it matches current day from startDate 
-//			console.log("this is the board's startDate: "+b.startDate)
 			if(doneStoryCounter < doneStories.length){
 				let difference = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
 				if(difference == i){
@@ -411,7 +419,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					}
 				}
 				else{
-					// if it doesn't OR if you're already finished with all the done stories
+					// if it doesn't match current day OR if you're already finished with all the done stories
 					// add a filler coordinate with the same value as before for this day
 					// only if there are still stories to be checked
 					let coordinate = {label:"",value:""};
@@ -419,7 +427,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					coordinate.value = ""+prevValue;
 					$scope.burndownData.data.push(coordinate);
 					
-					//if there are no more stories to be checked, don't add any more coordinates
 				}
 			}
 			else{
@@ -434,12 +441,48 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 	}
 });
 
-// Factory, Service, or Provider? Which to use?
+app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
+	$rootScope.$on("createNewTask", function (event, story) {
+		$scope.story = story;
+	});
+	$scope.saveTask = function () {
+		scrumBoardService.createNewTask($scope.taskName, $scope.story.id).then(
+			function (response) {
+				//traverseObject(response.data);
+				$scope.story.tasks.push(response.data);
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nTask could not be saved!");
+			}
+		);
+	}
+});
+
+app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) { 
+	$rootScope.$on("editStory", function (event, story) {
+		$scope.points = story.points;
+		$scope.desc = story.description;
+		$scope.updateStory = function(){
+			$scope.points = document.getElementById('storyPoints').value;
+			$scope.descript = document.getElementById('storyText').value;
+			story.points = $scope.points;
+			story.description = $scope.desc;
+			scrumBoardService.updateScrumBoardStory(story.id, story.description, story.points, story.finishTime).then(
+				function(response){
+					//no action necessary
+				}, function(error){
+					alert(error.status + " " + error.statusText + "\nThere was an error updating story!");
+				}
+			);
+		}
+	});
+});
+
+//Factory, Service, or Provider? Which to use?
 app.factory("loginUserService", function($http) {
 	return {
 		login: function(username, password) {
 			return $http.post("authenticateLogin", {username: username, password: password});
-		},
+		}, 
 		logout: function() {
 			return $http.get("logout");
 		}
@@ -451,14 +494,20 @@ app.factory("scrumBoardService", function($http) {
 		// Create
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
-		},
-		// Read
+		}, 
+		createNewTask: function (desc, storyId) {
+			return $http.post("createNewScrumBoardTask", {description: desc, storyId: storyId});
+		}, 
+		//Read
 		getScrumBoardLanes: function() {
 			return $http.get("getScrumBoardLanes");
 		}, 
 		// Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
+		}, 
+		updateScrumBoardStory: function(storyId, storyDescription, storyPoints, storyFinishTime) {
+			return $http.post("updateScrumBoardStory", {id: storyId, description: storyDescription, points: storyPoints, finishTime: storyFinishTime});
 		}, 
 		updateScrumBoardTaskStatus: function(id, status) {
 			return $http.post("updateScrumBoardTask", {id: id, status: status});

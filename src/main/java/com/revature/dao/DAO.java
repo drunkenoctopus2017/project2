@@ -12,6 +12,7 @@ public interface DAO {
 	
 	//Create
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb);
+	public ScrumBoardTask createNewScrumBoardTask(ScrumBoardTask task);
 
 	//Read
 	public List<ScrumUser> getAllUsers();

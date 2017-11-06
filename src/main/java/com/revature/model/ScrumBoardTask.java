@@ -1,13 +1,14 @@
 package com.revature.model;
 
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,8 +16,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="SB_TASKS")
 public class ScrumBoardTask {
+	
 	@Id
 	@Column(name="SBT_ID")
+	@SequenceGenerator(name="taskIdSequence", sequenceName="SBT_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="taskIdSequence")
 	private int id;
 	
 	//@Column(name="SBS_ID")
@@ -42,6 +46,12 @@ public class ScrumBoardTask {
 	}
 	
 	public ScrumBoardTask() {
+	}
+	
+	public ScrumBoardTask(String description, ScrumBoardStory story) {
+		super();
+		this.description = description;
+		this.story = story;
 	}
 
 	public int getId() {
@@ -73,13 +83,4 @@ public class ScrumBoardTask {
 		return "ScrumBoardTask [id=" + id + ", status=" + status + ", description=" + description + ", story=" + (story != null ? story.getId() : " no story parent found")
 				+ "]";
 	}
-
-	//public int getSbsId() {
-	//	return sbsId;
-	//}
-
-	//public void setSbsId(int sbsId) {
-	//	this.sbsId = sbsId;
-	//}
-	
 }

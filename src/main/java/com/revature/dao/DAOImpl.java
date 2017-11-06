@@ -30,12 +30,20 @@ public class DAOImpl implements DAO{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb) {
 		Session session = sessionFactory.getCurrentSession();
 		Integer id = (Integer) session.save(sb);
 		sb.setId(id);
 		return sb;
+	}
+	
+	public ScrumBoardTask createNewScrumBoardTask(ScrumBoardTask task) {
+		Session session = sessionFactory.getCurrentSession();
+		Integer id = (Integer) session.save(task);
+		//Maybe instead of setting the id (which might be dangerous???),
+		//we should session.get(id) to return the newly created task...?
+		task.setId(id);
+		return task;
 	}
 	
 	public ScrumUser getScrumUserByUsername(ScrumUser su) {
@@ -105,7 +113,9 @@ public class DAOImpl implements DAO{
 	
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task) {
 		Session session = sessionFactory.getCurrentSession();
+		//Wait, what? This works????
+		//Why does get update the data? This is weird.
 		ScrumBoardTask updateTask = session.get(ScrumBoardTask.class, task.getId());
-		return task;
+		return updateTask;
 	}
 }

@@ -17,11 +17,11 @@ import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-
 import com.revature.model.ScrumUsersBoards;
-import com.revature.model.UserBoardDTO;
 import com.revature.model.StoryLaneDTO;
+import com.revature.model.StoryTaskDTO;
 import com.revature.model.TaskStatusDTO;
+import com.revature.model.UserBoardDTO;
 
 
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
@@ -30,6 +30,28 @@ public class MainService {
 
 	@Autowired
 	private DAO dao;
+	
+	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
+		sb.setUserId(su.getId());
+		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
+		initialUsers.add(su);
+		sb.setScrumUsers(initialUsers);
+		sb = dao.createNewScrumBoard(sb);
+		su.getScrumBoards().add(sb);
+		su = dao.updateScrumUser(su);
+		return sb;
+	}
+	
+	public ScrumBoardTask createNewScrumBoardTask(StoryTaskDTO newTask) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(newTask.storyId);
+		ScrumBoardTask task = new ScrumBoardTask(newTask.description, story);
+		task = dao.createNewScrumBoardTask(task);
+		return task;
+	}
+
+	public List<ScrumUser> getAllUsers(){
+		return dao.getAllUsers();
+	}
 	
 	public ScrumUser getScrumUserByUsernameAndPassword(ScrumUser su) {
 		ScrumUser user = dao.getScrumUserByUsername(su);
@@ -43,22 +65,6 @@ public class MainService {
 		return dao.getScrumBoardLanes();
 	}
 	
-	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
-		sb.setUserId(su.getId());
-		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
-		initialUsers.add(su);
-		sb.setScrumUsers(initialUsers);
-		sb = dao.createNewScrumBoard(sb);
-		su.getScrumBoards().add(sb);
-		su = dao.updateScrumUser(su);
-		return sb;
-	}
-	
-
-	public List<ScrumUser> getAllUsers(){
-		return dao.getAllUsers();
-	}
-
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^
@@ -108,5 +114,14 @@ public class MainService {
 		task.setStatus(params.status);
 		task = dao.updateScrumBoardTask(task);
 		return task;
+	}
+	
+	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory sbs) {
+		ScrumBoardStory story = dao.getScrumBoardStoryById(sbs.getId());
+		story.setFinishTime(new Date());
+		story.setdescription(sbs.getdescription());
+		story.setPoints(sbs.getPoints());
+		story = dao.updateScrumBoardStory(story);
+		return story;
 	}
 }
