@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.dao.DAO;
+import com.revature.model.NewStoryDTO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -31,6 +32,8 @@ public class MainService {
 	@Autowired
 	private DAO dao;
 	
+	//Create
+	
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
@@ -42,13 +45,21 @@ public class MainService {
 		return sb;
 	}
 	
+	public ScrumBoardStory createNewStory(NewStoryDTO dto) {
+		ScrumBoard sb = dao.getScrumBoardById(dto.sbId);
+		ScrumBoardStory sbs = new ScrumBoardStory(sb, dto.description, dto.points, 10);
+		sbs = dao.createNewStory(sbs);
+		return sbs;
+	}
+	
 	public ScrumBoardTask createNewScrumBoardTask(StoryTaskDTO newTask) {
 		ScrumBoardStory story = dao.getScrumBoardStoryById(newTask.storyId);
 		ScrumBoardTask task = new ScrumBoardTask(newTask.description, story);
 		task = dao.createNewScrumBoardTask(task);
 		return task;
 	}
-
+	
+	//Read
 	public List<ScrumUser> getAllUsers(){
 		return dao.getAllUsers();
 	}
@@ -65,6 +76,7 @@ public class MainService {
 		return dao.getScrumBoardLanes();
 	}
 	
+	//Update
 	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
 		sb.setUserId(su.getId());
 		//this is necessary^

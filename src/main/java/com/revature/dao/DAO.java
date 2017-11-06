@@ -2,11 +2,11 @@ package com.revature.dao;
 
 import java.util.List;
 
+import com.revature.model.ScrumUser;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
-import com.revature.model.ScrumUser;
 
 public interface DAO {
 	
@@ -18,6 +18,7 @@ public interface DAO {
 	public List<ScrumUser> getAllUsers();
 	public ScrumUser getScrumUserById(int userId);
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
+	public ScrumBoardStory createNewStory(ScrumBoardStory s);
 	public List<ScrumBoardLane> getScrumBoardLanes();
 	public ScrumBoardStory getScrumBoardStoryById(int id);
 	public ScrumBoardTask getScrumBoardTaskById(int id);
@@ -29,5 +30,4 @@ public interface DAO {
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task);
 	
 	//Delete
-
 }
