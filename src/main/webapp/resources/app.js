@@ -163,6 +163,9 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 			}
 		}
 		let percent = Math.floor((sumDone*100)/sumPts);
+		if(sumPts == 0){
+			return 0;
+		}
 		return percent;
 	}
 	$scope.role = loginUserRole.id;
@@ -358,13 +361,14 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		    subCaption: "Burndown Chart",
 		    xAxisName: "Days",
 		    yAxisName: "Points",
-		    theme: "fint",
+		    theme: "carbon",//"fint",
 	    	showValues: "0"
 		},
 		data:[]
-	};
+	};	
+	let today = new Date();
 	// if current board has a startDate that is the present or in the past and has stories
-	if(b.stories.length > 0 && b.startDate != undefined && new Date(b.startDate) <= new Date()){
+	if(b.stories.length > 0 && b.startDate != undefined && new Date(b.startDate) <= today){
 		let doneStories = [];
 		for(var t = 0;t < b.stories.length; t++){
 			// if it's in done lane, do this:
@@ -385,11 +389,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		}
 		let prevValue = sumPts;
 		for(var i = 1;i < b.duration+1; i++){
-			// check the next story to see if it matches current day from startDate 
+			// if there are stories that are finished
 			if(doneStoryCounter < doneStories.length){
+				// check the next story to see if it matches current day from startDate 
 				let difference = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
 				if(difference == i){
-					// if it does AND you haven't already gone through all the finished stories
+					// if it does
 					// add a coordinate with an updated point level, representing a day in the chart where points got burned down
 					prevValue = prevValue - doneStories[doneStoryCounter].points;
 					// you've calculated burndown for this story, can start looking at next one
@@ -419,26 +424,50 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					}
 				}
 				else{
-					// if it doesn't match current day OR if you're already finished with all the done stories
+					// if next story doesn't match current day
 					// add a filler coordinate with the same value as before for this day
-					// only if there are still stories to be checked
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = ""+prevValue;
 					$scope.burndownData.data.push(coordinate);
-					
 				}
 			}
 			else{
+				console.log("no more stories");
+				console.log("difference between current day and start day");
+				console.log(daysBetween(new Date(b.startDate), today));
 				// if done with all stories and still have duration left
-				// then fill with empty points
-				let coordinate = {label:"",value:""};
-				coordinate.label = ""+i;
-				coordinate.value = "";
-				$scope.burndownData.data.push(coordinate);
+				// check if you've reached present day yet
+				// if you haven't reached present day, make filler points
+				if(daysBetween(new Date(b.startDate), today) > i){
+					console.log("haven't reached present day, making a filler point and adding it");
+					let coordinate = {label:"",value:""};
+					coordinate.label = ""+i;
+					coordinate.value = ""+prevValue;
+					$scope.burndownData.data.push(coordinate);
+				}
+				// if you are on present day, make a point and add a vertical line that shows where present day is
+				else if(daysBetween(new Date(b.startDate), today) == i){
+					console.log("reached present day, making a filler point and a vertical line");
+					let coordinate = {label:"",value:""};
+					coordinate.label = ""+i;
+					coordinate.value = ""+prevValue;
+					$scope.burndownData.data.push(coordinate);
+					let vertLine = {vline:"true", label:"Present Day", linePosition:"0"};
+					$scope.burndownData.data.push(vertLine);
+				}
+				// else if you've gone past present day, fill the rest with empty points
+				else{
+					console.log("past present day, but not done with duration");
+					let coordinate = {label:"",value:""};
+					coordinate.label = ""+i;
+					coordinate.value = "";
+					$scope.burndownData.data.push(coordinate);
+				}
 			}
 		}
 	}
+	
 });
 
 app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
@@ -546,6 +575,12 @@ function daysBetween( date1, date2 ) {
 	    
 	// Convert back to days and return
 	return Math.floor(difference_ms/one_day); 
+}
+// Don't delete this either, also for use in making burndown data
+Date.prototype.addDays = function(days) {
+	var dat = new Date(this.valueOf());
+	dat.setDate(dat.getDate() + days);
+	return dat;
 }
 
 //TODO delete before pushing to master
