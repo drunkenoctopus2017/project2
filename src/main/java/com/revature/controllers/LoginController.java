@@ -2,6 +2,8 @@ package com.revature.controllers;
 
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,21 +39,20 @@ public class LoginController {
 	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
 		request.getSession().setAttribute("user", su);
-		request.getSession().setAttribute("board", su.getScrumBoards());
-		
-		System.out.println(su.toString());
-		
-
-		ScrumBoard testBoard = su.getScrumBoards().get(0);
-		System.out.println(testBoard.toString());
-		System.out.println("test: " + testBoard.getStories());
-		
-		ScrumBoardTask testTask = testBoard.getStories().get(0).getTasks().get(0);
-		System.out.println("testTask" + testTask.toString());
-		
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
+	@RequestMapping(value="/logout")
+	public void logout(HttpSession session) {
+		System.out.println("logging out");
+		if(session != null) {
+			session.removeAttribute("user");
+			session.invalidate();
+			System.out.println("session invalidated");
+		}
+//		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
+	}
+
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
 	 * 

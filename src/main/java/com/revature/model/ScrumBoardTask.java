@@ -1,13 +1,14 @@
 package com.revature.model;
 
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,9 +16,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="SB_TASKS")
 public class ScrumBoardTask {
+	
 	@Id
 	@Column(name="SBT_ID")
-	private int sbtId;
+	@SequenceGenerator(name="taskIdSequence", sequenceName="SBT_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="taskIdSequence")
+	private int id;
 	
 	//@Column(name="SBS_ID")
 	//private int sbsId;
@@ -28,19 +32,34 @@ public class ScrumBoardTask {
 	@Column(name="SBT_DESCRIPTION")
 	private String description;
 	
-	@OneToMany
+	@ManyToOne
 	@JoinColumn(name="SBS_ID")
-	private List<ScrumBoardStory> scrumBoardStorys;
-
+	private ScrumBoardStory story;
+	
+	@JsonIgnore
+	public ScrumBoardStory getStory() {
+		return story;
+	}
+	
+	public void setStory(ScrumBoardStory story) {
+		this.story = story;
+	}
+	
 	public ScrumBoardTask() {
 	}
-
-	public int getSbtId() {
-		return sbtId;
+	
+	public ScrumBoardTask(String description, ScrumBoardStory story) {
+		super();
+		this.description = description;
+		this.story = story;
 	}
 
-	public void setSbtId(int sbtId) {
-		this.sbtId = sbtId;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getStatus() {
@@ -55,43 +74,13 @@ public class ScrumBoardTask {
 		return description;
 	}
 	
-	@JsonIgnore
-	public List<ScrumBoardStory>  getScrumBoardTask() {
-		return scrumBoardStorys;
-	}
-	 
-	public void setScrumBoardTask(List<ScrumBoardStory> scrumBoardStorys) {
-		this.scrumBoardStorys  = scrumBoardStorys;
-	}
-	
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	//public int getSbsId() {
-	//	return sbsId;
-	//}
-
-	//public void setSbsId(int sbsId) {
-	//	this.sbsId = sbsId;
-	//}
-	
-	@ManyToOne
-	@JoinColumn(name="SBS_ID")
-	private ScrumBoardStory story;
-	
-	@JsonIgnore
-	public ScrumBoardStory getStory() {
-		return story;
-	}
-
-	public void setStory(ScrumBoardStory story) {
-		this.story = story;
-	}
-	
 	@Override
 	public String toString() {
-		return "SbTasks [sbtId=" + sbtId + ", status=" + status + ", description=" + description + "]";
+		return "ScrumBoardTask [id=" + id + ", status=" + status + ", description=" + description + ", story=" + (story != null ? story.getId() : " no story parent found")
+				+ "]";
 	}
 }

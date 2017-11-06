@@ -1,6 +1,7 @@
 package com.revature.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ public class ScrumBoardStory {
 	@Column(name="SBS_ID")
 	@SequenceGenerator(name="storyIdSequence", sequenceName="SBS_SEQ")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="storyIdSequence")
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne
@@ -39,6 +41,17 @@ public class ScrumBoardStory {
 	public void setScrumBoard(ScrumBoard scrumBoard) {
 		this.scrumBoard = scrumBoard;
 	}
+	
+	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
+	private List<ScrumBoardTask> tasks = new ArrayList<>();
+	
+    public List<ScrumBoardTask> getTasks() {
+		return tasks;
+	}
+	
+    public void setTasks(List<ScrumBoardTask> tasks) {
+		this.tasks = tasks;
+	}
 
 	@Column(name="SBS_DESCRIPTION")
 	private String description;
@@ -49,8 +62,14 @@ public class ScrumBoardStory {
 	@Column(name="SBL_ID")
 	private int laneId;
 	
+	/**
+	 * TODO: 
+	 * This should simply represent the last time the story's lane status was updated.
+	 * So a finished story will be finished when it is moved to the the Done lane.
+	 * But each time the story changes lanes, this variable will be updated.
+	 */
 	@Column(name="SBS_DONE")
-	private String finishTime;
+	private Date finishTime;
 	
 	public ScrumBoardStory() {
 	}
@@ -103,23 +122,12 @@ public class ScrumBoardStory {
 		this.laneId = laneId;
 	}
 
-	public String getFinishTime() {
+	public Date getFinishTime() {
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime) {
+	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
-	}
-
-	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
-	private List<ScrumBoardTask> tasks = new ArrayList<>();
-	
-    public List<ScrumBoardTask> getTasks() {
-		return tasks;
-	}
-	
-    public void setTasks(List<ScrumBoardTask> tasks) {
-		this.tasks = tasks;
 	}
 
 	@Override

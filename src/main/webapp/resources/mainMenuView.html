@@ -2,15 +2,17 @@
 	<h1>Drunken Octopus Main Menu</h1>
 	<div class="jumbotron">
 		<p>Welcome {{firstName}} {{lastName}}</p>
+
 		<button data-ng-click="createScrumBoard()" data-ng-show="role == 200" class="btn btn-default">Create New Scrum Board</button>
 	</div>
-	<div class="panel panel-default" ng-repeat="b in boards">
+	<div class="panel panel-default" data-ng-repeat="b in boards">
 		<div class="panel-body">
-			{{b.id}} {{b.name}}
-			<div class="btn-group" role="group" aria-label="ASK ELVIS">
+			{{b.name}}
+			<div class="btn-group" role="group" aria-label="...">
 				<button type="button" class="btn btn-default" data-ng-click="viewBoard(b)">View</button>
-				<button type="button" class="btn btn-default">Edit</button>
+				<button type="button" class="btn btn-default" data-ng-click="editScrumBoard(b)">Edit</button>
 				<button type="button" class="btn btn-default">Delete</button>
+				<button data-ng-click="getAllUsers(b)" data-ng-show="role == 200" type="button" class="btn btn-default">Add User</button>
 			</div>
 		</div>
 	</div>

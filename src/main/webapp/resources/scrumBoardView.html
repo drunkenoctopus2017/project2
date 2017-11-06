@@ -11,11 +11,67 @@
 					<h3 class="panel-title">{{lane.name}}</h3>
 				</div>
 				<div class="panel-body">
-					<div class="panel panel-default" data-ng-repeat="story in filterStoriesByLane(lane.id)">
-						<div class="panel-body">
-							<p>{{story.description}}</p>
+					<div data-ng-repeat="story in filterStoriesByLane(lane.id)" style="border-top: solid">
+						<a style="float: left" data-ng-hide="$parent.$first" data-ng-click="changeLane(story, lanes[$parent.$index - 1])">
+							<span class="glyphicon glyphicon-triangle-left"></span> 
+						</a>
+						<span class="label label-default">Points {{story.points}}</span>
+						<a style="float: right" data-ng-hide="$parent.$last" data-ng-click="changeLane(story, lanes[$parent.$index + 1])">
+							<span class="glyphicon glyphicon-triangle-right"></span> 
+						</a>
+						<br />
+						<p>{{story.description}}</p>
+						<div class="checkbox" data-ng-repeat="task in story.tasks">
+							<label>
+								<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
+							</label>
 						</div>
+						<button data-toggle="modal" data-ng-show="role == 200" data-target="#addTaskModal" data-ng-click="setNewTaskTarget(story)" class="btn btn-default btn-xs">Add task</button>
+						<button data-ng-show="role == 200" data-toggle="modal" data-target="#editStoryModal" data-ng-click="setEditStoryTarget(story)" class="btn btn-default btn-xs">Edit Story</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div data-ng-controller="newTaskController" class="modal fade" id="addTaskModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">{{story.description}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskInput">Task Name</label>
+						<input type="text" class="form-control" data-ng-model="taskName" id="taskInput" placeholder="Enter task name here.">
+    				</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" data-ng-click="saveTask()" data-dismiss="modal">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div data-ng-controller="updateStoryController" class="modal fade" id="editStoryModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<label>points:</label>
+					<input id="storyPoints" type="text" pattern="[0-9]" data-ng-model="points" /><br>
+					<label>description:</label>
+					<input id="storyText" type="text" data-ng-model="desc" /><br>
+					<button data-ng-click="updateStory()" type="submit">Save</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
