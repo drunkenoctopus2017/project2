@@ -170,7 +170,7 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 		$location.path("/createOrEditScrumBoard");
 	}
 	$scope.viewBoard = function(b) {
-		$rootScope.currentScrumBoard = b
+		$rootScope.currentScrumBoard = b;
 		$location.path("/viewScrumBoard");
 	}
 	$scope.editScrumBoard = function(board) {
@@ -363,8 +363,8 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		},
 		data:[]
 	};
-	// if current board has a startDate and stories
-	if(b.stories.length > 0 && b.startDate != undefined){
+	// if current board has a startDate that is the present or in the past and has stories
+	if(b.stories.length > 0 && b.startDate != undefined && new Date(b.startDate) <= new Date()){
 		let doneStories = [];
 		for(var t = 0;t < b.stories.length; t++){
 			// if it's in done lane, do this:
@@ -386,7 +386,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		let prevValue = sumPts;
 		for(var i = 1;i < b.duration+1; i++){
 			// check the next story to see if it matches current day from startDate 
-//			console.log("this is the board's startDate: "+b.startDate)
 			if(doneStoryCounter < doneStories.length){
 				let difference = daysBetween(new Date(b.startDate), new Date(doneStories[doneStoryCounter].finishTime));
 				if(difference == i){
@@ -420,7 +419,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					}
 				}
 				else{
-					// if it doesn't OR if you're already finished with all the done stories
+					// if it doesn't match current day OR if you're already finished with all the done stories
 					// add a filler coordinate with the same value as before for this day
 					// only if there are still stories to be checked
 					let coordinate = {label:"",value:""};
@@ -428,7 +427,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 					coordinate.value = ""+prevValue;
 					$scope.burndownData.data.push(coordinate);
 					
-					//if there are no more stories to be checked, don't add any more coordinates
 				}
 			}
 			else{
