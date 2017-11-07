@@ -11,9 +11,12 @@ INSERT INTO SB_LANES VALUES(60, 'Done');
 /
 --Test Entries--
 INSERT INTO SCRUM_USERS VALUES (1,'Patrick', 'Onion', 'pusername', 'password', 200, 'jpwrunyan@hotmail.com');
-INSERT INTO SCRUM_USERS VALUES (2,'Mister','Rogers','musername','password',100,'brogers0101@gmail.com');
-INSERT INTO SCRUM_USERS VALUES (3,'Burly','Gerbil','busername','password',100,'jibbgh@gmail.com');
-INSERT INTO SCRUM_USERS VALUES (4,'Elvis','Yangster','eusername','password',100,'waveeyang@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (2,'Mister','Rogers','musername','password',200,'brogers0101@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (3,'Burly','Gerbil','busername','password',200,'jibbgh@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (4,'Elvis','Yangster','eusername','password',200,'waveeyang@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (5,'Demo','User','u','p',200,'waveeyang@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (6,'Inebriated','Cephalopod','i','c',100,'waveeyang@gmail.com');
+INSERT INTO SCRUM_USERS VALUES (7,'Slurred','Squid','s','s',100,'waveeyang@gmail.com');
 /
 --
 INSERT INTO SCRUM_BOARDS(USER_ID,SB_NAME) VALUES (1,'Patrick Board'); 
