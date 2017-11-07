@@ -31,4 +31,5 @@ public interface DAO {
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task);
 	
 	//Delete
+	public void deleteScrumBoard(ScrumBoard sb);
 }

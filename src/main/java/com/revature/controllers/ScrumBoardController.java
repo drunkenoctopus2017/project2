@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,6 +81,15 @@ public class ScrumBoardController {
 	}
 	
 	//Delete
+	@RequestMapping(value="/deleteExistingScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ScrumUser> deleteExistingScrumBoard(@RequestBody ScrumBoard sb, HttpSession session) {
+		System.out.println("CONTROLLER - This is the 'board' that is passed from JS side:"+sb);
+		ScrumBoard deletedSb = service.deleteExistingScrumBoard(sb);
+		ScrumUser sua = (ScrumUser) session.getAttribute("user");
+		// doesn't remove the board from the HttpSession user, oh well
+		// returns the session's user because why not (a.k.a. don't know how to get it to work without needing to return something)
+		return new ResponseEntity<ScrumUser>(sua, HttpStatus.OK);
+	}
 	
 	/**
 	 * Respond to an invalid credentials attempt and return 401.
