@@ -25,9 +25,6 @@ app.value("loginUser", {
 	//Add more fields here only if necessary.
 });
 
-app.value("loginUserBoards", []);
-app.value("allUsers", []);
-
 //for controlling what shows up on createScrumBoardView
 //false, if you're creating a board
 //true, if you're editing a board
@@ -78,14 +75,11 @@ app.config(function($routeProvider, urlBase) {
 	});
 });
 
-app.controller("navbarController", function($scope, $location, loginUser, loginUserBoards, loginUserService) {
+app.controller("navbarController", function($scope, $location, loginUser, loginUserService) {
 
 	$scope.logout = function(){
 		loginUser.firstName = "not logged in";
 		loginUser.lastName = "";
-		while(loginUserBoards.length > 0){
-			loginUserBoards.pop();	
-		}
 		loginUserService.logout().then(
 			function(response){
 				$location.path("/");
@@ -97,7 +91,7 @@ app.controller("navbarController", function($scope, $location, loginUser, loginU
   }
 });
 
-app.controller("loginController", function($scope, $location, loginUserService, loginUser, loginUserRole, loginUserBoards) {
+app.controller("loginController", function($scope, $rootScope, $location, loginUserService, loginUser, loginUserRole) {
 	$scope.login = function() {
 		//note that this anonymous function only has one line.
 		loginUserService.login($scope.username, $scope.password).then(
@@ -119,9 +113,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 				loginUser.lastName = response.data.lastName;
 				loginUserRole.id = response.data.role.id;
 				loginUserRole.roleName = response.data.role.roleName;
-				while(response.data.scrumBoards.length > 0) {
-					loginUserBoards.push(response.data.scrumBoards.pop());
-				}
+				$rootScope.boards = [];
 				$location.path("/mainMenu");
 			}, function (error) {
 				//The error object above has: 
@@ -136,7 +128,7 @@ app.controller("loginController", function($scope, $location, loginUserService, 
 });
 
 
-app.controller("mainMenuController", function($scope, $rootScope, $location, loginUser, loginUserRole, loginUserBoards, editing, currentBoard) {
+app.controller("mainMenuController", function($scope, $rootScope, $location, scrumBoardService, loginUser, loginUserRole, editing, currentBoard) {
 	//reset the value of editing, so that it doesn't stay true forever after you edit something
 	editing.value = false;
 	//clear currentBoard
@@ -147,11 +139,29 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 	//fill in html field
 	$scope.firstName = loginUser.firstName;
 	$scope.lastName = loginUser.lastName;
-	$scope.boards = loginUserBoards;
+	
+	$scope.boards = [];
 	$scope.role = loginUserRole.id;
+	
+	if ($rootScope.boards.length == 0) {
+		scrumBoardService.getScrumBoards().then(
+			function (response) {
+				//Refresh the data for the main menu without doing another server request (because you don't need to);
+				console.log("scrumbaords: " + response.data);
+				$rootScope.boards = response.data;
+				$scope.boards = response.data;
+			}, function (error) {
+				alert(error.status + " " + error.statusText + "\nCould not load scrum boards!");
+			}
+		);
+	} else {
+		$scope.boards = $rootScope.boards;
+	}
+		
 	$scope.createScrumBoard = function() {
 		$location.path("/createScrumBoard");
 	}
+	
 	$scope.viewBoard = function(b) {
 		$rootScope.currentScrumBoard = b
 		//traverseObject(b);
@@ -174,12 +184,14 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, log
 			currentBoard.name = board.name;
 			currentBoard.startDate = board.startDate;
 			currentBoard.duration = board.duration;
+			$rootScope.currentScrumBoard = board;
 			$location.path("/getAllUsers");
+			
 		}
 	}
 });
 
-app.controller("createScrumBoardController", function($scope, $location, scrumBoardService, loginUser, loginUserBoards, editing, currentBoard) {
+app.controller("createScrumBoardController", function($scope, $rootScope, $location, scrumBoardService, loginUser, editing, currentBoard) {
 	$scope.editing = editing.value;
 	if(editing.value){
 		//fill in the fields with the old values
@@ -195,7 +207,7 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 			scrumBoardService.createNewScrumBoard($scope.sbName, $scope.startDate, $scope.duration).then(
 				function (response) {
 					//Refresh the data for the main menu without doing another server request (because you don't need to);
-					loginUserBoards.push(response.data);
+					$rootScope.boards.push(response.data);
 					$location.path("/mainMenu");
 				}, function (error) {
 					alert(error.status + " " + error.statusText + "\nThere was an error creating this board!");
@@ -219,15 +231,15 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 				function (response) {
 					//Refresh the data for the main menu without doing another server request (because you don't need to);
 					//need to remove the outdated board from JS-side list
-					loginUserBoards.forEach(function (board, index, array) {
+					$rootScope.boards.forEach(function (board, index, array) {
 						//find the outdated board
 						if(board.id == currentBoard.id){
 							//remove it
-							loginUserBoards.splice(index, 1);
+							$rootScope.boards.splice(index, 1);
 						}	
 					});
 					//adds the new one to the front of the JS-side list
-					loginUserBoards.unshift(response.data);
+					$rootScope.boards.unshift(response.data);
 					$location.path("/mainMenu");
 				}, function (error) {
 					alert(error.status + " " + error.statusText + "\nThere was an error editing this board!");
@@ -237,16 +249,20 @@ app.controller("createScrumBoardController", function($scope, $location, scrumBo
 	}
 });
 
-app.controller("getAllUsersController", function($scope, $location, getAllUsersService, allUsers, currentBoard) {
+app.controller("getAllUsersController", function($scope, $rootScope, $location, getAllUsersService, currentBoard) {
+	$scope.board = $rootScope.currentScrumBoard;
+	$scope.availableUsers = [];
 	
-	$scope.users = [];
-	$scope.getAvailableUsers = function(){
-		return $scope.users.filter(function(u){
-			
-			let boards = u.scrumBoards;
-			for(let i=0; i < boards.length; i++){
-				let boardId =  boards[i].id;
-				if(boardId == currentBoard.id){
+	/*
+	$scope.getAvailableUsers = function() {
+		return $scope.board.scrumUsers.filter(function (u) {
+			let users = $scope.users;
+			console.log("userslength: " + users.length);
+			console.log("user: " + u.id);
+			for (let i = 0; i < users.length; i++) {
+				let userId =  users[i].id;
+				console.log(" userid: " + userId);
+				if(u.id == userId) {
 					return false;
 				}
 			}
@@ -254,24 +270,41 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 		})
 	}
 	$scope.getBoardUsers = function(){
-		return $scope.users.filter(function(u){
-			
-			let boards = u.scrumBoards;
-			for(let i=0; i < boards.length; i++){
-				let boardId =  boards[i].id;
-				if(boardId == currentBoard.id){
+		return $scope.board.scrumUsers.filter(function (u) {
+			let users = $scope.users;
+			for (let i = 0; i < users.length; i++){
+				let userId =  users[i].id;
+				if(u.id == userId){
 					return true;
 				}
 			}
 			return false;
 		})
 	}
-	
-	getAllUsersService.getAllExistingUsers().then (
+	*/
+	getAllUsersService.getAllExistingUsers().then(
 		function(response) {
-			$scope.users = response.data;
-			$scope.board = currentBoard.name;
-			
+			let availableUsers = [];
+			let allUsers = response.data;
+			let boardUsers = $scope.board.scrumUsers;
+			for (let i = 0; i < allUsers.length; i++) {
+				let currentUser = allUsers[i];
+				let userTaken = false;
+				for (let j = 0; j < boardUsers.length; j++) {
+					if (currentUser.id == boardUsers[j].id) {
+						userTaken = true;
+						console.log("user is taken: " + currentUser.id);
+						break;
+					}
+				}
+				if (!userTaken) {
+					console.log("user available: " + currentUser.id);
+					availableUsers.push(currentUser);
+				}
+			}
+			$scope.availableUsers = availableUsers;
+		}, function (error) {
+			alert(error.status + " " + error.statusText + "\nCould not get list of all users!");
 		}
 	);
 	
@@ -292,6 +325,7 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 app.controller("scrumBoardViewController", function ($scope, $rootScope, $location, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
+	$scope.users = $rootScope.currentScrumBoard.scrumUsers;
 	$scope.role = loginUserRole.id;
 	$scope.filterStoriesByLane = function (laneId) {
 		let stories = $rootScope.currentScrumBoard.stories;
@@ -408,19 +442,22 @@ app.factory("scrumBoardService", function($http) {
 		//Create
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
+		},
+		createNewStory : function(description, points, sbId){
+			return $http.post("createNewStory", {description: description, points: points, sbId:sbId});
+		}, 
+		createNewScrumBoard: function(name, startDate, duration) {
+			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
 		}, 
 		createNewTask: function (desc, storyId) {
 			return $http.post("createNewScrumBoardTask", {description: desc, storyId: storyId});
 		}, 
 		//Read
+		getScrumBoards: function() {
+			return $http.get("getScrumBoards");
+		}, 
 		getScrumBoardLanes: function() {
 			return $http.get("getScrumBoardLanes");
-		}, 
-		createNewScrumBoard: function(name, startDate, duration) {
-			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
-		},
-		createNewStory : function(description, points, sbId){
-			return $http.post("createNewStory", {description: description, points: points, sbId:sbId});
 		}, 
 		//Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {

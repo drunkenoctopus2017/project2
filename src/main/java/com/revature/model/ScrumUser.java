@@ -2,7 +2,6 @@ package com.revature.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="SCRUM_USERS")
@@ -45,7 +46,7 @@ public class ScrumUser {
 	@JoinColumn(name="ROLE_ID")
 	private ScrumUserRole role;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="USERS_BOARDS",	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID"))
 	private List<ScrumBoard> scrumBoards;
 	
@@ -125,6 +126,7 @@ public class ScrumUser {
 		this.role = role;
 	}
 	
+	@JsonIgnore
 	public List<ScrumBoard> getScrumBoards() {
 		return scrumBoards;
 	}

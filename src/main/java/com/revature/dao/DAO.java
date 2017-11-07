@@ -3,6 +3,7 @@ package com.revature.dao;
 import java.util.List;
 
 import com.revature.model.ScrumUser;
+import com.revature.model.UserBoardDTO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -13,9 +14,11 @@ public interface DAO {
 	//Create
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb);
 	public ScrumBoardTask createNewScrumBoardTask(ScrumBoardTask task);
-
+	public ScrumBoard addUserToBoard(UserBoardDTO ub);
 	//Read
 	public List<ScrumUser> getAllUsers();
+	public List<ScrumBoard> getAllScrumBoards();
+	public List<ScrumBoard> getScrumBoardsByUserId(int userId);
 	public ScrumUser getScrumUserById(int userId);
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
 	public ScrumBoardStory createNewStory(ScrumBoardStory s);

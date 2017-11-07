@@ -19,8 +19,8 @@ public class ScrumBoardTask {
 	
 	@Id
 	@Column(name="SBT_ID")
-	@SequenceGenerator(name="taskIdSequence", sequenceName="SBT_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="taskIdSequence")
+	@SequenceGenerator(name="SBT_SEQ", sequenceName="SBT_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SBT_SEQ")
 	private int id;
 	
 	//@Column(name="SBS_ID")
