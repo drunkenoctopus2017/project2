@@ -53,6 +53,7 @@ app.value("loginUserRole", {
 	roleName: "unauthorized"
 });
 
+
 app.config(function($routeProvider, urlBase) {
 	$routeProvider.when("/", {
 		templateUrl: urlBase + "loginView.html", 
@@ -66,6 +67,9 @@ app.config(function($routeProvider, urlBase) {
 	}).when("/viewScrumBoard", {
 		templateUrl: urlBase + "scrumBoardView.html",
 		controller: "scrumBoardViewController"
+	}).when("/createStoryView", {
+		templateUrl : urlBase + "createStoryView.html",
+		controller: "createStoryViewController"
 	}).when("/getAllUsers", {
 		templateUrl: urlBase + "addUserView.html", 
 		controller: "getAllUsersController"
@@ -309,8 +313,7 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-
-app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBoardService, loginUserRole) {
+app.controller("scrumBoardViewController", function ($scope, $rootScope, $location, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.role = loginUserRole.id;
@@ -351,8 +354,12 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 		function (response) {
 			$scope.lanes = response.data;
 		}, function (error) {
+			alert(error.status + " " + error.statusText + "\nError retrieving lanes!");
 		}
 	);
+	$scope.createStory =function(){
+		$location.path("/createStoryView")
+	};
 	// make the burndown chart data
 	let b = $rootScope.currentScrumBoard;
 	$scope.burndownData = {
@@ -467,7 +474,23 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, scrumBo
 			}
 		}
 	}
+});
+
+app.controller("createStoryViewController", function($scope, $location, $rootScope, scrumBoardService){
+	console.log("Create Story View Controller");
+	$scope.taskList =[];
 	
+	$scope.createStory = function () {
+		console.log("desc: " + $scope.description);
+		scrumBoardService.createNewStory($scope.description, 5, $rootScope.currentScrumBoard.id).then(
+				function (response) {
+					$rootScope.currentScrumBoard.stories.push(response.data);
+					$location.path("/viewScrumBoard");
+				}, function (error) {
+					alert(error.status + " " + error.statusText + "\nStory could not be saved!");
+				}
+		);
+	}
 });
 
 app.controller("newTaskController", function ($scope, $rootScope, scrumBoardService) {
@@ -523,15 +546,18 @@ app.factory("scrumBoardService", function($http) {
 		// Create
 		createNewScrumBoard: function(name, startDate, duration) {
 			return $http.post("createNewScrumBoard", {name: name, startDate: startDate, duration: duration});
-		}, 
+		},
+		createNewStory : function(description, points, sbId){
+			return $http.post("createNewStory", {description: description, points: points, sbId:sbId});
+		},  
 		createNewTask: function (desc, storyId) {
 			return $http.post("createNewScrumBoardTask", {description: desc, storyId: storyId});
-		}, 
+		},
 		//Read
 		getScrumBoardLanes: function() {
 			return $http.get("getScrumBoardLanes");
-		}, 
-		// Update
+		},
+		//Update
 		editExistingScrumBoard: function(id, name, startDate, duration) {
 			return $http.post("editExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
 		}, 
@@ -555,7 +581,6 @@ app.factory("getAllUsersService", function($http){
 			return $http.get("getAllExistingUsers");
 		}, 
 		addUserToBoard: function(userId, boardId){
-			
 			return $http.post("addUserToBoard", {userId: userId, boardId: boardId});
 		}
 	};

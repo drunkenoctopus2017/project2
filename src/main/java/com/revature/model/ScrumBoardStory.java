@@ -7,10 +7,13 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +24,9 @@ public class ScrumBoardStory {
 	
 	@Id
 	@Column(name="SBS_ID")
+	@SequenceGenerator(name="storyIdSequence", sequenceName="SBS_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="storyIdSequence")
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne
@@ -66,6 +72,14 @@ public class ScrumBoardStory {
 	private Date finishTime;
 	
 	public ScrumBoardStory() {
+	}
+	
+	public ScrumBoardStory(ScrumBoard scrumBoard, String description, int points, int laneId) {
+		super();
+		this.scrumBoard = scrumBoard;
+		this.description = description;
+		this.points = points;
+		this.laneId = laneId;
 	}
 
 	public int getId() {
