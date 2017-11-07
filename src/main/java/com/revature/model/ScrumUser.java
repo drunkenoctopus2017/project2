@@ -46,6 +46,7 @@ public class ScrumUser {
 	@JoinColumn(name="ROLE_ID")
 	private ScrumUserRole role;
 	
+
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="USERS_BOARDS",	joinColumns=@JoinColumn(name="USER_ID", referencedColumnName="USER_ID"), inverseJoinColumns=@JoinColumn(name="SB_ID", referencedColumnName="SB_ID"))
 	private List<ScrumBoard> scrumBoards;

@@ -200,7 +200,31 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, scr
 		currentBoard.duration = board.duration;
 		$location.path("/createOrEditScrumBoard");
 	}
-
+	$scope.triggerModal = function(b){
+		$("#deleteModal"+b.id).modal();
+	}
+	$scope.deleteScrumBoard = function(b) {
+		// set the current board properties to the properties of board
+		// associated with the button that called this function
+		scrumBoardService.deleteExistingScrumBoard(b.id, b.name, b.startDate, b.duration).then(
+			function (response) {
+				// Refresh the data for the main menu without doing another
+				// server request (because you don't need to);
+				// need to remove the deleted board from JS-side list
+				$scope.boards.forEach(function (board, index, array) {
+					// find the outdated board
+					if(board.id == b.id){
+						// remove it
+						$scope.boards.splice(index, 1);
+					}	
+				});
+			}, 
+			function (error) {
+				alert(error.status + " " + error.statusText + "\nThere was an error deleting this board!");
+			}
+		);
+		//Need to update $scope.boards and user object on both sides possibly
+	}
 	if($scope.role == 200){
 		$scope.getAllUsers = function(board) {
 			currentBoard.id = board.id;
@@ -328,7 +352,6 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 		return stories.filter(s => s.laneId == laneId);
 	}
 	$scope.changeLane = function (story, lane) {
-		console.log("story: " + story.id + " lane dir: " + lane.id);
 		story.laneId = lane.id;
 		scrumBoardService.changeScrumBoardStoryLane(story.id, lane.id).then(
 			function(response){
@@ -446,14 +469,14 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 				}
 			}
 			else{
-				console.log("no more stories");
-				console.log("difference between current day and start day");
+//				console.log("no more stories");
+//				console.log("difference between current day and start day");
 				console.log(daysBetween(new Date(b.startDate), today));
 				// if done with all stories and still have duration left
 				// check if you've reached present day yet
 				// if you haven't reached present day, make filler points
 				if(daysBetween(new Date(b.startDate), today) > i){
-					console.log("haven't reached present day, making a filler point and adding it");
+//					console.log("haven't reached present day, making a filler point and adding it");
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = ""+prevValue;
@@ -461,7 +484,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 				}
 				// if you are on present day, make a point and add a vertical line that shows where present day is
 				else if(daysBetween(new Date(b.startDate), today) == i){
-					console.log("reached present day, making a filler point and a vertical line");
+//					console.log("reached present day, making a filler point and a vertical line");
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = ""+prevValue;
@@ -471,7 +494,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 				}
 				// else if you've gone past present day, fill the rest with empty points
 				else{
-					console.log("past present day, but not done with duration");
+//					console.log("past present day, but not done with duration");
 					let coordinate = {label:"",value:""};
 					coordinate.label = ""+i;
 					coordinate.value = "";
@@ -483,11 +506,11 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 });
 
 app.controller("createStoryViewController", function($scope, $location, $rootScope, scrumBoardService){
-	console.log("Create Story View Controller");
+//	console.log("Create Story View Controller");
 	$scope.taskList =[];
 	
 	$scope.createStory = function () {
-		console.log("desc: " + $scope.description);
+//		console.log("desc: " + $scope.description);
 		scrumBoardService.createNewStory($scope.description, 5, $rootScope.currentScrumBoard.id).then(
 				function (response) {
 					$rootScope.currentScrumBoard.stories.push(response.data);
@@ -578,8 +601,11 @@ app.factory("scrumBoardService", function($http) {
 		}, 
 		changeScrumBoardStoryLane: function (storyId, laneId) {
 			return $http.post("changeScrumBoardStoryLane", {storyId: storyId, laneId: laneId});
-		}
+		},
 		// Delete
+		deleteExistingScrumBoard: function(id, name, startDate, duration){
+			return $http.post("deleteExistingScrumBoard", {id: id, name: name, startDate: startDate, duration: duration});
+		}
 		// none currently
 	};
 });

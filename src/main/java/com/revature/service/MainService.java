@@ -128,4 +128,11 @@ public class MainService {
 		story = dao.updateScrumBoardStory(story);
 		return story;
 	}
+
+	//Delete
+	public ScrumBoard deleteExistingScrumBoard(ScrumBoard s) {
+		ScrumBoard sb = dao.getScrumBoardById(s.getId());
+		dao.deleteScrumBoard(sb);
+		return sb;
+	}
 }
