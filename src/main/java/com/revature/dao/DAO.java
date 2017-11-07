@@ -13,6 +13,7 @@ public interface DAO {
 	
 	//Create
 	public ScrumBoard createNewScrumBoard(ScrumBoard sb);
+	public ScrumBoardStory createNewStory(ScrumBoardStory s);
 	public ScrumBoardTask createNewScrumBoardTask(ScrumBoardTask task);
 	public ScrumBoard addUserToBoard(UserBoardDTO ub);
 	//Read
@@ -21,11 +22,11 @@ public interface DAO {
 	public List<ScrumBoard> getScrumBoardsByUserId(int userId);
 	public ScrumUser getScrumUserById(int userId);
 	public ScrumUser getScrumUserByUsername(ScrumUser user);
-	public ScrumBoardStory createNewStory(ScrumBoardStory s);
 	public List<ScrumBoardLane> getScrumBoardLanes();
-	public ScrumBoardStory getScrumBoardStoryById(int id);
+	public ScrumBoardStory getScrumBoardStoryById(int id);	
 	public ScrumBoardTask getScrumBoardTaskById(int id);
 	public ScrumBoard getScrumBoardById(int boardId);
+	
 	//Update
 	public ScrumUser updateScrumUser(ScrumUser su);
 	public ScrumBoard updateScrumBoard(ScrumBoard sb);
