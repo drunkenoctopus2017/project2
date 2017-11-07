@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class ScrumAspects {
 
 	private static final Logger log = LogManager.getRootLogger();
+	//--------------------------------------------------------------------------
 
 	@Before("execution(* createNewScrumBoard*(..))")
 	public void beforeCreatingNSB(JoinPoint jp) {
