@@ -442,7 +442,7 @@ app.controller("scrumBoardViewController", function ($scope, $rootScope, $locati
 			sumPts += b.stories[i].points;
 		}
 		let prevValue = sumPts;
-		for(var i = 1;i < b.duration+1; i++){
+		for(var i = 0;i < b.duration+1; i++){
 			// if there are stories that are finished
 			if(doneStoryCounter < doneStories.length){
 				// check the next story to see if it matches current day from startDate 
