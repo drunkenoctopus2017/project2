@@ -60,6 +60,7 @@ public class DAOImpl implements DAO{
 		users = query.getResultList();
 		return users;
 	}
+	
 
 	public ScrumUser getScrumUserById(int userId) {
 		Session session = sessionFactory.getCurrentSession();

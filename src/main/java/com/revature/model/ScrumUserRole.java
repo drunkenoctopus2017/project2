@@ -19,6 +19,10 @@ public class ScrumUserRole {
 	public ScrumUserRole() {
 		// TODO Auto-generated constructor stub
 	}
+	public ScrumUserRole(int id, String roleName) {
+		this.id = id;
+		this.roleName = roleName;
+	}
 	
 	public int getId() {
 		return id;
