@@ -1,4 +1,4 @@
-package com.revature.test;
+package com.revature;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
