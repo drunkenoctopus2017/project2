@@ -11,7 +11,7 @@
 					<td>{{u.lastName}}</td>
 					<td>{{u.username}}</td>
 					<td>{{u.email}}</td>
-					<td><button data-ng-click="addUserToBoard(u)">Add</button></td>
+					<td><button data-ng-click="addUserToBoard(u)" data-ng-show="role == 200">Add</button></td>
 				</tr>
 			</tbody>
 		</table>
