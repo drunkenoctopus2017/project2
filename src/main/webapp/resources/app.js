@@ -299,44 +299,62 @@ app.controller("createOrEditScrumBoardController", function($scope, $rootScope, 
 app.controller("getAllUsersController", function($scope, $rootScope, $location, getAllUsersService, currentBoard) {
 	$scope.board = $rootScope.currentScrumBoard;
 	$scope.availableUsers = [];
+	$scope.allUsers = [];
 	
 	getAllUsersService.getAllExistingUsers().then(
 		function(response) {
-			let availableUsers = [];
-			let allUsers = response.data;
-			let boardUsers = $scope.board.scrumUsers;
-			for (let i = 0; i < allUsers.length; i++) {
-				let currentUser = allUsers[i];
-				let userTaken = false;
-				for (let j = 0; j < boardUsers.length; j++) {
-					if (currentUser.id == boardUsers[j].id) {
-						userTaken = true;
-						console.log("user is taken: " + currentUser.id);
-						break;
-					}
-				}
-				if (!userTaken) {
-					console.log("user available: " + currentUser.id);
-					availableUsers.push(currentUser);
-				}
-			}
-			$scope.availableUsers = availableUsers;
+			//updateUsers(response.data);
+			$scope.allUsers = response.data;
+			updateUsers();
 		}, function (error) {
 			alert(error.status + " " + error.statusText + "\nCould not get list of all users!");
 		}
 	);
+	
+	function updateUsers() {
+		let allUsers = $scope.allUsers;
+		let availableUsers = [];	
+		let boardUsers = $scope.board.scrumUsers;
+		for (let i = 0; i < allUsers.length; i++) {
+			let currentUser = allUsers[i];
+			let userTaken = false;
+			for (let j = 0; j < boardUsers.length; j++) {
+				if (currentUser.id == boardUsers[j].id) {
+					userTaken = true;
+					break;
+				}
+			}
+			if (!userTaken) {
+				availableUsers.push(currentUser);
+			}
+		}
+		$scope.availableUsers = availableUsers;
+	}
 	
 	$scope.addUserToBoard = function(user){
 		getAllUsersService.addUserToBoard(user.id, currentBoard.id).then(
 			function (response) {
 				//no action necessary
 				let temp = $scope.users;
-				$location.path("/mainMenu");
-				$scope.board = response.data.name;
+				$rootScope.currentScrumBoard = response.data;
+				$scope.board = $rootScope.currentScrumBoard;
+				let newUsers = $scope.board.scrumUsers;
+				updateUsers();
+				for (let i = 0; i < $rootScope.boards.length; i++) {
+					let oldBoard = $rootScope.boards[i];
+					if (oldBoard.id == $scope.board.id) {
+						$rootScope.boards[i] = $scope.board;
+						break;
+					}
+				}
 			}, function (error) {
 				alert(error.status + " " + error.statusText + "\nThere was an error!");
 			}
 		);
+	}
+	
+	$scope.goToMain = function () {
+		$location.path("/mainMenu");
 	}
 });
 
