@@ -315,6 +315,8 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 
 app.controller("scrumBoardViewController", function ($scope, $rootScope, $location, scrumBoardService, loginUserRole) {
 	$scope.scrumBoardName = $rootScope.currentScrumBoard.name;
+	$scope.scrumBoardStartDate = ""+new Date($rootScope.currentScrumBoard.startDate).toDateString();
+	$scope.scrumBoardDuration = $rootScope.currentScrumBoard.duration;
 	$scope.scrumBoardStories = $rootScope.currentScrumBoard.stories;
 	$scope.role = loginUserRole.id;
 	$scope.filterStoriesByLane = function (laneId) {
