@@ -87,7 +87,12 @@ app.controller("navbarController", function($scope, $rootScope, $location, login
 				alert(error.status + " " + error.statusText + "\nThere was an error logging out!");
 			}
 		);
-  }
+	}
+	$scope.gotoMainMenu = function(){
+		if($rootScope.loggedIn == true){
+			$location.path("/mainMenu");
+		}
+	}
 });
 
 app.controller("loginController", function($scope, $rootScope, $location, loginUserService, loginUser, loginUserRole) {
