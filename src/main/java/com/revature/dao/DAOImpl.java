@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.ScrumUser;
+import com.revature.model.UserBoardDTO;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -18,7 +20,7 @@ import com.revature.model.ScrumBoardTask;
 
 @Transactional
 @Repository	//Makes it a bean, and used with the TransactionManager
-public class DAOImpl implements DAO{
+public class DAOImpl implements DAO {
 	/*
 	 * <!-- create a transaction manager and give the sessionfactory -->
 	 * <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -37,9 +39,13 @@ public class DAOImpl implements DAO{
 	}
 	
 	public ScrumBoardStory createNewStory(ScrumBoardStory s) {
+		System.out.println("createNewStory()");
 		Session session = sessionFactory.getCurrentSession();
+		System.out.println("about to save");
 		Integer id = (Integer) session.save(s);
+		System.out.println("saved with id " + id);
 		s.setId(id);
+		System.out.println("id was set");
 		return s;
 	}
 	
@@ -52,6 +58,27 @@ public class DAOImpl implements DAO{
 		return task;
 	}
 	
+	public ScrumBoard addUserToBoard(UserBoardDTO ub) {
+		Session session = sessionFactory.getCurrentSession();
+		ScrumBoard sb = session.get(ScrumBoard.class, ub.getBoardId());
+		ScrumUser su = session.get(ScrumUser.class, ub.getUserId());
+		sb.getScrumUsers().add(su);
+		su.getScrumBoards().add(sb);
+		session.save(sb);
+		session.save(su);
+		sb.getScrumUsers().size(); //to avoid lazy instantiation error
+		
+		/*
+		ScrumUsersBoards userBoardJoin = new ScrumUsersBoards();
+		userBoardJoin.setSbId(ub.getBoardId());
+		userBoardJoin.setUserId(ub.getUserId());
+		session.save(userBoardJoin);
+		
+		ScrumBoard sb = session.get(ScrumBoard.class, ub.getBoardId());
+		*/
+		return sb;
+	}
+	
 	//Read
 	public List<ScrumUser> getAllUsers(){
 		Session session = sessionFactory.getCurrentSession();
@@ -61,6 +88,24 @@ public class DAOImpl implements DAO{
 		return users;
 	}
 	
+	public List<ScrumBoard> getAllScrumBoards() {
+		Session session = sessionFactory.getCurrentSession();
+		List<ScrumBoard> allBoards = new ArrayList<>();
+		Query query = session.createQuery("from ScrumBoard");
+		allBoards = query.getResultList();
+		return allBoards;
+	}
+	
+	public List<ScrumBoard> getScrumBoardsByUserId(int userId) {
+		Session session = sessionFactory.getCurrentSession();
+		ScrumUser su = session.get(ScrumUser.class, userId);
+		List<ScrumBoard> boards = su.getScrumBoards();
+		//boards.size();
+		for (ScrumBoard board : boards) {
+			board.getScrumUsers().size();
+		}
+		return boards;
+	}
 
 	public ScrumUser getScrumUserById(int userId) {
 		Session session = sessionFactory.getCurrentSession();
@@ -126,5 +171,20 @@ public class DAOImpl implements DAO{
 		//Why does get update the data? This is weird.
 		ScrumBoardTask updateTask = session.get(ScrumBoardTask.class, task.getId());
 		return updateTask;
+	}
+	
+	//Delete
+	@Override
+	public void deleteScrumBoard(ScrumBoard sb) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		sb = session.load(ScrumBoard.class, sb.getId());
+		//remove the user board associations in the database manually to avoid violating join table foreign key constraint when i delete
+		List<ScrumUser> users = sb.getScrumUsers();
+		for(ScrumUser u : users) {
+			u.getScrumBoards().remove(sb);
+			session.update(u);
+		}
+		session.delete(sb);
 	}
 }

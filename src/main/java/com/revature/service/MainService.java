@@ -1,12 +1,9 @@
 package com.revature.service;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,6 @@ import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
-import com.revature.model.ScrumUsersBoards;
 import com.revature.model.StoryLaneDTO;
 import com.revature.model.StoryTaskDTO;
 import com.revature.model.TaskStatusDTO;
@@ -28,20 +24,19 @@ import com.revature.model.UserBoardDTO;
 @Service(value="MainService") //will be applied as a bean, and used with the transactionManager when needed
 @Transactional
 public class MainService {
-
 	@Autowired
 	private DAO dao;
 	
 	//Create
-	
-	public ScrumBoard createNewScrumBoard(ScrumBoard sb, ScrumUser su) {
-		sb.setUserId(su.getId());
+	public ScrumBoard createNewScrumBoard(ScrumBoard sb, int userId) {
+		sb.setUserId(userId);
+		ScrumUser su = dao.getScrumUserById(userId);
 		ArrayList<ScrumUser> initialUsers = new ArrayList<>();
 		initialUsers.add(su);
 		sb.setScrumUsers(initialUsers);
 		sb = dao.createNewScrumBoard(sb);
 		su.getScrumBoards().add(sb);
-		su = dao.updateScrumUser(su);
+		//su = dao.updateScrumUser(su);
 		return sb;
 	}
 	
@@ -64,6 +59,14 @@ public class MainService {
 		return dao.getAllUsers();
 	}
 	
+	public List<ScrumBoard> getAllScrumBoards() {
+		return dao.getAllScrumBoards();
+	}
+	
+	public List<ScrumBoard> getScrumBoardsByUserId(int userId) {
+		return dao.getScrumBoardsByUserId(userId);
+	}
+	
 	public ScrumUser getScrumUserByUsernameAndPassword(ScrumUser su) {
 		ScrumUser user = dao.getScrumUserByUsername(su);
 		if(su.getUsername().equals(user.getUsername()) && su.getPassword().equals(su.getPassword())) {
@@ -77,11 +80,12 @@ public class MainService {
 	}
 	
 	//Update
-	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, ScrumUser su) {
-		sb.setUserId(su.getId());
+	public ScrumBoard editExistingScrumBoard(ScrumBoard sb, int userId) {
+		sb.setUserId(userId);
 		//this is necessary^
 		//TODO: explain why this is necessary! Even if you don't know why. SAY you don't know why! ;-)
 		sb = dao.updateScrumBoard(sb);
+		/*
 		//make sure the scrumboard object in the user's list is updated, dunno if it would automatically do this
 		for(ScrumBoard osb : su.getScrumBoards()) {
 			if(osb.getId() == sb.getId()) {
@@ -90,27 +94,15 @@ public class MainService {
 				return sb;
 			}
 		}
+		*/
 		return sb;
 	}	
-	
-	//--Quarantined-------------------------------------------------
-	//DEBUG LATER.
-	@Autowired
-	private SessionFactory sessionFactory;
 	
 	public ScrumBoard addUserToBoard(UserBoardDTO ub) {
 		//TODO: This is not the right way.
 		//But it is currently, the ONLY way to get this to work.
-		Session session = sessionFactory.getCurrentSession();
-		ScrumUsersBoards userBoardJoin = new ScrumUsersBoards();
-		userBoardJoin.setSbId(ub.getBoardId());
-		userBoardJoin.setUserId(ub.getUserId());
-		session.save(userBoardJoin);
-		
-		ScrumBoard sb = session.get(ScrumBoard.class, ub.getBoardId());
-		return sb;
+		return dao.addUserToBoard(ub);
 	}
-	//--Quarantined-------------------------------------------------
 	
 	
 	public ScrumBoardStory changeScrumBoardStoryLane(StoryLaneDTO params) {
@@ -135,5 +127,12 @@ public class MainService {
 		story.setPoints(sbs.getPoints());
 		story = dao.updateScrumBoardStory(story);
 		return story;
+	}
+
+	//Delete
+	public ScrumBoard deleteExistingScrumBoard(ScrumBoard s) {
+		ScrumBoard sb = dao.getScrumBoardById(s.getId());
+		dao.deleteScrumBoard(sb);
+		return sb;
 	}
 }

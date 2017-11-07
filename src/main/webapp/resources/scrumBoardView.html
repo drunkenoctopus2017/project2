@@ -1,33 +1,74 @@
 <div class="container">
 	<h1>Drunken Octopus Scrum Board System</h1>
 	<div class="jumbotron">
-		<p>{{scrumBoardName}}</p>
-		<button type="button" class="btn btn-default" data-ng-click="createStory()">Create Story</button>
+		<p>{{scrumBoardName}}
+		<small><span data-ng-repeat="user in users">{{user.firstName}} {{user.lastName}}{{$last ? '' : ', '}}</</span></small></p><br>
+		<span>Start Date: {{scrumBoardStartDate}}</span><br>
+		<span>Duration: {{scrumBoardDuration}}</span>	<br><br>	
+		<!-- Trigger the modal with a button -->
+		<button type="button" class="btn btn-default btn-lg"
+			data-toggle="modal" data-target="#myModal" data-ng-click="getBurndownChart()">View Burndown	Chart</button>
+		<br><br>
+		<button type="button" class="btn btn-default" data-ng-show="role == 200" data-ng-click="createStory()">Create Story</button>
 	</div>
-	<div class="row">
-		<div data-ng-repeat="lane in lanes" class="col-xs-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">{{lane.name}}</h3>
+	<br>
+	<div class="container">
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog modal-lg">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Burndown Chart</h4>
+					</div>
+					<div class="modal-body">
+						<div fusioncharts width="870" height="400" type="line"
+							dataSource="{{burndownData}}"></div>
+						<!-- {{burndownData}} -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
 				</div>
-				<div class="panel-body">
-					<div data-ng-repeat="story in filterStoriesByLane(lane.id)" style="border-top: solid">
-						<a style="float: left" data-ng-hide="$parent.$first" data-ng-click="changeLane(story, lanes[$parent.$index - 1])">
-							<span class="glyphicon glyphicon-triangle-left"></span> 
-						</a>
-						<span class="label label-default">Points {{story.points}}</span>
-						<a style="float: right" data-ng-hide="$parent.$last" data-ng-click="changeLane(story, lanes[$parent.$index + 1])">
-							<span class="glyphicon glyphicon-triangle-right"></span> 
-						</a>
-						<br />
-						<p>{{story.description}}</p>
-						<div class="checkbox" data-ng-repeat="task in story.tasks">
-							<label>
-								<input type="checkbox" data-ng-model="task.status" data-ng-true-value="1" data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
-							</label>
+
+			</div>
+		</div>
+
+	</div>
+	<br>
+	<div class="container">
+		<div class="row">
+			<div data-ng-repeat="lane in lanes" class="col-xs-2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{lane.name}}</h3>
+					</div>
+					<div class="panel-body">
+	
+						<div data-ng-repeat="story in filterStoriesByLane(lane.id)" style="border-top: solid">
+							<a style="float: left" data-ng-hide="$parent.$first" data-ng-click="changeLane(story, lanes[$parent.$index - 1])">
+								<span class="glyphicon glyphicon-triangle-left"></span> 
+							</a>
+							<span class="label label-default">Points {{story.points}}</span>
+							<a style="float: right" data-ng-hide="$parent.$last" data-ng-click="changeLane(story, lanes[$parent.$index + 1])">
+								<span class="glyphicon glyphicon-triangle-right"></span> 
+							</a>
+							<br />
+	
+							<p>{{story.description}}</p>
+	
+							<div class="checkbox" data-ng-repeat="task in story.tasks">
+								<label> <input type="checkbox"
+									data-ng-model="task.status" data-ng-true-value="1"
+									data-ng-false-value="0" data-ng-change="updateTask(task)">{{task.description}}
+								</label>
+							</div>
+							<button data-toggle="modal" data-ng-show="role == 200" data-target="#addTaskModal" data-ng-click="setNewTaskTarget(story)" class="btn btn-default btn-xs">Add task</button>
+							<button data-ng-show="role == 200" data-toggle="modal" data-target="#editStoryModal" data-ng-click="setEditStoryTarget(story)" class="btn btn-default btn-xs">Edit Story</button>
 						</div>
-						<button data-toggle="modal" data-ng-show="role == 200" data-target="#addTaskModal" data-ng-click="setNewTaskTarget(story)" class="btn btn-default btn-xs">Add task</button>
-						<button data-ng-show="role == 200" data-toggle="modal" data-target="#editStoryModal" data-ng-click="setEditStoryTarget(story)" class="btn btn-default btn-xs">Edit Story</button>
 					</div>
 				</div>
 			</div>

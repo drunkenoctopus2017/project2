@@ -38,7 +38,7 @@ public class LoginController {
 	@RequestMapping(value="/authenticateLogin", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumUser> authenticateLogin(@RequestBody ScrumUser loginUserCredentials, HttpServletRequest request) {
 		ScrumUser su = service.getScrumUserByUsernameAndPassword(loginUserCredentials);
-		request.getSession().setAttribute("user", su);
+		request.getSession().setAttribute("userId", su.getId());
 		return new ResponseEntity<ScrumUser>(su, HttpStatus.OK); //200
 	}
 	
@@ -46,7 +46,7 @@ public class LoginController {
 	public void logout(HttpSession session) {
 		System.out.println("logging out");
 		if(session != null) {
-			session.removeAttribute("user");
+			session.removeAttribute("userId");
 			session.invalidate();
 			System.out.println("session invalidated");
 		}
