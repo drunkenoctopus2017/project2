@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +40,7 @@ public class ScrumBoard {
 	@Column(name="SB_DURATION")
 	private int duration;
 	
-	@OneToMany(mappedBy="scrumBoard", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="scrumBoard", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<ScrumBoardStory> stories = new ArrayList<>();
 	
     public List<ScrumBoardStory> getStories() {
@@ -53,7 +54,7 @@ public class ScrumBoard {
 	@ManyToMany(mappedBy="scrumBoards")
 	private List<ScrumUser> scrumUsers;
 	
-	@JsonIgnore
+	//@JsonIgnore
     public List<ScrumUser> getScrumUsers() {
 		return scrumUsers;
 	}

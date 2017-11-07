@@ -1,11 +1,11 @@
 <div class="container">
 <table class="table table-bordered table-hover">
 	<thead>
-		<tr><th colspan="6">Add User to Board: {{board}} </th></tr>
+		<tr><th colspan="6">Add User to Board: {{board.name}} </th></tr>
 	</thead>
 	<tbody>
 		<tr><th>Id</th><th>First Name</th><th>Last Name</th><th>Username</th><th>Email</th><th></th></tr>
-		<tr data-ng-repeat="u in getAvailableUsers()" >
+		<tr data-ng-repeat="u in availableUsers" >
 			<td>{{u.id}}</td><td>{{u.firstName}}</td>
 			<td>{{u.lastName}}</td>
 			<td>{{u.username}}</td>
@@ -16,6 +16,6 @@
 </table>
 
 <div>
-	<p data-ng-repeat="u in getBoardUsers()">{{u.firstName }} {{u.lastName}}</p>
+	<p data-ng-repeat="u in board.scrumUsers">{{u.firstName }} {{u.lastName}}</p>
 </div>
 </div>
