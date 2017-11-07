@@ -1,21 +1,24 @@
 <div class="container">
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr><th colspan="6">Add User to Board: {{board.name}} </th></tr>
-	</thead>
-	<tbody>
-		<tr><th>Id</th><th>First Name</th><th>Last Name</th><th>Username</th><th>Email</th><th></th></tr>
-		<tr data-ng-repeat="u in availableUsers" >
-			<td>{{u.id}}</td><td>{{u.firstName}}</td>
-			<td>{{u.lastName}}</td>
-			<td>{{u.username}}</td>
-			<td>{{u.email}}</td>
-			<td><button data-ng-click="addUserToBoard(u)">Add</button></td>
-		</tr>
-	</tbody>
-</table>
-
-<div>
-	<p data-ng-repeat="u in board.scrumUsers">{{u.firstName }} {{u.lastName}}</p>
-</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr><th colspan="6">Add User to Board: {{board.name}} </th></tr>
+		</thead>
+		<tbody>
+			<tr><th>Id</th><th>First Name</th><th>Last Name</th><th>Username</th><th>Email</th><th></th></tr>
+			<tr data-ng-repeat="u in availableUsers" >
+				<td>{{u.id}}</td><td>{{u.firstName}}</td>
+				<td>{{u.lastName}}</td>
+				<td>{{u.username}}</td>
+				<td>{{u.email}}</td>
+				<td><button data-ng-click="addUserToBoard(u)">Add</button></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div>
+		<p>
+			<small><span data-ng-repeat="u in board.scrumUsers">{{u.firstName}} {{u.lastName}}{{$last ? '' : ', '}}</span></small>
+		</p>		
+	</div>
+	<button type="button" class="btn btn-default" data-ng-click="goToMain()">Main Menu</button>
 </div>
