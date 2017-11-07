@@ -35,8 +35,8 @@ public class ScrumBoardController {
 	//Create
 	@RequestMapping(value="/createNewScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumBoard> createNewScrumBoard(@RequestBody ScrumBoard newScrumBoard, HttpServletRequest request) {
-		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
-		ScrumBoard sb = service.createNewScrumBoard(newScrumBoard, su);
+		int userId = (Integer) request.getSession().getAttribute("userId");
+		ScrumBoard sb = service.createNewScrumBoard(newScrumBoard, userId);
 		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	
@@ -47,18 +47,26 @@ public class ScrumBoardController {
 	}
 	
 	//Read
+	@RequestMapping(value="/getScrumBoards", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ScrumBoard>> getScrumBoards(HttpServletRequest request) {
+		int userId = (Integer) request.getSession().getAttribute("userId");
+		List<ScrumBoard> boards = service.getScrumBoardsByUserId(userId);
+		return new ResponseEntity<List<ScrumBoard>>(boards, HttpStatus.OK); //200
+	}
+	
+	
 	@RequestMapping(value="/getScrumBoardLanes", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ScrumBoardLane>> getScrumBoardLanes() {
 		List<ScrumBoardLane> sbLanes = service.getScrumBoardLanes();
-//		System.out.println("lanes: " + sbLanes);
 		return new ResponseEntity<List<ScrumBoardLane>>(sbLanes, HttpStatus.OK); //200
 	}
 	
 	//Update
 	@RequestMapping(value="/editExistingScrumBoard", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ScrumBoard> editExistingScrumBoard(@RequestBody ScrumBoard newScrumBoard, HttpServletRequest request) {
-		ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
-		ScrumBoard sb = service.editExistingScrumBoard(newScrumBoard, su);
+		//ScrumUser su = (ScrumUser) request.getSession().getAttribute("user");
+		int userId = (Integer) request.getSession().getAttribute("userId");
+		ScrumBoard sb = service.editExistingScrumBoard(newScrumBoard, userId);
 		return new ResponseEntity<ScrumBoard>(sb, HttpStatus.OK); //200
 	}
 	

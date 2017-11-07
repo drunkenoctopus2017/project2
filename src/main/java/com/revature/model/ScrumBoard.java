@@ -54,7 +54,7 @@ public class ScrumBoard {
 	@ManyToMany(mappedBy="scrumBoards")
 	private List<ScrumUser> scrumUsers;
 	
-	@JsonIgnore
+	//@JsonIgnore
     public List<ScrumUser> getScrumUsers() {
 		return scrumUsers;
 	}
