@@ -200,6 +200,9 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, scr
 		currentBoard.duration = board.duration;
 		$location.path("/createOrEditScrumBoard");
 	}
+	$scope.triggerModal = function(b){
+		$("#deleteModal"+b.id).modal();
+	}
 	$scope.deleteScrumBoard = function(b) {
 		// set the current board properties to the properties of board
 		// associated with the button that called this function
