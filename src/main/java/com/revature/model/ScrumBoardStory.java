@@ -24,8 +24,8 @@ public class ScrumBoardStory {
 	
 	@Id
 	@Column(name="SBS_ID")
-	@SequenceGenerator(name="storyIdSequence", sequenceName="SBS_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="storyIdSequence")
+	@SequenceGenerator(name="SBS_SEQ", sequenceName="SBS_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SBS_SEQ")
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	

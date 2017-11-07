@@ -1,7 +1,8 @@
 <div class="container">
 	<h1>Drunken Octopus Scrum Board System</h1>
 	<div class="jumbotron">
-		<p>{{scrumBoardName}}</p>
+		<p>{{scrumBoardName}}<br />
+		<small><span data-ng-repeat="user in users">{{user.firstName}} {{user.lastName}}{{$last ? '' : ', '}}</</span></small></p>
 		<button type="button" class="btn btn-default" data-ng-click="createStory()">Create Story</button>
 	</div>
 	<div class="row">
