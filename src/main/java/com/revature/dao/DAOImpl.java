@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -170,5 +171,20 @@ public class DAOImpl implements DAO {
 		//Why does get update the data? This is weird.
 		ScrumBoardTask updateTask = session.get(ScrumBoardTask.class, task.getId());
 		return updateTask;
+	}
+	
+	//Delete
+	@Override
+	public void deleteScrumBoard(ScrumBoard sb) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		sb = session.load(ScrumBoard.class, sb.getId());
+		//remove the user board associations in the database manually to avoid violating join table foreign key constraint when i delete
+		List<ScrumUser> users = sb.getScrumUsers();
+		for(ScrumUser u : users) {
+			u.getScrumBoards().remove(sb);
+			session.update(u);
+		}
+		session.delete(sb);
 	}
 }
