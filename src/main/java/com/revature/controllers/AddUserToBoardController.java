@@ -36,7 +36,6 @@ public class AddUserToBoardController {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	
 	public ResponseEntity<Exception> handleException(Exception e){
 		e.printStackTrace();
 		return new ResponseEntity<Exception>(e, HttpStatus.CONFLICT);

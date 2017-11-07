@@ -1,5 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<aop-reference-model>
-<aop-project name="ProjectTwo_AgileSCRUMBoard"/>
-<aop-project name="TestSpringSetup"/>
-</aop-reference-model>
+<aop-reference-model/>

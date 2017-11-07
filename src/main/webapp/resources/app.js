@@ -285,7 +285,7 @@ app.controller("getAllUsersController", function($scope, $location, getAllUsersS
 	}
 });
 
-app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService) 
+app.controller("updateStoryController", function ($scope, $rootScope, scrumBoardService){
 	$rootScope.$on("editStory", function (event, story) {
 		$scope.points = story.points;
 		$scope.desc = story.description;
