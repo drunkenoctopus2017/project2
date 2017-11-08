@@ -230,16 +230,14 @@ app.controller("mainMenuController", function($scope, $rootScope, $location, scr
 		);
 		//Need to update $scope.boards and user object on both sides possibly
 	}
-	if($scope.role == 200){
-		$scope.getAllUsers = function(board) {
-			currentBoard.id = board.id;
-			currentBoard.name = board.name;
-			currentBoard.startDate = board.startDate;
-			currentBoard.duration = board.duration;
-			$rootScope.currentScrumBoard = board;
-			$location.path("/getAllUsers");
-			
-		}
+	
+	$scope.getAllUsers = function(board) {
+		currentBoard.id = board.id;
+		currentBoard.name = board.name;
+		currentBoard.startDate = board.startDate;
+		currentBoard.duration = board.duration;
+		$rootScope.currentScrumBoard = board;
+		$location.path("/getAllUsers");		
 	}
 });
 
@@ -301,10 +299,12 @@ app.controller("createOrEditScrumBoardController", function($scope, $rootScope, 
 	}
 });
 
-app.controller("getAllUsersController", function($scope, $rootScope, $location, getAllUsersService, currentBoard) {
+app.controller("getAllUsersController", function($scope, $rootScope, $location, getAllUsersService, currentBoard, loginUserRole) {
 	$scope.board = $rootScope.currentScrumBoard;
 	$scope.availableUsers = [];
 	$scope.allUsers = [];
+	
+	$scope.role = loginUserRole.id;
 	
 	getAllUsersService.getAllExistingUsers().then(
 		function(response) {
