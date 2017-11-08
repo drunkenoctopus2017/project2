@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.dao.DAO;
+import com.revature.dao.DAOImpl;
 import com.revature.model.ScrumBoard;
 import com.revature.model.ScrumBoardLane;
 import com.revature.model.ScrumBoardStory;
@@ -45,22 +46,36 @@ public class TestDao {
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task);
 	 */
 	
-	@Autowired
-	private DAO dao;
+	
+	private DAO dao = new DAOImpl();
 	
 	//ScrumUser(int id, String firstName, String lastName, String username, String password, String email, ScrumUserRole role)
 	ScrumUserRole role = new ScrumUserRole(1, "manager");
-	ScrumUser user = new ScrumUser(1, "test", "user", "testuser", "password", "test@test.com", role);
+	ScrumUser user = new ScrumUser(1, "Patrick", "user", "pusername", "password", "test@test.com", role);
 	
 	@Test
 	@Transactional
+	@Rollback(true)
 	public void testGetUserId() {
 		Assert.assertTrue(user.getId() == 1);
 	}
 	
 	@Test
 	@Transactional
-	public void test() {
-		Assert.assertTrue(user.getFirstName() == "test");
+	@Rollback(true)
+	public void testGetFirstName() {
+		Assert.assertTrue(user.getFirstName() == "Patrick");
 	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)	
+	public void testGetUserByUsername() {
+		System.out.println(dao.toString());
+		ScrumUser test = dao.getScrumUserByUsername(user);
+		System.out.println(test);
+		Assert.assertEquals(200, 200);
+		//test.getRole().getId()
+	}
+	
 }
