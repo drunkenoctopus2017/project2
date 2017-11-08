@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +43,7 @@ public class ScrumBoardStory {
 		this.scrumBoard = scrumBoard;
 	}
 	
-	@OneToMany(mappedBy="story", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="story", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<ScrumBoardTask> tasks = new ArrayList<>();
 	
     public List<ScrumBoardTask> getTasks() {
