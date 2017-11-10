@@ -1,5 +1,8 @@
 package com.revature.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +25,7 @@ import com.revature.model.ScrumBoardStory;
 import com.revature.model.ScrumBoardTask;
 import com.revature.model.ScrumUser;
 import com.revature.model.ScrumUserRole;
+import com.revature.service.MainService;
 
 public class TestDao {
 	/*
@@ -45,12 +49,15 @@ public class TestDao {
 	public ScrumBoardStory updateScrumBoardStory(ScrumBoardStory story);
 	public ScrumBoardTask updateScrumBoardTask(ScrumBoardTask task);
 	 */
-	
+	@Autowired
+	private MainService service;
 	
 	private DAO dao = new DAOImpl();
 	
 	//ScrumUser(int id, String firstName, String lastName, String username, String password, String email, ScrumUserRole role)
 	ScrumUserRole role = new ScrumUserRole(1, "manager");
+	
+	
 	ScrumUser user = new ScrumUser(1, "Patrick", "user", "pusername", "password", "test@test.com", role);
 	
 	@Test
@@ -68,14 +75,27 @@ public class TestDao {
 	}
 	
 	@Test
-	@Transactional
-	@Rollback(true)	
-	public void testGetUserByUsername() {
-		System.out.println(dao.toString());
-		ScrumUser test = dao.getScrumUserByUsername(user);
-		System.out.println(test);
-		Assert.assertEquals(200, 200);
-		//test.getRole().getId()
+	public void helloWorld() {
+		assertNotNull("Hello World!", new String("Hello World"));
 	}
+	
+	@Test
+	public void testLanes() {
+		System.out.println("124431r");
+		assertEquals(6, service.getScrumBoardLanes().size());
+		
+		
+	}
+	
+//	@Test
+//	@Transactional
+//	@Rollback(true)	
+//	public void testGetUserByUsername() {
+//		System.out.println(dao.toString());
+//		ScrumUser test = dao.getScrumUserByUsername(user);
+//		System.out.println(test);
+//		Assert.assertEquals(200, 200);
+//		//test.getRole().getId()
+//	}
 	
 }

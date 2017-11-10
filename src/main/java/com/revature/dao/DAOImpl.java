@@ -131,6 +131,7 @@ public class DAOImpl implements DAO {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from ScrumBoardLane");
 		List<ScrumBoardLane> results = (List<ScrumBoardLane>) query.getResultList();
+		System.err.println("test: " + results);
 		return results;
 	}
 		

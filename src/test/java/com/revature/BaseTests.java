@@ -8,13 +8,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.revature.service.MainService;
 
-
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/applicationContext.xml"})
+@WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration({locations="classpath:applicationContext.xml"})
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/applicationContext.xml"})
 public class BaseTests {
 	
 	@Autowired
@@ -27,9 +27,6 @@ public class BaseTests {
 	
 	@Test
 	public void testLanes() {
-		
 		assertEquals(6, service.getScrumBoardLanes().size());
-		
-		
 	}
 }
