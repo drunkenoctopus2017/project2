@@ -147,9 +147,9 @@ public class DAOImpl implements DAO {
 	//Update
 	public ScrumUser updateScrumUser(ScrumUser su) {
 		Session session = sessionFactory.getCurrentSession();
-		System.out.println("--------------------------- about to merge");
+// 		System.out.println("--------------------------- about to merge");
 		su = (ScrumUser) session.merge(su);
-		System.out.println("--------------------------- merged!");
+// 		System.out.println("--------------------------- merged!");
 		return su;
 	}
 	

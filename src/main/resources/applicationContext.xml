@@ -20,7 +20,7 @@
 	<!-- Tell DispatcherServlet the location of our static content -->
 	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
 	
-		<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
+	<!-- Tell Spring we are using a transactionManager and to scan for the @s of @Transactional -->
 	<tx:annotation-driven />
 	
   	<aop:aspectj-autoproxy proxy-target-class="true"/>

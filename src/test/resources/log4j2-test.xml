@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="none">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%highlight{%d{MM-dd-yy HH:mm:ss} %-5p - %m%n}" />
+		</Console>
+		
+	</Appenders>
+	<Loggers>
+		<Logger name="com.revature.aspects.ScrumAspects.consoleLogger"
+			level="none" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Root level="none">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>

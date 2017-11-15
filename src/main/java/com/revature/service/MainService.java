@@ -76,6 +76,7 @@ public class MainService {
 	}
 	
 	public List<ScrumBoardLane> getScrumBoardLanes() {
+// 		System.out.println("service func");
 		return dao.getScrumBoardLanes();
 	}
 	
